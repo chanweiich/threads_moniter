@@ -34,7 +34,7 @@ playwright install chromium
 ### 3. 設定環境變數 (.env)
 請在根目錄建立 `.env` 檔案，寫入您的 Google Gemini API 金鑰：
 ```ini
-GEMINI_API_KEY=AIzaSyYourSecretKeyHere...
+GEMINI_API_KEY=請在此填入您的API_KEY
 ```
 
 ### 4. 運行系統
