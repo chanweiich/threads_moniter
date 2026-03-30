@@ -1,0 +1,27 @@
+#.env variables
+.env
+
+# Environments
+.venv/
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS Files
+.DS_Store
+
+# Scraper databases & telemetry artifacts
+threads_data.json
+history_db.json
+final_crisis_report.json
+crisis_watchlist.json
+trend_data.json
+time_series_data.json
+
+# Browser state & Logs
+browser_data/
+error_screenshot.png
