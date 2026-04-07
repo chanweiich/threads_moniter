@@ -18,26 +18,41 @@
 ## 📦 安裝指南
 本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
 
-### 1. 建立並啟動虛擬環境 (.venv)
+### 1. 下載本專案
+```bash
+git clone https://github.com/chanweiich/threads_moniter.git
+cd threads_moniter
+```
+
+### 2. 建立並啟動虛擬環境 (.venv)
 請在專案根目錄中執行：
+`Mac`
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate  # Windows 系統請輸入 .venv\Scripts\activate
 ```
 
-### 2. 安裝套件依賴與瀏覽器內核
+`Windows`
+```bash
+py -m venv .venv
+.venv\Scripts\activate
+# 確保名稱一致(複製一份python.exe，命名為 python3.exe)
+.venv\Scripts\python.exe .venv\Scripts\python3.exe
+```
+
+### 3. 安裝套件依賴與瀏覽器內核
 ```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 3. 設定環境變數 (.env)
+### 4. 設定環境變數 (.env)
 請在根目錄建立 `.env` 檔案，寫入您的 Google Gemini API 金鑰：
 ```ini
 GEMINI_API_KEY=請在此填入您的API_KEY
 ```
 
-### 4. 運行系統
+### 5. 運行系統
 * **啟動爬蟲與分析排程器**：`python3 scheduler.py`
 * **啟動網頁戰情室 (Dashboard)**：進入 `dashboard` 資料夾並執行 `python3 app.py`，接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
 
