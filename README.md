@@ -30,7 +30,7 @@ cd threads_moniter
 `Mac`
 ```bash
 python3 -m venv .venv
-source .venv/bin/activate  # Windows 系統請輸入 .venv\Scripts\activate
+source .venv/bin/activate
 ```
 
 `Windows`
