@@ -6,6 +6,7 @@ from datetime import datetime
 from pydantic import BaseModel
 import google.generativeai as genai
 from dotenv import load_dotenv
+import groq
 from playwright.async_api import async_playwright
 
 load_dotenv()
@@ -26,6 +27,8 @@ def parse_number_text(text):
     except: return 0
 
 async def manual_add(url):
+    # 1. 極致網址清洗 (Universal URL Cleaner)
+    url = url.split('?')[0].replace('threads.com', 'threads.net')
     print(f"正在手動抓取單一網址：{url}")
     user_data_dir = os.path.join(os.getcwd(), "browser_data")
     
@@ -41,9 +44,11 @@ async def manual_add(url):
         
         try:
             try:
-                await page.goto(url, wait_until="domcontentloaded", timeout=15000)
+                await page.goto(url, wait_until="networkidle", timeout=15000)
             except Exception as nav_e:
                 print(f"導航超時或發生跳轉，繼續嘗試抓取: {nav_e}")
+                
+            await asyncio.sleep(3)
                 
             try:
                 # 強制等待內容載入
@@ -51,8 +56,6 @@ async def manual_add(url):
             except Exception as wait_e:
                 print(f"等待主要內容容器出現時超時: {wait_e}")
                 await page.screenshot(path="error_screenshot.png")
-                
-            await asyncio.sleep(2)
             
             # Find the main post container (usually the first article or generic div)
             post_data = await page.evaluate('''() => {
@@ -155,39 +158,67 @@ async def manual_add(url):
         print("跳過 Gemini 分析，直接賦予初始 0 分待處理狀態。")
         analysis = {"summary": "抓取失敗/待更新", "sentiment": "中立", "crisis_score": 0}
     else:
-        print("啟動 Gemini 分析...")
-        try:
-            client = genai.Client()
-            prompt = f"""請分析以下 Threads 貼文內容：
+        print("啟動 Groq (Llama-3.3) 分析...")
+        groq_api_key = os.environ.get("GROQ_API_KEY")
+        if not groq_api_key:
+            print("請檢查 .env 裡的 GROQ_API_KEY 是否正確")
+            analysis = {"summary": "數據已存檔，API Key 缺失", "sentiment": "中立", "crisis_score": 0, "engine": "Failed"}
+            score = 0
+        else:
+            try:
+                client = groq.Groq(api_key=groq_api_key)
+                prompt = f"""你是一位政大秘書處的資深公關專家。這是一篇人工通報的疑似危機貼文，請用最嚴格的標準審核，若內容包含對政大的具體攻擊、宿舍安全、匿名爆料，請給予 7 分以上的評分。
+請針對這篇來自 Threads 的貼文進行危機評估：
 【貼文內容】：{post_data['content']}
 
+評分 (1-10)：1 為純日常，10 為重大公關災難（如校園安全、宿舍爆發大規模抗議、學術誠信）。
+情緒 (Sentiment)：正面、中立或負面。
+摘要 (Summary)：簡短說明學生在吵什麼。
+
 請嚴格依照結構提供 JSON：
-1. `summary`: 30字以內的摘要。若無意義或太短，請寫「無具體內容」。
-2. `sentiment`: 情緒判定，只能是 "正面"、"中立" 或 "負面"。
-3. `crisis_score`: 危機指數 (1-10分)，評分標準：
-   - 1-3分：一般日常、正面、無爭議的內容或單純疑問。
-   - 4-6分：微抱怨、個人不滿、討論度可能升溫但不至於嚴重損害校譽。
-   - 7-10分：嚴重負面、炎上潛力、霸凌、公共安全或嚴重損害校譽的危機。
-"""
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config=genai.types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=CrisisAnalysis,
+```json
+{{
+  "summary": "簡短說明學生在吵什麼",
+  "sentiment": "正面",
+  "crisis_score": 1
+}}
+```"""
+                print(f"[Groq Engine] Analyzing content...")
+                completion = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[
+                        {"role": "system", "content": "You are a specialized PR crisis analysis engine. Always output precisely valid JSON."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    response_format={"type": "json_object"},
                     temperature=0.2
                 )
-            )
-            analysis_obj = CrisisAnalysis.model_validate_json(response.text)
-            analysis = analysis_obj.model_dump()
-            score = analysis.get('crisis_score', 0)
-            print(f"分析完成！危機分數: {score}")
-        except Exception as e:
-            print(f"⚠️ Gemini 分析遭遇錯誤或超時: {e}")
-            analysis = {"summary": "數據已存檔，但 AI 分析暫時不可用", "sentiment": "中立", "crisis_score": 0}
-            score = 0
+                
+                response_content = completion.choices[0].message.content
+                start_idx = response_content.find('{')
+                end_idx = response_content.rfind('}')
+                if start_idx != -1 and end_idx != -1:
+                    response_content = response_content[start_idx:end_idx+1]
+                
+                analysis_obj = CrisisAnalysis.model_validate_json(response_content)
+                analysis = analysis_obj.model_dump()
+                analysis['engine'] = 'Groq'
+                score = analysis.get('crisis_score', 0)
+                print(f"分析完成！危機分數: {score}")
+            except Exception as e:
+                print(f"⚠️ Groq 分析遭遇錯誤或超時: {e}")
+                
+                try:
+                    if 'response_content' in locals() and response_content:
+                        print(f"--- 原始回傳內容 ---\n{response_content}\n--------------------")
+                except: pass
+                
+                analysis = {"summary": "數據已存檔，但 AI 分析暫時不可用", "sentiment": "中立", "crisis_score": 0, "engine": "Failed"}
+                score = 0
 
     post_data['analysis'] = analysis
+    post_data['source'] = "Manual_Report"
+    post_data['status'] = "Critical"
 
     # --- 5. 再次更新所有檔案 (Second Pass) ---
     t_data = [t for t in t_data if t.get('url') != post_data['url']]

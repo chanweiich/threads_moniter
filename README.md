@@ -48,10 +48,16 @@ playwright install chromium
 ```
 
 ### 4. 設定環境變數 (.env)
-請在根目錄建立 `.env` 檔案，寫入您的 Google Gemini API 金鑰：
+本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+
 ```ini
-GEMINI_API_KEY=請在此填入您的API_KEY
+GROQ_API_KEY=您的_Groq_API_金鑰
+GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
+
+> **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
+
+**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 ### 5. 運行系統
 * **啟動爬蟲與分析排程器**：`python3 scheduler.py`

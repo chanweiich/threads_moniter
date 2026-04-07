@@ -16,6 +16,7 @@ class TrendAnalysis(BaseModel):
     gemini_sentiment_score: int
     negative_words: list[str]
     pr_analysis: str
+    top_3_complaints: list[str]
 
 # 輔助函式：文字轉數字 ("1.1 萬" -> 11000)
 def parse_number_text(text):
@@ -159,6 +160,7 @@ async def track_trends():
 3. `negative_words`: 從留言中提取 3-5 個最常出現的關鍵詞彙。若適用，請確保包含『會研所』、『公平性』、『學歷』、『道歉』等。
 4. `reasoning`: 簡短解釋。
 5. `pr_analysis`: 撰寫一份大約 150 字的『政大公關處置分析報告』，點出校方當下主要被攻擊的危機點、學生核心訴求與建議作法。
+6. `top_3_complaints`: 特別注意，如果擷取到的留言總數量超過 10 則，請以簡短的一句話條列出『學生最不滿的三個點是什麼？』，否則請回傳空陣列。
 """
             retry_count = 0
             success = False
@@ -186,7 +188,8 @@ async def track_trends():
                         "replies": replies_num,
                         "gemini_sentiment_score": analysis['gemini_sentiment_score'],
                         "negative_words": analysis['negative_words'],
-                        "pr_analysis": analysis['pr_analysis']
+                        "pr_analysis": analysis['pr_analysis'],
+                        "top_3_complaints": analysis.get('top_3_complaints', [])
                     })
                     
                     print(f"✅ {url} 解析完成：{analysis['trend']} (情緒分數: {analysis['gemini_sentiment_score']})")
