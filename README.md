@@ -26,6 +26,7 @@ cd threads_moniter
 
 ### 2. 建立並啟動虛擬環境 (.venv)
 請在專案根目錄中執行：
+
 `Mac`
 ```bash
 python3 -m venv .venv
