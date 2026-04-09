@@ -66,6 +66,9 @@ python3 analyze_crisis.py
 python3 track_trends.py
 python3 scheduler.py
 ```
+若未曾於電腦登入threads：
+
+彈出瀏覽視窗時，請在該視窗另開一分頁輸入threads.net，輸入帳號登入threads。
 
 * **啟動網頁戰情室 (Dashboard)**
 另外開啟一個terminal
