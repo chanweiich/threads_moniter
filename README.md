@@ -60,8 +60,19 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 ### 5. 運行系統
-* **啟動爬蟲與分析排程器**：`python3 scheduler.py`
-* **啟動網頁戰情室 (Dashboard)**：進入 `dashboard` 資料夾並執行 `python3 app.py`，接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+* **啟動爬蟲與分析排程器**
+```bash
+python3 analyze_crisis.py
+python3 track_trends.py
+python3 scheduler.py
+```
+
+* **啟動網頁戰情室 (Dashboard)**
+```bash
+cd dashboard
+python3 app.py
+```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
 
 ## ⚠️ 免責聲明
 本系統僅供國立政治大學校園研究、實習專案與公關趨勢監測使用。所擷取之數據僅作為內部決策輔助，請嚴格遵守相關社群平台（Meta / Threads）之使用規範與隱私條款，嚴禁將爬蟲數據用於非法窺探或商業營利。
