@@ -38,7 +38,7 @@ source .venv/bin/activate
 py -m venv .venv
 .venv\Scripts\activate
 # 確保名稱一致(複製一份python.exe，命名為 python3.exe)
-.venv\Scripts\python.exe .venv\Scripts\python3.exe
+copy .venv\Scripts\python.exe .venv\Scripts\python3.exe
 ```
 
 ### 3. 安裝套件依賴與瀏覽器內核
