@@ -59,6 +59,14 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 
 **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
+**待修改**
+```
+python hourly_scheduler.py
+python analyze_crisis.py
+cd dashboard
+python app.py
+```
+
 ### 5. 運行系統
 * **啟動爬蟲與分析排程器**
 ```bash
