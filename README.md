@@ -68,6 +68,7 @@ python3 scheduler.py
 ```
 
 * **啟動網頁戰情室 (Dashboard)**
+另外開啟一個terminal
 ```bash
 cd dashboard
 python3 app.py
