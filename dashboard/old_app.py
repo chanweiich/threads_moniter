@@ -6,61 +6,73 @@ import threading
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import re
-import sqlite3
-import collections
 
 # 讀取上一層目錄 (專案根目錄) 的 .env 檔案
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 app = Flask(__name__)
 
-# 資料庫路徑設定
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "threads_posts.db")
-
-def get_db_connection():
-    conn = sqlite3.connect(DB_PATH, timeout=10)
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def parse_threads_time(time_str, content_str=""):
     now = datetime.now()
     
+    # 1. 優先提取原文內容 (content) 中的絕對日期 (YYYY-MM-DD 或 YYYY/MM/DD)
     if content_str:
         match_content = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', content_str)
         if match_content:
-            try: return datetime(int(match_content.group(1)), int(match_content.group(2)), int(match_content.group(3)))
-            except: pass
+            try:
+                return datetime(int(match_content.group(1)), int(match_content.group(2)), int(match_content.group(3)))
+            except:
+                pass
                 
-    if not time_str: return None
+    # 若原文中沒日期，我們再處理 `time_str` (如果還是空的，代表徹底失敗，回傳 None)
+    if not time_str:
+        return None
+        
     time_str = time_str.strip().lower()
     
+    # 支援 "X天"
     match = re.search(r'^(\d+)\s*天', time_str)
-    if match: return now - timedelta(days=int(match.group(1)))
+    if match:
+        return now - timedelta(days=int(match.group(1)))
         
+    # 支援 "Xh" 或 "X小時"
     match = re.search(r'^(\d+)\s*(h|小時)', time_str)
-    if match: return now - timedelta(hours=int(match.group(1)))
+    if match:
+        return now - timedelta(hours=int(match.group(1)))
         
+    # 支援 "Xm" 或 "X分鐘"
     match = re.search(r'^(\d+)\s*(m|分鐘)', time_str)
-    if match: return now - timedelta(minutes=int(match.group(1)))
+    if match:
+        return now - timedelta(minutes=int(match.group(1)))
         
+    # 支援 "Xs" 或 "X秒"
     match = re.search(r'^(\d+)\s*(s|秒)', time_str)
-    if match: return now - timedelta(seconds=int(match.group(1)))
+    if match:
+        return now - timedelta(seconds=int(match.group(1)))
         
+    # 支援 "Xw" 或 "X週"
     match = re.search(r'^(\d+)\s*(w|週)', time_str)
-    if match: return now - timedelta(weeks=int(match.group(1)))
+    if match:
+        return now - timedelta(weeks=int(match.group(1)))
         
+    # 支援時間欄位中的 YYYY-MM-DD 或是 "YYYY/MM/DD
     match = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', time_str)
     if match:
-        try: return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)))
-        except: pass
+        try:
+            return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        except:
+            pass
             
+    # 支援 Threads 其他絕對時間表示 (如 "12/02/25" 月/日/年 或 "03/19")
     try:
         parts = time_str.split('/')
-        if len(parts) == 3: return datetime.strptime(time_str, "%m/%d/%y")
+        if len(parts) == 3:
+            return datetime.strptime(time_str, "%m/%d/%y")
         elif len(parts) == 2:
             dt = datetime.strptime(time_str, "%m/%d")
             return dt.replace(year=now.year)
-    except: pass
+    except:
+        pass
         
     return None
 
@@ -78,55 +90,24 @@ def run_scraper_and_analyzer():
 
 @app.route('/')
 def index():
-    data = []
-    
-    if os.path.exists(DB_PATH):
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            # 根據你提供的資料表結構進行查詢
-            query = """
-                SELECT p.url, p.author, p.content, p.likes, p.comments, 
-                       p.reposts, p.shares, p.post_date,
-                       a.summary, a.sentiment, a.crisis_score
-                FROM posts p
-                LEFT JOIN post_analysis a ON p.url = a.post_url
-            """
-            cursor.execute(query)
-            rows = cursor.fetchall()
-            
-            for row in rows:
-                post = dict(row)
-                item = {
-                    "url": post.get("url"),
-                    "author": post.get("author", "未知帳號"),
-                    "content": post.get("content", ""),
-                    "likes": post.get("likes") or 0,
-                    "comments": post.get("comments") or 0,
-                    "reposts": post.get("reposts") or 0,
-                    "shares": post.get("shares") or 0,
-                    "time": post.get("post_date", ""),  # 將資料庫的 post_date 映射到前端的 time
-                    "analysis": {
-                        "summary": post.get("summary") or "分析中...",
-                        "sentiment": post.get("sentiment") or "中立",
-                        "crisis_score": post.get("crisis_score") or 0
-                    }
-                }
-                data.append(item)
-            conn.close()
-        except Exception as e:
-            print(f"❌ 資料庫讀取錯誤: {e}")
-
-    # --- 以下保持不變 (處理日期格式轉換、排序、圖表數據等) ---
+    report_path = os.path.join(os.path.dirname(__file__), "..", "final_crisis_report.json")
     trend_path = os.path.join(os.path.dirname(__file__), "..", "trend_data.json")
+    
+    data = []
+    if os.path.exists(report_path):
+        with open(report_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
     trend_data = {}
     if os.path.exists(trend_path):
         with open(trend_path, "r", encoding="utf-8") as f:
             trend_data = json.load(f)
             
+    # 【執行要求：紀錄成功提取的日期數量】
     extracted_count = 0
+            
+    # 為每筆資料增加 timestamp，並將顯示時間統一化為 YYYY/MM/DD
     for item in data:
-        # parse_threads_time 會嘗試解析資料庫中的 post_date 內容
         dt = parse_threads_time(item.get('time', ''), item.get('content', ''))
         if dt:
             item['timestamp'] = dt.timestamp()
@@ -134,12 +115,24 @@ def index():
             extracted_count += 1
         else:
             item['timestamp'] = 0.0
-            item['time_display'] = item.get('time') if item.get('time') else '日期不明'
+            item['time_display'] = '日期不明'
             
+        # 【新增】將 trend_data 放進去
         item['trend_info'] = trend_data.get(item.get('url'))
             
-    # 排序邏輯：危機分數高者在前，分數相同則日期新者在前
-    data.sort(key=lambda x: (x.get('analysis', {}).get('crisis_score', 0), x.get('timestamp', 0.0)), reverse=True)
+    # 在終端機輸出提取結果
+    print(f"\\n✅ 【日誌】已成功從內容提取 {extracted_count} 筆日期！\\n")
+            
+    # 【雙重排序邏輯】
+    # 第一層：危機指數 (10 -> 1) 降序
+    # 第二層：發文時間 (timestamp) 降序
+    data.sort(
+        key=lambda x: (
+            x.get('analysis', {}).get('crisis_score', 0), 
+            x.get('timestamp', 0.0)
+        ), 
+        reverse=True
+    )
     
     score_distribution = {str(i): 0 for i in range(1, 11)}
     sentiment_distribution = {"正面": 0, "中立": 0, "負面": 0}
@@ -160,12 +153,14 @@ def index():
         "sentiments": [sentiment_distribution["正面"], sentiment_distribution["中立"], sentiment_distribution["負面"]]
     }
             
+    # 【新增】載入並轉換時序資料
     ts_path = os.path.join(os.path.dirname(__file__), "..", "time_series_data.json")
     time_series = []
     if os.path.exists(ts_path):
         with open(ts_path, "r", encoding="utf-8") as f:
             time_series = json.load(f)
             
+    import collections
     ts_by_url = collections.defaultdict(list)
     for row in time_series:
         ts_by_url[row['url']].append(row)
@@ -199,6 +194,7 @@ def get_search_queries(keyword):
 
 @app.route('/api/search_intent', methods=['GET'])
 def search_intent():
+    from flask import request
     keyword = request.args.get('keyword', '').strip()
     if not keyword:
         return jsonify({"status": "error", "queries": []})
@@ -208,6 +204,7 @@ def search_intent():
 
 @app.route('/api/search', methods=['GET'])
 def search_posts():
+    from flask import request
     keyword = request.args.get('keyword', '').strip()
     if not keyword:
         return jsonify({"status": "error", "message": "請提供搜尋關鍵字"})
@@ -218,6 +215,7 @@ def search_posts():
     updated_count = 0
     
     try:
+        import subprocess
         os.chdir("..")
         venv_python = os.path.abspath(os.path.join(os.getcwd(), ".venv", "bin", "python3"))
         if not os.path.exists(venv_python):
@@ -242,35 +240,9 @@ def search_posts():
             os.chdir("dashboard")
         print(f"混合搜查調用失敗: {e}")
     
-    # 【改為從資料庫獲取資料做篩選】
-    data = []
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        query = """
-            SELECT p.url, p.author, p.content, p.likes, p.comments, p.time, p.post_date,
-                   a.summary, a.sentiment, a.crisis_score
-            FROM posts p
-            LEFT JOIN post_analysis a ON p.url = a.post_url
-        """
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        for row in rows:
-            post = dict(row)
-            data.append({
-                "url": post.get("url"),
-                "author": post.get("author", ""),
-                "content": post.get("content", ""),
-                "likes": post.get("likes", "0"),
-                "comments": post.get("comments", "0"),
-                "time": post.get("time", ""),
-                "analysis": {
-                    "summary": post.get("summary") or "",
-                    "sentiment": post.get("sentiment") or "中立",
-                    "crisis_score": post.get("crisis_score") or 0
-                }
-            })
-        conn.close()
+        with open("../threads_data.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
     except Exception as e:
         return jsonify({"status": "error", "message": "無法讀取資料庫"}), 500
 
@@ -299,6 +271,7 @@ def search_posts():
         
     import jieba
     from collections import Counter
+    import re
     
     text_clean = re.sub(r'[^\w\s]', '', all_text_for_cloud)
     words = jieba.lcut(text_clean)
@@ -308,13 +281,14 @@ def search_posts():
     def is_valid_word(w):
         if len(w) <= 1: return False
         if w in stopwords: return False
-        if re.search(r'\d', w): return False 
-        if re.match(r'^[A-Za-z_]+$', w): return False
+        if re.search(r'\d', w): return False # Drop words with digits (17, 60, Day2)
+        if re.match(r'^[A-Za-z_]+$', w): return False # Drop pure english usernames or noise
         return True
         
     filtered_words = [w for w in words if is_valid_word(w)]
     raw_counts = Counter(filtered_words)
     
+    # 黑話加權
     focus_words = {"指南": 2, "價格": 3, "好吃": 3, "糖粉": 5, "魷魚": 5, "作弊": 3, "洩題": 4, "宿舍": 2}
     for fw, mult in focus_words.items():
         if fw in raw_counts:
@@ -352,12 +326,14 @@ def search_posts():
 
 @app.route('/api/scrape', methods=['POST'])
 def trigger_scrape():
+    # 啟動背景執行序來處理爬取與分析，避免前端長時間等待 TimeOut
     thread = threading.Thread(target=run_scraper_and_analyzer)
     thread.start()
     return jsonify({"status": "success", "message": "已在背景啟動小規模爬取與分析任務，請稍後重整頁面查看結果。"})
 
 @app.route('/api/add_manual_post', methods=['POST'])
 def add_manual_post():
+    from flask import request, jsonify
     data = request.json
     raw_url = data.get('url', '').strip()
     
@@ -367,6 +343,8 @@ def add_manual_post():
         return jsonify({"status": "error", "message": "無效的 Threads 網址，請確認連結包含 threads 域名與文章標識。"})
         
     try:
+        # 切換到上一層目錄執行
+        import subprocess
         os.chdir("..")
         venv_python = os.path.abspath(os.path.join(os.getcwd(), ".venv", "bin", "python3"))
         if not os.path.exists(venv_python):
@@ -374,18 +352,20 @@ def add_manual_post():
             
         print(f"手動執行單筆抓取 (使用直譯器: {venv_python}): {url}")
         
+        # 執行 manual_add.py，並取得輸出
         result = subprocess.run([venv_python, "manual_add.py", url], capture_output=True, text=True)
         os.chdir("dashboard")
         
         output = result.stdout
         
+        # 找尋 JSON 輸出
         if "---OUTPUT_START---" in output and "---OUTPUT_END---" in output:
             json_str = output.split("---OUTPUT_START---")[1].split("---OUTPUT_END---")[0].strip()
             parsed = json.loads(json_str)
             if parsed.get("status") == "success":
                 return jsonify(parsed)
                 
-        return jsonify({"status": "error", "message": "無法抓取或解析該網址，請確認連結權限或格式。\n" + output[-200:]})
+        return jsonify({"status": "error", "message": "無法抓取或解析該網址，請確認連結權限或格式。\\n" + output[-200:]})
     except Exception as e:
         if os.getcwd().endswith('threads_monitor'):
             os.chdir("dashboard")
@@ -393,31 +373,38 @@ def add_manual_post():
 
 @app.route('/api/delete_post', methods=['POST'])
 def delete_post():
+    from flask import request
     data = request.json
     url_to_delete = data.get('url')
     if not url_to_delete:
         return jsonify({"status": "error", "message": "Missing URL"}), 400
         
-    try:
-        # 【改為使用 SQL 指令刪除】
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # 刪除貼文本體
-        cursor.execute("DELETE FROM posts WHERE url = ?", (url_to_delete,))
-        # 刪除分析資料
-        cursor.execute("DELETE FROM post_analysis WHERE post_url = ?", (url_to_delete,))
-        
-        conn.commit()
-        conn.close()
-        
-        return jsonify({
-            "status": "success", 
-            "message": f"已成功移除資料庫中的貼文。"
-        })
-    except Exception as e:
-        print(f"資料庫刪除錯誤: {e}")
-        return jsonify({"status": "error", "message": f"刪除失敗：{str(e)}"}), 500
+    def remove_from_json(filename):
+        filepath = os.path.join(os.path.dirname(__file__), "..", filename)
+        if not os.path.exists(filepath):
+            return 0
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                items = json.load(f)
+            original_len = len(items)
+            items = [item for item in items if item.get('url') != url_to_delete]
+            if len(items) < original_len:
+                with open(filepath, "w", encoding="utf-8") as f:
+                    json.dump(items, f, ensure_ascii=False, indent=4)
+                return original_len - len(items)
+        except Exception as e:
+            print(f"Error modifying {filename}: {e}")
+        return 0
+
+    c1 = remove_from_json("threads_data.json")
+    c2 = remove_from_json("final_crisis_report.json")
+    c3 = remove_from_json("crisis_watchlist.json")
+    
+    return jsonify({
+        "status": "success", 
+        "message": f"已成功移除資料庫中的貼文。"
+    })
 
 if __name__ == '__main__':
+    # Flask 開發伺服器
     app.run(debug=True, port=5000)
