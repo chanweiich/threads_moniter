@@ -18,6 +18,9 @@
 ## 📦 安裝指南
 本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
 
+請在終端機執行以下指令
+
+請選擇您想放置檔案的位置，如至於桌面 `C:\Users\user>Desktop`
 ### 1. 下載本專案
 ```bash
 git clone https://github.com/chanweiich/threads_moniter.git
@@ -59,15 +62,21 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 
 **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
-**待修改**
-```
+### 5. 運行系統
+請按照以下順序輸入指令
+```bash
 python hourly_scheduler.py
 python analyze_crisis.py
+```
+
+另外開啟一個terminal
+```bash
 cd dashboard
 python app.py
 ```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
 
-### 5. 運行系統
+#### 以下代修改=============
 * **啟動爬蟲與分析排程器**
 ```bash
 python3 analyze_crisis.py
@@ -85,6 +94,7 @@ cd dashboard
 python3 app.py
 ```
 接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+#### =============
 
 ## ⚠️ 免責聲明
 本系統僅供國立政治大學校園研究、實習專案與公關趨勢監測使用。所擷取之數據僅作為內部決策輔助，請嚴格遵守相關社群平台（Meta / Threads）之使用規範與隱私條款，嚴禁將爬蟲數據用於非法窺探或商業營利。
