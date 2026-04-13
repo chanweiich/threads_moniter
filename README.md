@@ -69,10 +69,6 @@ cd hourly_crawler
 python hourly_scheduler.py
 cd ..
 python analyze_crisis.py
-```
-
-另外開啟一個terminal
-```bash
 cd dashboard
 python app.py
 ```
