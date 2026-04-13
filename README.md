@@ -65,7 +65,9 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ### 5. 運行系統
 請按照以下順序輸入指令
 ```bash
+cd hourly_crawler
 python hourly_scheduler.py
+cd ..
 python analyze_crisis.py
 ```
 
