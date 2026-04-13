@@ -64,6 +64,8 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 
 ### 5. 運行系統
 請按照以下順序輸入指令
+
+請在輸入python hourly_scheduler.py後，登入threads
 ```bash
 cd hourly_crawler
 python hourly_scheduler.py
