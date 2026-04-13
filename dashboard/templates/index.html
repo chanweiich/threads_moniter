@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads 危機監控儀表板 (NCCU)</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; border-radius: 12px; }
+        .card-header { background-color: #fff; border-bottom: 2px solid #f0f2f5; font-weight: bold; border-radius: 12px 12px 0 0 !important; }
+        .high-crisis { background-color: #fff0f0; border-left: 4px solid #dc3545; }
+        .mid-crisis { background-color: #fffaf0; border-left: 4px solid #ffc107; }
+        .low-crisis { background-color: #f0fff4; border-left: 4px solid #28a745; }
+        .btn-update { border-radius: 30px; padding: 10px 25px; font-weight: bold; }
+        .post-content { max-height: 80px; overflow-y: auto; font-size: 0.9em; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>📊 Threads 社群危機監控中心</h2>
+        <div class="d-flex align-items-center gap-3">
+            <div class="border rounded px-3 py-1 bg-white shadow-sm d-flex align-items-center">
+                <span class="me-3 fs-6">
+                    <strong>✨ Gemini:</strong> 
+                    {% if api_status.gemini == 'Healthy' %}
+                        <span class="badge bg-success">正常作動</span>
+                    {% elif api_status.gemini == 'RateLimited' %}
+                        <span class="badge bg-danger animate-pulse">限流冷卻中</span>
+                    {% else %}
+                        <span class="badge bg-secondary">待命中</span>
+                    {% endif %}
+                </span>
+                <span class="fs-6">
+                    <strong>🚀 Groq (Llama-3):</strong> 
+                    {% if api_status.groq == 'Active' %}
+                        <span class="badge bg-success animate-pulse">接管分析中</span>
+                    {% else %}
+                        <span class="badge bg-secondary">備援待命</span>
+                    {% endif %}
+                </span>
+            </div>
+            <button id="updateBtn" class="btn btn-primary btn-update" onclick="triggerUpdate()">🔄 即時更新數據</button>
+        </div>
+    </div>
+
+    <!-- 🔗 手動新增監控貼文 -->
+    <div class="card mb-4 shadow-sm border-0 bg-white" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-body bg-light">
+            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-link"></i> 🔗 手動新增監控貼文</h5>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                <input type="text" id="manualUrlInput" class="form-control border-start-0" placeholder="請貼上 Threads 貼文網址 (例如: https://www.threads.net/...)">
+                <button class="btn btn-primary px-4 fw-bold" type="button" onclick="submitManualPost()" id="manualSubmitBtn">開始監控</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔍 專題關鍵字搜尋與分析系统 -->
+    <div class="card mb-4 shadow-sm border-0 bg-white" style="border-radius: 12px; overflow: hidden;">
+        <div class="card-body bg-light">
+            <h5 class="fw-bold text-success mb-3"><i class="fas fa-search"></i> 🔍 專題關鍵字深度分析</h5>
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="fas fa-filter text-muted"></i></span>
+                <input type="text" id="keywordSearchInput" class="form-control border-start-0" placeholder="輸入想分析的校園議題 (例如: 作弊、宿舍、指南夜市...)">
+                <button class="btn btn-success px-4 fw-bold" type="button" onclick="searchKeyword()" id="keywordSearchBtn">深度分析</button>
+            </div>
+            <div id="searchStatusArea" class="mt-3 alert alert-success fw-bold" style="display: none; border-left: 5px solid #28a745;"></div>
+        </div>
+    </div>
+
+    <!-- ⚡ 分數跳升預警 -->
+    {% set escalated_posts = posts | selectattr("analysis.is_escalating", "equalto", true) | list %}
+    {% if escalated_posts %}
+    <div class="alert alert-danger shadow-sm mb-4" style="border-left: 5px solid #dc3545;">
+        <h5 class="fw-bold mb-2">⚡ 分數跳升預警 (突發炎上)</h5>
+        <ul class="mb-0">
+        {% for ep in escalated_posts %}
+            <li><a href="{{ ep.url }}" target="_blank" class="text-danger fw-bold text-decoration-none">{{ ep.content[:50] }}...</a> 
+                <span class="badge bg-danger ms-2">↑ 原分數: {{ ep.analysis.old_score }} ➡️ 新分數: {{ ep.analysis.crisis_score }}</span>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- 圖表區 -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card h-100">
+                <div class="card-header">危機指數分佈圖 (分數 1-10)</div>
+                <div class="card-body">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">整體情緒佔比</div>
+                <div class="card-body">
+                    <canvas id="sentimentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 動態文字雲 (預設隱藏，搜尋後顯示) -->
+    <div class="card mb-4 shadow-sm" id="wordcloudCard" style="display: none;">
+        <div class="card-header bg-white fw-bold"><i class="fas fa-cloud"></i> 專題核心文字雲</div>
+        <div class="card-body text-center">
+            <canvas id="wordcloudCanvas" width="800" height="300" style="width: 100%; max-width: 800px; height: 300px;"></canvas>
+        </div>
+    </div>
+
+    <!-- 表格區 -->
+    <div class="card">
+        <div class="card-header">監控貼文列表 (雙重排序：1. 危機指數降序 2. 發文時間降序)</div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="8%">分數</th>
+                            <th width="8%">情緒</th>
+                            <th width="10%">輿情走向</th>
+                            <th width="12%">發文時間</th>
+                            <th width="24%">AI 分析摘要</th>
+                            <th width="28%">原文內容節錄</th>
+                            <th width="10%">操作選項</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        {% set score = post.analysis.crisis_score %}
+                        <tr class="{% if score >= 7 %}high-crisis{% elif score >= 4 %}mid-crisis{% elif score == 0 %}bg-white{% else %}low-crisis{% endif %}">
+                            <td class="text-center fw-bold fs-5 
+                                {% if score >= 7 %}text-danger{% elif score >= 4 %}text-warning{% elif score == 0 %}text-secondary{% else %}text-success{% endif %}">
+                                {% if score == 0 %}-{% else %}{{ score }}{% endif %}
+                            </td>
+                            <td>
+                                {% if post.analysis.sentiment == '正面' %}
+                                    <span class="badge bg-success">正面</span>
+                                {% elif post.analysis.sentiment == '負面' %}
+                                    <span class="badge bg-danger">負面</span>
+                                {% elif post.analysis.sentiment == '-' %}
+                                    <span class="badge bg-secondary">序列中</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">中立</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if score >= 7 or post.trend_info %}
+                                    <span class="badge bg-danger mb-1" style="cursor: pointer" onclick="openModal('{{ post.url }}')"><i class="fas fa-fire"></i> 持續監控中 (點擊看趨勢)</span><br>
+                                    {% if post.trend_info %}
+                                        <span class="fw-bold fs-6">
+                                        {% if post.trend_info.trend in ['擴大中', '上升中 📈', '出現反彈聲浪'] %}
+                                            🔥 升溫中
+                                        {% elif post.trend_info.trend in ['已平息 ✅', '校方已平息情緒'] %}
+                                            🧊 冷卻中
+                                        {% else %}
+                                            {{ post.trend_info.trend }}
+                                        {% endif %}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted" style="font-size: 0.85em;">分析中...</span>
+                                    {% endif %}
+                                {% elif post.analysis.is_escalating %}
+                                    <span class="badge bg-warning text-dark"><i class="fas fa-fire"></i> 炎上預警</span>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong style="white-space: nowrap; color: #495057;">🕒 {{ post.time_display if post.time_display else '未知時間' }}</strong>
+                            </td>
+                            <td class="fw-bold {% if score == 0 %}text-muted fst-italic{% endif %}">
+                                {% if post.analysis.engine == 'Groq' %}
+                                    <span title="Groq Llama-3 備援引擎生成">🚀</span>
+                                {% elif post.analysis.engine == 'Gemini' %}
+                                    <span title="Gemini 引擎生成">✨</span>
+                                {% endif %}
+                                {{ post.analysis.summary }}
+                            </td>
+                            <td>
+                                {% if post.is_new %}
+                                    <span class="badge bg-success mb-1 mt-1"><i class="fas fa-plus-circle"></i> 🆕 新發現</span>
+                                {% endif %}
+                                {% if post.source == 'Manual_Report' %}
+                                    <span class="badge bg-danger mb-1 mt-1 animate-pulse"><i class="fas fa-bullhorn"></i> 🚨 人工緊急通報</span>
+                                {% endif %}
+                                {% if post.is_updated %}
+                                    <span class="badge bg-info text-dark mb-1 mt-1"><i class="fas fa-sync-alt"></i> 🔄 已更新數據</span><br>
+                                {% endif %}
+                                {% if post.risk_tag %}
+                                    <span class="badge bg-danger mb-1 mt-1 animate-pulse"><i class="fas fa-exclamation-circle"></i> ⚠️ 歷史敏感話題</span><br>
+                                {% endif %}
+                                <div class="post-content">{{ post.content }}</div>
+                            </td>
+                            <td>
+                                <a href="{{ post.url }}" target="_blank" class="btn btn-sm btn-outline-secondary mb-1">前往</a>
+                                <button class="btn btn-sm btn-outline-danger mb-1" onclick="deletePost('{{ post.url }}')">🗑️ 刪除</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        
+                        {% if not posts %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">目前尚無數據，請點擊右上角按鈕更新獲取新資料。</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 【新增】高危機貼文實時追蹤 Modal -->
+<div class="modal fade" id="trendModal" tabindex="-1" aria-labelledby="trendModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header bg-light">
+        <h5 class="modal-title fw-bold text-danger" id="trendModalLabel">🔥 高危機貼文實時追蹤</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          
+        <!-- 詞雲區塊 -->
+        <div class="mb-4">
+            <h6 class="fw-bold text-secondary">💬 即時負面關鍵詞雲 (最新留言萃取)</h6>
+            <div id="wordCloudContainer" class="d-flex flex-wrap gap-2 p-3 rounded" style="background-color: #f8f9fa; min-height: 60px;">
+                <!-- Labels dynamically injected here -->
+            </div>
+        </div>
+
+        <!-- PR 處置區塊 -->
+        <div class="row">
+            <div class="col-12 mt-2 mb-4">
+               <h6 class="fw-bold text-secondary">📋 政大公關處置分析報告 (Gemini 即時產出)</h6>
+               <div id="prAnalysisContainer" class="p-3 bg-light rounded text-dark fs-6 shadow-sm mt-2" style="border-left: 4px solid #dc3545;">
+                   <!-- PR Analysis injected here -->
+               </div>
+            </div>
+        </div>
+
+        <div class="row">
+           <div class="col-md-6 mb-3">
+               <h6 class="fw-bold text-secondary">📈 熱度走向 (按讚數與留言數)</h6>
+               <div style="height: 300px;">
+                   <canvas id="heatChart"></canvas>
+               </div>
+           </div>
+           <div class="col-md-6 mb-3">
+               <h6 class="fw-bold text-secondary">📉 情緒演變走向 (Gemini 負面分數 1-10)</h6>
+               <div style="height: 300px;">
+                   <canvas id="sentimentTrendChart"></canvas>
+               </div>
+           </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // 渲染主要圖表
+    const chartData = {{ chart_data | tojson | safe }};
+    
+    // 柱狀圖：危機指數
+    const ctxScore = document.getElementById('scoreChart').getContext('2d');
+    window.scoreChartInstance = new Chart(ctxScore, {
+        type: 'bar',
+        data: {
+            labels: ['1分', '2分', '3分', '4分', '5分', '6分', '7分', '8分', '9分', '10分'],
+            datasets: [{
+                label: '貼文數量',
+                data: chartData.scores,
+                backgroundColor: [
+                    '#28a745','#28a745','#28a745', // 1-3
+                    '#ffc107','#ffc107','#ffc107', // 4-6
+                    '#dc3545','#dc3545','#dc3545','#dc3545' // 7-10
+                ],
+                borderRadius: 4
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+
+    // 圓餅圖：情緒
+    const ctxSentiment = document.getElementById('sentimentChart').getContext('2d');
+    window.sentimentChartInstance = new Chart(ctxSentiment, {
+        type: 'doughnut',
+        data: {
+            labels: ['正面', '中立', '負面'],
+            datasets: [{
+                data: chartData.sentiments,
+                backgroundColor: ['#28a745', '#6c757d', '#dc3545'],
+                hoverOffset: 4
+            }]
+        }
+    });
+
+    // ==========================================
+    // 【新增】動態 Modal 追蹤圖表邏輯
+    // ==========================================
+    const tsData = {{ ts_by_url | tojson | safe }};
+    let heatChartInst = null;
+    let sentChartInst = null;
+    const trendModal = new bootstrap.Modal(document.getElementById('trendModal'));
+
+    function openModal(url) {
+        let records = tsData[url] || [];
+        if(records.length === 0) {
+            alert('此貼文目前尚無時序追蹤數據！程式可能正在背景搜集中，請稍後重試。');
+            return;
+        }
+        
+        let labels = records.map(r => new Date(r.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+        let likes = records.map(r => r.likes);
+        let replies = records.map(r => r.replies);
+        let scores = records.map(r => r.gemini_sentiment_score);
+        
+        // 渲染詞雲 (收集所有出現過的負面字，亦可只取最後一筆)
+        let latestRecord = records[records.length - 1];
+        let words = latestRecord.negative_words || [];
+        
+        // 渲染 PR 公關分析報告
+        let latestPrAnalysis = latestRecord.pr_analysis || "尚未產生公關處置分析報告...";
+        document.getElementById('prAnalysisContainer').innerText = latestPrAnalysis;
+        
+        let wordCloudHtml = words.map(w => `<span class="badge bg-dark fs-5 text-light px-3 py-2 shadow-sm">${w}</span>`).join('');
+        document.getElementById('wordCloudContainer').innerHTML = wordCloudHtml || '<span class="text-muted mt-2">目前暫無明顯負面關鍵字</span>';
+
+        // 渲染熱度圖 A
+        if(heatChartInst) heatChartInst.destroy();
+        heatChartInst = new Chart(document.getElementById('heatChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '按讚數', data: likes, borderColor: '#ffc107', backgroundColor: 'rgba(255, 193, 7, 0.1)', fill: true, tension: 0.3 },
+                    { label: '留言數', data: replies, borderColor: '#0dcaf0', backgroundColor: 'rgba(13, 202, 240, 0.1)', fill: true, tension: 0.3 }
+                ]
+            },
+            options: { maintainAspectRatio: false }
+        });
+
+        // 渲染情緒圖 B
+        if(sentChartInst) sentChartInst.destroy();
+        sentChartInst = new Chart(document.getElementById('sentimentTrendChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '負面情緒分數', data: scores, borderColor: '#dc3545', backgroundColor: 'rgba(220, 53, 69, 0.2)', fill: true, tension: 0.3, pointRadius: 5 }
+                ]
+            },
+            options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 10, ticks: { stepSize: 1 } } } }
+        });
+        
+        trendModal.show();
+    }
+
+    // 刪除貼文
+    function deletePost(url) {
+        if(confirm('確定要移除這篇貼文嗎？這將停止對該文的追蹤。')) {
+            fetch('/api/delete_post', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    location.reload(); 
+                } else {
+                    alert('刪除失敗：' + data.message);
+                }
+            })
+            .catch(err => alert("發生錯誤：" + err));
+        }
+    }
+
+    // 手動新增貼文
+    function submitManualPost() {
+        const input = document.getElementById('manualUrlInput');
+        const btn = document.getElementById('manualSubmitBtn');
+        const rawUrl = input.value.trim();
+        
+        let url = rawUrl.split('?')[0].replace('threads.com', 'threads.net');
+        if(url.endsWith('/')) { url = url.slice(0, -1); }
+        
+        if(!url.includes('threads.net') || !url.includes('@') || !url.includes('post')) {
+            alert('❌ 錯誤：請輸入有效的 Threads 貼文網址。');
+            return;
+        }
+        
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 擷取分析中...';
+        btn.disabled = true;
+        input.disabled = true;
+        
+        fetch('/api/add_manual_post', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: url })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                alert('✅ 貼文已成功納入監控系統！\\n目前危機評分為：' + data.score + ' 分');
+                location.reload();
+            } else {
+                alert('手動新增失敗：' + data.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                input.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert("發生錯誤：" + err);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            input.disabled = false;
+        });
+    }
+
+    // 專題關鍵字搜尋
+    function searchKeyword() {
+        const keyword = document.getElementById('keywordSearchInput').value.trim();
+        if (!keyword) {
+            alert('請輸入想分析的關鍵字！'); return;
+        }
+        
+        const btn = document.getElementById('keywordSearchBtn');
+        const origText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 實時同步中...';
+        btn.disabled = true;
+        
+        const statusArea = document.getElementById('searchStatusArea');
+        statusArea.style.display = 'block';
+        statusArea.innerHTML = '🔍 正在分析上下文與掃描實時情資...';
+        
+        // 1. 先執行 Intent 解析獲取擴充關鍵字
+        fetch('/api/search_intent?keyword=' + encodeURIComponent(keyword))
+            .then(res => res.json())
+            .then(intentData => {
+                if(intentData.status === 'success' && intentData.queries.length > 0) {
+                    const mappedStr = intentData.queries.join('、');
+                    statusArea.innerHTML = `🔍 正在為您搜尋關於「${mappedStr}」的即時情資...`;
+                }
+                
+                // 2. 發送混合搜尋請求
+                return fetch('/api/search?keyword=' + encodeURIComponent(keyword));
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+                
+                if (data.status === 'success') {
+                    // 更新狀態文字
+                    let newCount = Math.min(data.new_count || 0, data.posts.length);
+                    let historyCount = data.posts.length - newCount;
+                    statusArea.innerHTML = `✅ 已整合 ${historyCount} 篇歷史紀錄與 ${newCount} 篇即時情資，分析報表已更新。`;
+                    
+                    // 重繪表格
+                    const tbody = document.querySelector('table tbody');
+                    tbody.innerHTML = '';
+                    
+                    if (data.posts.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">目前查無「${keyword}」相關文章</td></tr>`;
+                    } else {
+                        data.posts.forEach(post => {
+                            let score = post.analysis?.crisis_score || 0;
+                            let rowClass = score >= 7 ? 'high-crisis' : (score >= 4 ? 'mid-crisis' : (score === 0 ? 'bg-white' : 'low-crisis'));
+                            let scoreColor = score >= 7 ? 'text-danger' : (score >= 4 ? 'text-warning' : (score === 0 ? 'text-secondary' : 'text-success'));
+                            let sentimentBadge = '';
+                            if (post.analysis?.sentiment === '正面') sentimentBadge = '<span class="badge bg-success">正面</span>';
+                            else if (post.analysis?.sentiment === '負面') sentimentBadge = '<span class="badge bg-danger">負面</span>';
+                            else sentimentBadge = '<span class="badge bg-secondary">中立</span>';
+                            
+                            tbody.innerHTML += `
+                                <tr class="${rowClass}">
+                                    <td class="text-center fw-bold fs-5 ${scoreColor}">${score === 0 ? '-' : score}</td>
+                                    <td>${sentimentBadge}</td>
+                                    <td class="text-center"><span class="text-muted">-</span></td>
+                                    <td><strong style="color: #495057;">🕒 ${post.time_display || '未知時間'}</strong></td>
+                                    <td class="fw-bold">${post.analysis?.summary || ''}</td>
+                                    <td>
+                                        <div class="post-content">${post.content}</div>
+                                    </td>
+                                    <td>
+                                        <a href="${post.url}" target="_blank" class="btn btn-sm btn-outline-secondary mb-1">前往</a>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    
+                    // 更新圖表
+                    if (data.chart_data && window.scoreChartInstance && window.sentimentChartInstance) {
+                        window.scoreChartInstance.data.datasets[0].data = data.chart_data.scores;
+                        window.scoreChartInstance.update();
+                        
+                        window.sentimentChartInstance.data.datasets[0].data = data.chart_data.sentiments;
+                        window.sentimentChartInstance.update();
+                    }
+                    
+                    // 更新文字雲
+                    const wcCard = document.getElementById('wordcloudCard');
+                    if (data.wordcloud && data.wordcloud.length > 0) {
+                        wcCard.style.display = 'block';
+                        
+                        // WordCloud2JS require canvas element
+                        WordCloud(document.getElementById('wordcloudCanvas'), {
+                            list: data.wordcloud,
+                            fontFamily: 'Inter, system-ui, sans-serif',
+                            shape: 'circle',
+                            backgroundColor: 'transparent',
+                            color: function(word, weight) {
+                                const colors = ['#0A2540', '#FF3B30', '#FF9500', '#34C759', '#007AFF', '#5856D6', '#E24C00'];
+                                return colors[(word.charCodeAt(0) + weight) % colors.length];
+                            },
+                            weightFactor: function (size) {
+                                return (size * 5) + 16;
+                            }
+                        });
+                    } else {
+                        wcCard.style.display = 'none';
+                    }
+                } else {
+                    alert('搜尋失敗: ' + data.message);
+                }
+            })
+            .catch(err => {
+                alert("發生錯誤：" + err);
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            });
+    }
+
+    // 觸發更新
+    function triggerUpdate() {
+        const btn = document.getElementById('updateBtn');
+        btn.disabled = true;
+        btn.innerText = "⏳ 爬取與分析中 (約需 1-2 分鐘)...";
+        
+        fetch('/api/scrape', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                btn.innerText = "重新載入頁面";
+            })
+            .catch(err => {
+                alert("發生錯誤：" + err);
+                btn.disabled = false;
+                btn.innerText = "🔄 即時更新數據";
+            });
+    }
+</script>
+</body>
+</html>

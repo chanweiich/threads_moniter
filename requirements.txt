@@ -1,0 +1,9 @@
+Flask
+groq
+playwright
+jieba
+beautifulsoup4
+python-dotenv
+pydantic
+google-generativeai
+google-genai

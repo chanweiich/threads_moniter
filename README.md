@@ -18,28 +18,83 @@
 ## 📦 安裝指南
 本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
 
-### 1. 建立並啟動虛擬環境 (.venv)
-請在專案根目錄中執行：
+請在終端機執行以下指令
+
+請選擇您想放置檔案的位置，如至於桌面 `C:\Users\user>Desktop`
+### 1. 下載本專案
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate  # Windows 系統請輸入 .venv\Scripts\activate
+git clone https://github.com/chanweiich/threads_moniter.git
+cd threads_moniter
 ```
 
-### 2. 安裝套件依賴與瀏覽器內核
+### 2. 建立並啟動虛擬環境 (.venv)
+請在專案根目錄中執行：
+
+`Mac`
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+`Windows`
+```bash
+py -m venv .venv
+.venv\Scripts\activate
+# 確保名稱一致(複製一份python.exe，命名為 python3.exe)
+copy .venv\Scripts\python.exe .venv\Scripts\python3.exe
+```
+
+### 3. 安裝套件依賴與瀏覽器內核
 ```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 3. 設定環境變數 (.env)
-請在根目錄建立 `.env` 檔案，寫入您的 Google Gemini API 金鑰：
+### 4. 設定環境變數 (.env)
+本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+
 ```ini
-GEMINI_API_KEY=請在此填入您的API_KEY
+GROQ_API_KEY=您的_Groq_API_金鑰
+GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
 
-### 4. 運行系統
-* **啟動爬蟲與分析排程器**：`python3 scheduler.py`
-* **啟動網頁戰情室 (Dashboard)**：進入 `dashboard` 資料夾並執行 `python3 app.py`，接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+> **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
+
+**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+
+### 5. 運行系統
+請按照以下順序輸入指令
+```bash
+python hourly_scheduler.py
+python analyze_crisis.py
+```
+
+另外開啟一個terminal
+```bash
+cd dashboard
+python app.py
+```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+
+#### 以下代修改=============
+* **啟動爬蟲與分析排程器**
+```bash
+python3 analyze_crisis.py
+python3 track_trends.py
+python3 scheduler.py
+```
+若未曾於電腦登入threads：
+
+彈出瀏覽視窗時，請在該視窗另開一分頁輸入threads.net，輸入帳號登入threads。
+
+* **啟動網頁戰情室 (Dashboard)**
+另外開啟一個terminal
+```bash
+cd dashboard
+python3 app.py
+```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+#### =============
 
 ## ⚠️ 免責聲明
 本系統僅供國立政治大學校園研究、實習專案與公關趨勢監測使用。所擷取之數據僅作為內部決策輔助，請嚴格遵守相關社群平台（Meta / Threads）之使用規範與隱私條款，嚴禁將爬蟲數據用於非法窺探或商業營利。
