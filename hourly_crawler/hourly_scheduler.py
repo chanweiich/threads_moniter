@@ -14,7 +14,7 @@ def main():
     print(f"[{datetime.datetime.now()}] 🕐 Threads 爬蟲啟動")
     print("=" * 50)
     
-    keywords = ["政大", "國立政治大學", "NCCU", "政大交流板"]
+    keywords = ["政大"]
     
     try:
         # 初始化資料庫 (如果表格不存在會自動建立)

@@ -3,9 +3,12 @@ SQLite 資料庫工具模組
 提供其他組員查詢 posts 表的便利函式
 """
 import sqlite3
+import os
 from datetime import datetime, timedelta
 
-DB_PATH = "threads_posts.db"
+# 取得專案根目錄 (hourly_crawler 的上層)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "threads_posts.db")
 
 
 def get_connection():

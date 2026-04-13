@@ -10,7 +10,9 @@ import re
 from datetime import datetime
 from playwright.async_api import async_playwright
 
-DB_PATH = "threads_posts.db"
+# 取得專案根目錄 (hourly_crawler 的上層)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "threads_posts.db")
 
 
 def parse_number_text(text):
@@ -179,7 +181,8 @@ async def scrape_threads_hourly(keywords):
     只抓取 24 小時內的貼文，不限數量
     """
     results = []
-    user_data_dir = os.path.join(os.getcwd(), "browser_data")
+    # browser_data 放在專案根目錄
+    user_data_dir = os.path.join(BASE_DIR, "browser_data")
     
     async with async_playwright() as p:
         print(f"[{datetime.now()}] 正在啟動瀏覽器...")
@@ -195,7 +198,7 @@ async def scrape_threads_hourly(keywords):
         page = await context.new_page()
         
         print("正在開啟 Threads 首頁...")
-        await page.goto("https://www.threads.net/", wait_until="domcontentloaded")
+        await page.goto("https://www.threads.com/", wait_until="domcontentloaded")
         
         # 等待頁面穩定
         await asyncio.sleep(5)
@@ -203,18 +206,35 @@ async def scrape_threads_hourly(keywords):
         
         await asyncio.sleep(2)
         
+        # 計算昨天的日期（用於 after_date 參數）
+        from datetime import timedelta
+        yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+        
         for keyword in keywords:
             print(f"\n========= 正在搜尋關鍵字：{keyword} =========")
-            search_url = f"https://www.threads.net/search?q={keyword}&filter=recent"
+            search_url = f"https://www.threads.com/search?after_date={yesterday}&q={keyword}&serp_type=default&hl=zh-tw"
+            print(f"   搜尋網址：{search_url}")
             await page.goto(search_url, wait_until="domcontentloaded")
             await asyncio.sleep(4)
             
-            # 大量捲動以載入更多貼文（確保抓到所有 24 小時內的貼文）
-            SCROLL_TIMES = 30  # 捲動次數
-            print(f"捲動載入貼文中... (共 {SCROLL_TIMES} 次)")
+            # 模擬人類滑鼠滾動行為
+            SCROLL_TIMES = 30
+            print(f"模擬滾動載入貼文中... (共 {SCROLL_TIMES} 次)")
+            
+            import random
             for i in range(SCROLL_TIMES):
-                await page.mouse.wheel(0, 2000)
-                await asyncio.sleep(1)
+                # 隨機滾動距離 (800-1500 像素)
+                scroll_distance = random.randint(800, 1500)
+                await page.mouse.wheel(0, scroll_distance)
+                
+                # 隨機等待時間 (0.5-1.5 秒)，模擬人類閱讀
+                wait_time = random.uniform(0.5, 1.5)
+                await asyncio.sleep(wait_time)
+                
+                # 偶爾停頓久一點 (模擬閱讀貼文)
+                if random.random() < 0.2:
+                    await asyncio.sleep(random.uniform(1, 2))
+                
                 if (i + 1) % 10 == 0:
                     print(f"   已捲動 {i + 1}/{SCROLL_TIMES} 次...")
 
@@ -293,17 +313,11 @@ async def scrape_threads_hourly(keywords):
                 return data;
             }''')
             
-            # Debug: 顯示抓到的資料
-            if posts_data:
-                print(f"   [DEBUG] 抓到 {len(posts_data)} 筆貼文")
-                print(f"   [DEBUG] 時間範例：{[p.get('time', '') for p in posts_data[:3]]}")
-                print(f"   [DEBUG] 互動數範例：{[(p.get('likes', ''), p.get('replies', ''), p.get('reposts', '')) for p in posts_data[:3]]}")
+            # 顯示抓到的資料
+            print(f"   抓到 {len(posts_data)} 筆貼文")
             
-            # 過濾只保留 24 小時內的貼文
-            TIME_LIMIT_DAYS = 1
-            filtered_posts = [p for p in posts_data if is_within_time_limit(p.get('time', ''), days=TIME_LIMIT_DAYS)]
-            print(f"針對關鍵字 '{keyword}' 擷取到 {len(filtered_posts)} 筆 24 小時內的貼文。")
-            results.extend(filtered_posts)
+            # Threads 的 after_date 參數已過濾日期，直接全部加入
+            results.extend(posts_data)
             
         await context.close()
     
@@ -326,8 +340,8 @@ async def scrape_threads_hourly(keywords):
 
 
 if __name__ == "__main__":
-    # 預設關鍵字 (與原程式相同)
-    keywords_to_search = ["政大", "國立政治大學", "NCCU", "政大交流板"]
+    # 關鍵字
+    keywords_to_search = ["政大"]
     
     # 初始化資料庫
     init_database()
