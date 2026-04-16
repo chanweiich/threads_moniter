@@ -22,7 +22,7 @@
 
 ### **`mac`** 
 
-1.下載本專案
+1. 下載本專案
 ```bash
 git clone https://github.com/chanweiich/threads_moniter.git
 cd threads_moniter
@@ -42,14 +42,14 @@ playwright install chromium
 
 4. 設定環境變數 (.env)
 
-本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+> 本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
 ```bash
 GROQ_API_KEY=您的_Groq_API_金鑰
 GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
 > **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
 
-**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 5. 設定 Mac 工作排程器
 ```
@@ -99,14 +99,14 @@ playwright install chromium
 
 4. 設定環境變數 (.env)
 
-本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+> 本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
 ```bash
 GROQ_API_KEY=您的_Groq_API_金鑰
 GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
 > **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
 
-**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 5. 設定 Windows 工作排程器
 - 開啟「工作排程器」(taskschd.msc)
