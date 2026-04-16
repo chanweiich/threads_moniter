@@ -115,7 +115,7 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 - 設定動作(請依照實際路徑修改)：
   - 程式：C:\Users\ggc\Desktop\threads_moniter\.venv\Scripts\python.exe
   - 引數：hourly_scheduler.py
-  - 起始位置：C:\Users\ggc\Desktop\threads_moniter
+  - 起始位置：C:\Users\ggc\Desktop\threads_moniter\hourly_crawler
 
 6.執行
 ```bash
