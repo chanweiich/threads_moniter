@@ -110,12 +110,14 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 
 5. 設定 Windows 工作排程器
 - 開啟「工作排程器」(taskschd.msc)
-- 點選「建立基本工作」
-- 設定觸發程序：每天 → 每隔 1 小時 重複
+- 右側列表，點選「建立基本工作」
+- 設定觸發程序：每天
 - 設定動作(請依照實際路徑修改)：
   - 程式：C:\Users\ggc\Desktop\threads_moniter\.venv\Scripts\python.exe
   - 引數：hourly_scheduler.py
   - 起始位置：C:\Users\ggc\Desktop\threads_moniter\hourly_crawler
+- 設定每隔 1 小時 重複
+  - 點選該項工作 > 觸發程序 > 編輯 > 進階設定 > 重複工作每隔: 一小時 > 持續時間為: 不限制
 
 6.執行
 ```bash
