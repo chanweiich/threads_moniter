@@ -16,7 +16,9 @@
 * **前端與數據視覺化**：原生 HTML/JS 搭配 `Chart.js` 及 Bootstrap
 
 ## 📦 安裝指南
-本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
+本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署
+
+若未曾登入過threads，請先登入：
 
 ### **`mac`** 
 
@@ -70,6 +72,7 @@ chmod +x setup_cron.sh
 cd dashboard
 python app.py
 ```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`
 
 ### **`Windows`**
 
@@ -113,6 +116,7 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 cd dashboard
 python app.py
 ```
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`
 
 請在終端機執行以下指令
 
