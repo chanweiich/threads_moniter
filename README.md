@@ -18,6 +18,93 @@
 ## 📦 安裝指南
 本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
 
+`mac`
+
+1.下載本專案
+```bash
+git clone https://github.com/chanweiich/threads_moniter.git
+cd threads_moniter
+
+2. 建立並啟動虛擬環境
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+3. 安裝依賴套件與瀏覽器
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
+
+4. 設定環境變數 (.env)
+##本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+```bash
+GROQ_API_KEY=您的_Groq_API_金鑰
+GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
+```
+
+5. 設定 Mac 工作排程器
+```
+# 1. 建立檔案
+nano setup_cron.sh
+# 2. 貼上內容並存檔
+PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PYTHON_PATH="$PROJECT_ROOT/.venv/bin/python"
+SCHEDULER_PATH="$PROJECT_ROOT/hourly_crawler/hourly_scheduler.py"
+(crontab -l 2>/dev/null; echo "0 * * * * $PYTHON_PATH $SCHEDULER_PATH") | crontab -
+echo "✅ Cron 任務已設定，每小時執行一次"
+# 3. 讓它可執行
+chmod +x setup_cron.sh
+# 4. 執行
+./setup_cron.sh
+```
+
+6. 執行
+```bash
+cd dashboard
+python app.py
+```
+
+`Windows`
+
+1.下載本專案
+```bash
+git clone https://github.com/chanweiich/threads_moniter.git
+cd threads_moniter
+
+2. 建立並啟動虛擬環境
+```bash
+py -m venv .venv
+.venv\Scripts\activate
+
+3. 安裝依賴套件與瀏覽器
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
+
+4. 設定環境變數 (.env)
+##本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+```bash
+GROQ_API_KEY=您的_Groq_API_金鑰
+GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
+```
+
+5. 設定 Windows 工作排程器
+開啟「工作排程器」(taskschd.msc)
+點選「建立基本工作」
+設定觸發程序：每天 → 每隔 1 小時 重複
+設定動作(請依照實際路徑修改)：
+程式：C:\Users\ggc\Desktop\threads_moniter\.venv\Scripts\python.exe
+引數：hourly_scheduler.py
+起始位置：C:\Users\ggc\Desktop\threads_moniter
+
+6.執行
+```bash
+cd dashboard
+python app.py
+```
+
 請在終端機執行以下指令
 
 請選擇您想放置檔案的位置，如至於桌面 `C:\Users\user>Desktop`
