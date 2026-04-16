@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request
 import json
 import os
 import subprocess
+import sys
 import threading
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
@@ -21,6 +22,22 @@ def get_db_connection():
     conn = sqlite3.connect(DB_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def get_python_executable():
+    """Return the correct Python executable for this environment."""
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Windows virtualenv path
+    win_path = os.path.join(project_root, ".venv", "Scripts", "python.exe")
+    # Mac/Linux virtualenv path
+    posix_path = os.path.join(project_root, ".venv", "bin", "python")
+
+    if os.path.exists(win_path):
+        return win_path
+    if os.path.exists(posix_path):
+        return posix_path
+    return sys.executable
+
 
 def parse_threads_time(time_str, content_str=""):
     now = datetime.now()
@@ -66,12 +83,13 @@ def parse_threads_time(time_str, content_str=""):
 
 def run_scraper_and_analyzer():
     try:
+        python_exec = get_python_executable()
         print("啟動小規模爬蟲...")
-        subprocess.run(["python3", "scrape_threads.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
+        subprocess.run([python_exec, "hourly_crawler/hourly_scraper.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
         print("啟動分析模組...")
-        subprocess.run(["python3", "analyze_crisis.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
+        subprocess.run([python_exec, "analyze_crisis.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
         print("啟動輿情追蹤模組...")
-        subprocess.run(["python3", "track_trends.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
+        subprocess.run([python_exec, "track_trends.py"], check=True, cwd=os.path.join(os.path.dirname(__file__), ".."))
         print("任務完成")
     except Exception as e:
         print(f"執行出錯: {e}")
@@ -118,11 +136,25 @@ def index():
             print(f"❌ 資料庫讀取錯誤: {e}")
 
     # --- 以下保持不變 (處理日期格式轉換、排序、圖表數據等) ---
-    trend_path = os.path.join(os.path.dirname(__file__), "..", "trend_data.json")
+    # 從SQLite讀取trend_data
     trend_data = {}
-    if os.path.exists(trend_path):
-        with open(trend_path, "r", encoding="utf-8") as f:
-            trend_data = json.load(f)
+    try:
+        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
+        cursor = conn.cursor()
+        cursor.execute("SELECT post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints FROM trend_analysis")
+        for row in cursor.fetchall():
+            post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints = row
+            trend_data[post_url] = {
+                "trend": trend,
+                "reasoning": reasoning,
+                "gemini_sentiment_score": gemini_sentiment_score,
+                "negative_words": json.loads(negative_words) if negative_words else [],
+                "pr_analysis": pr_analysis,
+                "top_3_complaints": json.loads(top_3_complaints) if top_3_complaints else []
+            }
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取trend_data錯誤: {e}")
             
     extracted_count = 0
     for item in data:
@@ -160,23 +192,38 @@ def index():
         "sentiments": [sentiment_distribution["正面"], sentiment_distribution["中立"], sentiment_distribution["負面"]]
     }
             
-    ts_path = os.path.join(os.path.dirname(__file__), "..", "time_series_data.json")
+    # 從SQLite讀取time_series_data
     time_series = []
-    if os.path.exists(ts_path):
-        with open(ts_path, "r", encoding="utf-8") as f:
-            time_series = json.load(f)
+    try:
+        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
+        cursor = conn.cursor()
+        cursor.execute("SELECT data FROM time_series ORDER BY date")
+        for row in cursor.fetchall():
+            data_str = row[0]
+            if data_str:
+                time_series.extend(json.loads(data_str))
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取time_series_data錯誤: {e}")
             
     ts_by_url = collections.defaultdict(list)
     for row in time_series:
         ts_by_url[row['url']].append(row)
         
     api_status = {"gemini": "Unknown", "groq": "Unknown", "last_updated": ""}
-    api_status_path = os.path.join(os.path.dirname(__file__), "api_status.json")
-    if os.path.exists(api_status_path):
-        try:
-            with open(api_status_path, "r", encoding="utf-8") as f:
-                api_status = json.load(f)
-        except: pass
+    # 從SQLite讀取api_status
+    try:
+        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
+        cursor = conn.cursor()
+        cursor.execute("SELECT service_name, status, last_checked FROM api_status")
+        for row in cursor.fetchall():
+            service_name, status, last_checked = row
+            api_status[service_name.lower()] = status
+            if service_name.lower() == "gemini" or service_name.lower() == "groq":
+                api_status["last_updated"] = last_checked
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取api_status錯誤: {e}")
             
     return render_template('index.html', posts=data, chart_data=chart_data, ts_by_url=dict(ts_by_url), api_status=api_status)
 
@@ -206,9 +253,55 @@ def search_intent():
     queries = get_search_queries(keyword)
     return jsonify({"status": "success", "queries": queries})
 
+def filter_by_date_range(posts, start_date_str=None, end_date_str=None):
+    """根據時間範圍篩選貼文"""
+    if not start_date_str and not end_date_str:
+        return posts
+    
+    filtered = []
+    
+    # 解析輸入的日期
+    start_dt = None
+    end_dt = None
+    
+    if start_date_str:
+        try:
+            start_dt = datetime.fromisoformat(start_date_str)
+        except:
+            pass
+    
+    if end_date_str:
+        try:
+            end_dt = datetime.fromisoformat(end_date_str)
+            # 設定為該天的 23:59:59 (以包含整個一天)
+            end_dt = end_dt.replace(hour=23, minute=59, second=59)
+        except:
+            pass
+    
+    for post in posts:
+        # 使用 parse_threads_time 將 post_date 轉換為絕對時間
+        post_dt = parse_threads_time(post.get('time', ''), post.get('content', ''))
+        
+        if not post_dt:
+            continue
+        
+        # 檢查是否在時間範圍內
+        # 注：如果 post_dt 只有日期部分（沒有時間），會以當天 00:00:00 計算
+        if start_dt and post_dt < start_dt:
+            continue
+        if end_dt and post_dt > end_dt:
+            continue
+        
+        filtered.append(post)
+    
+    return filtered
+
 @app.route('/api/search', methods=['GET'])
 def search_posts():
     keyword = request.args.get('keyword', '').strip()
+    start_date = request.args.get('start_date', '').strip()
+    end_date = request.args.get('end_date', '').strip()
+    
     if not keyword:
         return jsonify({"status": "error", "message": "請提供搜尋關鍵字"})
         
@@ -219,10 +312,7 @@ def search_posts():
     
     try:
         os.chdir("..")
-        venv_python = os.path.abspath(os.path.join(os.getcwd(), ".venv", "bin", "python3"))
-        if not os.path.exists(venv_python):
-            venv_python = "python3"
-            
+        venv_python = get_python_executable()
         print(f"啟動混合搜尋 (Hybrid Search): {search_queries}")
         result = subprocess.run([venv_python, "hybrid_search.py", *search_queries], capture_output=True, text=True)
         os.chdir("dashboard")
@@ -248,7 +338,7 @@ def search_posts():
         conn = get_db_connection()
         cursor = conn.cursor()
         query = """
-            SELECT p.url, p.author, p.content, p.likes, p.comments, p.time, p.post_date,
+            SELECT p.url, p.author, p.content, p.likes, p.comments, p.post_date,
                    a.summary, a.sentiment, a.crisis_score
             FROM posts p
             LEFT JOIN post_analysis a ON p.url = a.post_url
@@ -257,13 +347,26 @@ def search_posts():
         rows = cursor.fetchall()
         for row in rows:
             post = dict(row)
+            
+            # 【重點】計算 time_display
+            time_str = post.get("post_date", "")
+            dt = parse_threads_time(time_str, post.get("content", ""))
+            if dt:
+                time_display = dt.strftime('%Y/%m/%d')
+                timestamp = dt.timestamp()
+            else:
+                time_display = time_str if time_str else '日期不明'
+                timestamp = 0.0
+            
             data.append({
                 "url": post.get("url"),
                 "author": post.get("author", ""),
                 "content": post.get("content", ""),
                 "likes": post.get("likes", "0"),
                 "comments": post.get("comments", "0"),
-                "time": post.get("time", ""),
+                "time": post.get("post_date", ""),
+                "time_display": time_display,
+                "timestamp": timestamp,
                 "analysis": {
                     "summary": post.get("summary") or "",
                     "sentiment": post.get("sentiment") or "中立",
@@ -293,6 +396,9 @@ def search_posts():
         if match:
             filtered_posts.append(post)
             all_text_for_cloud += " " + post.get('content', '')
+    
+    # 【新增】時間範圍篩選
+    filtered_posts = filter_by_date_range(filtered_posts, start_date, end_date)
             
     if not filtered_posts:
         return jsonify({"status": "success", "posts": [], "wordcloud": [], "chart_data": None})
@@ -368,10 +474,7 @@ def add_manual_post():
         
     try:
         os.chdir("..")
-        venv_python = os.path.abspath(os.path.join(os.getcwd(), ".venv", "bin", "python3"))
-        if not os.path.exists(venv_python):
-            venv_python = "python3"
-            
+        venv_python = get_python_executable()
         print(f"手動執行單筆抓取 (使用直譯器: {venv_python}): {url}")
         
         result = subprocess.run([venv_python, "manual_add.py", url], capture_output=True, text=True)

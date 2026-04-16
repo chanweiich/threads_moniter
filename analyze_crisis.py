@@ -6,6 +6,7 @@ from google import genai
 import groq
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
+import sqlite3
 
 load_dotenv()
 
@@ -29,9 +30,24 @@ class BatchCrisisResponse(BaseModel):
     results: list[BatchItemAnalysis]
 
 def update_api_status(gemini_status: str, groq_status: str):
-    status = {"gemini": gemini_status, "groq": groq_status, "last_updated": datetime.now().isoformat()}
-    with open("dashboard/api_status.json", "w", encoding="utf-8") as f:
-        json.dump(status, f, ensure_ascii=False, indent=4)
+    import sqlite3
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    now = datetime.now().isoformat()
+    
+    # 更新或插入API狀態
+    cursor.execute("""
+        INSERT OR REPLACE INTO api_status (service_name, status, last_checked)
+        VALUES (?, ?, ?)
+    """, ("gemini", gemini_status, now))
+    
+    cursor.execute("""
+        INSERT OR REPLACE INTO api_status (service_name, status, last_checked)
+        VALUES (?, ?, ?)
+    """, ("groq", groq_status, now))
+    
+    conn.commit()
+    conn.close()
 
 def analyze_crisis():
     # if not os.environ.get("GEMINI_API_KEY"):
@@ -46,31 +62,89 @@ def analyze_crisis():
         
     groq_client = groq.Groq(api_key=groq_api_key)
 
-    try:
-        with open("threads_data.json", "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        print("找不到 threads_data.json")
+# 原本是從json取資料分析，改成sqlite
+#    try:
+#        with open("threads_data.json", "r", encoding="utf-8") as f:
+#            data = json.load(f)
+#    except FileNotFoundError:
+#        print("找不到 threads_data.json")
+#        return
+
+    # === sqlite資料庫讀取邏輯 ===
+    db_path = "threads_posts.db"
+    if not os.path.exists(db_path):
+        print(f"找不到資料庫 {db_path}，請確認爬蟲是否已執行")
         return
 
-    history_db = {}
-    if os.path.exists("history_db.json"):
-        try:
-            with open("history_db.json", "r", encoding="utf-8") as f:
-                history_db = json.load(f)
-        except: pass
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row  # 讓結果可以像字典一樣讀取
+    cursor = conn.cursor()
 
-    data.sort(key=lambda x: 0 if x.get('risk_tag') else 1)
+    # 抓取 posts 表中所有資料 (或是你可以根據需求篩選未處理過的)
+    cursor.execute("SELECT * FROM posts")
+    rows = cursor.fetchall()
+    data = [dict(row) for row in rows] # 轉成 list 格式以相容原有的分析邏輯
+    conn.close()
+    # ========================
+
+    # 從SQLite讀取history_db
+    history_db = {}
+    try:
+        conn = sqlite3.connect("threads_posts.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT key, data FROM history")
+        for row in cursor.fetchall():
+            key, data_str = row
+            if data_str:
+                history_db[key] = json.loads(data_str)
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取history_db錯誤: {e}")
+
+    #data.sort(key=lambda x: 0 if x.get('risk_tag') else 1)
+
+    # 按時間排序 (越新的貼文越先處理)
+    data.sort(key=lambda x: x.get('post_date', ''), reverse=True)
+
     print(f"開始全量分析，共 {len(data)} 筆貼文...")
     
     old_reports = {}
-    if os.path.exists("final_crisis_report.json"):
-        try:
-            with open("final_crisis_report.json", "r", encoding="utf-8") as f:
-                for rep in json.load(f):
-                    if "analysis" in rep:
-                        old_reports[rep['url']] = rep['analysis']
-        except: pass
+    #　替換為sqlite
+    #if os.path.exists("final_crisis_report.json"):
+    #    try:
+    #        with open("final_crisis_report.json", "r", encoding="utf-8") as f:
+    #            for rep in json.load(f):
+    #                if "analysis" in rep:
+    #                    old_reports[rep['url']] = rep['analysis']
+    #    except: pass
+
+    # === sqlite從資料庫讀取舊的分析報告 ===
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        # 檢查分析表是否存在
+        cursor.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='post_analysis'")
+        if cursor.fetchone()[0] == 1:
+            # 使用 JOIN 同時抓取分析結果與 posts 表中的讚數
+            # 這樣 old_reports 就會包含 likes 數據，供後續比對 is_escalating
+            query = """
+                SELECT pa.post_url, pa.summary, pa.sentiment, pa.crisis_score, p.likes 
+                FROM post_analysis pa
+                JOIN posts p ON pa.post_url = p.url
+            """
+            cursor.execute(query)
+            for row in cursor.fetchall():
+                old_reports[row['post_url']] = {
+                    "summary": row['summary'],
+                    "sentiment": row['sentiment'],
+                    "crisis_score": row['crisis_score'],
+                    "likes_numeric": parse_number_text(str(row['likes'])) # 關鍵：存入舊讚數
+                }
+        conn.close()
+    except Exception as e:
+        print(f"讀取舊報告時發生錯誤: {e}")
             
     # Step 1: Filter and assign placeholders
     results = [None] * len(data)
@@ -81,7 +155,7 @@ def analyze_crisis():
     for i, post in enumerate(data):
         url = post.get('url', str(i))
         new_likes = parse_number_text(post.get('likes', '0'))
-        new_replies = parse_number_text(post.get('replies', '0'))
+        new_replies = parse_number_text(post.get('comments', '0')) # 改用 comments
         
         is_escalating = False
         old_score = 0
@@ -114,9 +188,9 @@ def analyze_crisis():
         results[i] = placeholder
         batch_queue.append((i, post, is_escalating))
 
-    # Flush fast placeholders
-    with open("final_crisis_report.json", "w", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=4)
+    # Flush fast placeholders - removed JSON write, data now stored in SQLite
+    # with open("final_crisis_report.json", "w", encoding="utf-8") as f:
+    #     json.dump(results, f, ensure_ascii=False, indent=4)
 
     # Step 2: Process batch queue
     BATCH_SIZE = 5
@@ -207,7 +281,7 @@ def analyze_crisis():
                         if analysis.get('crisis_score', 0) > 4:
                             history_db[post.get('url')] = {
                                 "likes": parse_number_text(post.get('likes', '0')),
-                                "replies": parse_number_text(post.get('replies', '0')),
+                                "comments": parse_number_text(post.get('comments', '0')),
                                 "crisis_score": analysis['crisis_score'],
                                 "last_seen": datetime.now().isoformat()
                             }
@@ -240,29 +314,72 @@ def analyze_crisis():
                 post['analysis'] = {"summary": "分析失敗", "sentiment": "中立", "crisis_score": 1, "engine": "Failed"}
                 results[idx] = post
 
-        # Incremental File Write per batch
-        with open("final_crisis_report.json", "w", encoding="utf-8") as f:
-            json.dump(results, f, ensure_ascii=False, indent=4)
+        # Incremental File Write per batch - removed JSON write, data now stored in SQLite
+        # with open("final_crisis_report.json", "w", encoding="utf-8") as f:
+        #     json.dump(results, f, ensure_ascii=False, indent=4)
 
-    # 寫入最終清理檔
-    for post in data:
-        post.pop('needs_reanalysis', None)
-    with open("threads_data.json", "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    # 寫入最終清理檔 - removed JSON write, data now stored in SQLite
+    # for post in data:
+    #     post.pop('needs_reanalysis', None)
+    # with open("threads_data.json", "w", encoding="utf-8") as f:
+    #     json.dump(data, f, ensure_ascii=False, indent=4)
 
-    with open("history_db.json", "w", encoding="utf-8") as f:
-        json.dump(history_db, f, ensure_ascii=False, indent=4)
-        
-    watchlist = []
+    # 寫入 SQLite 數據庫
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    
+    # 更新 history 表
+    cursor.execute("DELETE FROM history")
+    for key, value in history_db.items():
+        cursor.execute("INSERT INTO history (key, data) VALUES (?, ?)", 
+                      (key, json.dumps(value)))
+    
+    # 更新 crisis_watchlist 表
+    cursor.execute("DELETE FROM crisis_watchlist")
     for r in results:
         if r and r.get('analysis', {}).get('crisis_score', 0) >= 7:
-            watchlist.append({
-                "url": r.get('url'),
-                "original_content": r.get('content', ''),
-                "original_sentiment": r.get('analysis', {}).get('sentiment', '中立')
-            })
-    with open("crisis_watchlist.json", "w", encoding="utf-8") as f:
-        json.dump(watchlist, f, ensure_ascii=False, indent=4)
+            cursor.execute("""
+                INSERT INTO crisis_watchlist (url, original_content, original_sentiment)
+                VALUES (?, ?, ?)
+            """, (
+                r.get('url'),
+                r.get('content', ''),
+                r.get('analysis', {}).get('sentiment', '中立')
+            ))
+    
+    conn.commit()
+    conn.close()
+
+    # === 將分析結果存入資料庫 post_analysis 表 ===
+    db_path = "threads_posts.db"  # 確保路徑與 hourly_scraper 一致
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    # 確保資料表存在
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS post_analysis (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        post_url TEXT UNIQUE,
+        summary TEXT,
+        sentiment TEXT,
+        crisis_score INTEGER,
+        analyzed_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    for post in results:
+        if post and 'analysis' in post:
+            ana = post['analysis']
+            # 使用 INSERT OR REPLACE 避免重複，並更新分析內容
+            cursor.execute("""
+            INSERT OR REPLACE INTO post_analysis (post_url, summary, sentiment, crisis_score)
+            VALUES (?, ?, ?, ?)
+            """, (post.get('url'), ana.get('summary'), ana.get('sentiment'), ana.get('crisis_score')))
+    
+    conn.commit()
+    conn.close()
+    print("✅ 分析結果已成功同步至 SQLite 資料庫 (post_analysis 表)")
+    # ===========================================
 
 if __name__ == "__main__":
     analyze_crisis()

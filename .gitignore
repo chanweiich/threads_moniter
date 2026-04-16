@@ -15,14 +15,9 @@ __pycache__/
 # OS Files
 .DS_Store
 
-# Scraper databases & telemetry artifacts
-threads_data.json
-history_db.json
-final_crisis_report.json
-crisis_watchlist.json
-trend_data.json
-time_series_data.json
-
 # Browser state & Logs
 browser_data/
-error_screenshot.png
+
+# 資料庫檔案
+#*.db
+#threads_posts.db

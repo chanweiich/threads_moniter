@@ -123,7 +123,7 @@ def init_database():
     
     conn.commit()
     conn.close()
-    print(f"✅ SQLite 資料庫已初始化：{DB_PATH}")
+    print(f"[OK] SQLite database initialized: {DB_PATH}")
 
 
 def save_to_database(posts_data, keywords):
@@ -131,11 +131,12 @@ def save_to_database(posts_data, keywords):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # 清空現有資料
-    cursor.execute('DELETE FROM posts')
-    print("🗑️ 已清空舊資料")
+    # 不要清空現有資料
+    #cursor.execute('DELETE FROM posts')
+    #print("🗑️ 已清空舊資料")
     
     new_posts = 0
+    updated_posts = 0
     current_time = datetime.now().isoformat()
     
     for post in posts_data:
@@ -145,26 +146,31 @@ def save_to_database(posts_data, keywords):
             
         likes = parse_number_text(post.get('likes', '0'))
         comments = parse_number_text(post.get('replies', '0'))
-        reposts = parse_number_text(post.get('reposts', '0'))
-        shares = 0  # Threads 目前無法直接抓取分享數
         
-        # 新增貼文
-        cursor.execute('''
-            INSERT INTO posts (url, author, content, post_date, likes, comments, reposts, shares, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            url,
-            post.get('author', 'Unknown'),
-            post.get('content', ''),
-            post.get('time', ''),
-            likes,
-            comments,
-            reposts,
-            shares,
-            current_time,
-            current_time
-        ))
-        new_posts += 1
+        # 使用 INSERT OR REPLACE 或是先檢查是否存在
+        # 這裡建議保留 created_at，只更新 likes, comments 和 updated_at
+        cursor.execute("SELECT id FROM posts WHERE url = ?", (url,))
+        row = cursor.fetchone()
+        
+        if row:
+            # 已經存在的貼文 -> 更新數據
+            cursor.execute('''
+                UPDATE posts 
+                SET likes = ?, comments = ?, updated_at = ?
+                WHERE url = ?
+            ''', (likes, comments, current_time, url))
+            updated_posts += 1
+        else:
+            # 新貼文 -> 插入
+            cursor.execute('''
+                INSERT INTO posts (url, author, content, post_date, likes, comments, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (url, post.get('author'), post.get('content'), post.get('time'), 
+                  likes, comments, current_time, current_time))
+            new_posts += 1
+            
+        # 【進階：存入歷史記錄表】
+        # cursor.execute('INSERT INTO stats_history (post_url, likes, comments, check_time) VALUES (?,?,?,?)')
     
     conn.commit()
     conn.close()
@@ -202,7 +208,7 @@ async def scrape_threads_hourly(keywords):
         
         # 等待頁面穩定
         await asyncio.sleep(5)
-        print("✅ 頁面已載入，開始搜尋...")
+        print("[OK] Page loaded, starting search...")
         
         await asyncio.sleep(2)
         
@@ -332,7 +338,7 @@ async def scrape_threads_hourly(keywords):
     # 存入資料庫
     stats = save_to_database(unique_results, keywords)
     
-    print(f"\n✅ 爬取完成！")
+    print(f"\n[OK] Scraping completed!")
     print(f"   - 總共擷取：{stats['total']} 筆")
     print(f"   - 新增貼文：{stats['new']} 筆")
     

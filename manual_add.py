@@ -1,6 +1,7 @@
 import sys
 import os
 import json
+import sqlite3
 import asyncio
 from datetime import datetime
 from pydantic import BaseModel
@@ -126,14 +127,17 @@ async def manual_add(url):
 
     post_data['analysis'] = {"summary": "處理中/待 AI 評分", "sentiment": "中立", "crisis_score": 0}
     
-    # --- 3. 實作非阻塞存檔 (Non-blocking Save/First Pass) ---
-    try:
-        with open("threads_data.json", "r", encoding="utf-8") as f:
-            t_data = json.load(f)
-    except:
-        t_data = []
-
-    t_data = [t for t in t_data if t.get('url') != post_data['url']]
+    # --- 3. 檢查重複並準備存檔 ---
+    # 從SQLite檢查是否已存在
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM posts WHERE url = ?", (post_data['url'],))
+    exists = cursor.fetchone()[0] > 0
+    conn.close()
+    
+    if exists:
+        print(f"⚠️  URL {post_data['url']} 已存在，跳過新增。")
+        return
 
     try:
         with open("nccu_risk_keywords.json", "r", encoding="utf-8") as f:
@@ -144,12 +148,29 @@ async def manual_add(url):
     post_data['risk_tag'] = any(rw in post_data['content'] for rw in risk_keywords)
     post_data['is_new'] = True
     post_data['last_updated'] = datetime.now().isoformat()
-    t_data.insert(0, post_data)
-
-    with open("threads_data.json", "w", encoding="utf-8") as f:
-        json.dump(t_data, f, ensure_ascii=False, indent=4)
+    
+    # 寫入SQLite數據庫
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT OR REPLACE INTO posts (url, author, content, post_date, likes, comments, reposts, shares, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        post_data['url'],
+        post_data['author'],
+        post_data['content'],
+        post_data['post_date'],
+        post_data.get('likes', 0),
+        post_data.get('comments', 0),
+        post_data.get('reposts', 0),
+        post_data.get('shares', 0),
+        post_data['created_at'],
+        post_data['updated_at']
+    ))
+    conn.commit()
+    conn.close()
         
-    print("✅ 數據已初步存檔！(預設分數: 0 待處理)")
+    print("✅ 數據已存入SQLite數據庫！(預設分數: 0 待處理)")
 
     # --- 4. 隔離 API 錯誤：啟動 Gemini 分析 ---
     analysis = post_data['analysis']
@@ -220,39 +241,67 @@ async def manual_add(url):
     post_data['source'] = "Manual_Report"
     post_data['status'] = "Critical"
 
-    # --- 5. 再次更新所有檔案 (Second Pass) ---
-    t_data = [t for t in t_data if t.get('url') != post_data['url']]
-    t_data.insert(0, post_data)
-    with open("threads_data.json", "w", encoding="utf-8") as f:
-        json.dump(t_data, f, ensure_ascii=False, indent=4)
+    # --- 5. 更新SQLite數據庫 ---
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    
+    # 更新posts表
+    cursor.execute("""
+        UPDATE posts SET 
+            updated_at = ?,
+            content = ?
+        WHERE url = ?
+    """, (
+        datetime.now().isoformat(),
+        post_data['content'],
+        post_data['url']
+    ))
+    
+    # 插入或更新post_analysis表
+    cursor.execute("""
+        INSERT OR REPLACE INTO post_analysis (post_url, summary, sentiment, crisis_score, analyzed_at)
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        post_data['url'],
+        analysis.get('summary'),
+        analysis.get('sentiment'),
+        analysis.get('crisis_score'),
+        datetime.now().isoformat()
+    ))
+    
+    conn.commit()
+    conn.close()
 
-    # 寫入 final_crisis_report.json
-    try:
-        with open("final_crisis_report.json", "r", encoding="utf-8") as f:
-            c_data = json.load(f)
-    except:
-        c_data = []
+    # 寫入crisis_reports表
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO crisis_reports (report_type, data, created_at)
+        VALUES (?, ?, ?)
+    """, (
+        "manual_report",
+        json.dumps(post_data),
+        datetime.now().isoformat()
+    ))
+    conn.commit()
+    conn.close()
 
-    c_data = [c for c in c_data if c.get('url') != post_data['url']]
-    c_data.insert(0, post_data)
-    with open("final_crisis_report.json", "w", encoding="utf-8") as f:
-        json.dump(c_data, f, ensure_ascii=False, indent=4)
-
-    # 強制追蹤 crisis_watchlist.json
-    try:
-        with open("crisis_watchlist.json", "r", encoding="utf-8") as f:
-            w_data = json.load(f)
-    except:
-        w_data = []
-        
-    if not any(w.get('url') == post_data['url'] for w in w_data):
-        w_data.append({
-            "url": post_data['url'],
-            "original_content": post_data['content'],
-            "original_sentiment": post_data['analysis']['sentiment']
-        })
-        with open("crisis_watchlist.json", "w", encoding="utf-8") as f:
-            json.dump(w_data, f, ensure_ascii=False, indent=4)
+    # 強制追蹤 crisis_watchlist
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM crisis_watchlist WHERE url = ?", (post_data['url'],))
+    exists = cursor.fetchone()[0] > 0
+    if not exists:
+        cursor.execute("""
+            INSERT INTO crisis_watchlist (url, original_content, original_sentiment)
+            VALUES (?, ?, ?)
+        """, (
+            post_data['url'],
+            post_data['content'],
+            post_data['analysis']['sentiment']
+        ))
+    conn.commit()
+    conn.close()
 
     # Output JSON string exactly for app.py to parse
     output_result = {

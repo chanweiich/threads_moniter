@@ -16,85 +16,113 @@
 * **前端與數據視覺化**：原生 HTML/JS 搭配 `Chart.js` 及 Bootstrap
 
 ## 📦 安裝指南
-本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署：
+本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署
 
-請在終端機執行以下指令
+若未曾登入過threads，請先登入：
 
-請選擇您想放置檔案的位置，如至於桌面 `C:\Users\user>Desktop`
-### 1. 下載本專案
+### **`mac`** 
+
+1. 下載本專案
 ```bash
 git clone https://github.com/chanweiich/threads_moniter.git
 cd threads_moniter
 ```
 
-### 2. 建立並啟動虛擬環境 (.venv)
-請在專案根目錄中執行：
-
-`Mac`
+2. 建立並啟動虛擬環境
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-`Windows`
-```bash
-py -m venv .venv
-.venv\Scripts\activate
-# 確保名稱一致(複製一份python.exe，命名為 python3.exe)
-copy .venv\Scripts\python.exe .venv\Scripts\python3.exe
-```
-
-### 3. 安裝套件依賴與瀏覽器內核
+3. 安裝依賴套件與瀏覽器
 ```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
-### 4. 設定環境變數 (.env)
-本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+4. 設定環境變數 (.env)
 
-```ini
+> 本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+```bash
 GROQ_API_KEY=您的_Groq_API_金鑰
 GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
-
 > **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
 
-**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
-### 5. 運行系統
-請按照以下順序輸入指令
-```bash
-python hourly_scheduler.py
-python analyze_crisis.py
+5. 設定 Mac 工作排程器
+```
+# 1. 建立檔案
+nano setup_cron.sh
+
+# 2. 貼上內容並存檔
+PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PYTHON_PATH="$PROJECT_ROOT/.venv/bin/python"
+SCHEDULER_PATH="$PROJECT_ROOT/hourly_crawler/hourly_scheduler.py"
+(crontab -l 2>/dev/null; echo "0 * * * * $PYTHON_PATH $SCHEDULER_PATH") | crontab -
+echo "✅ Cron 任務已設定，每小時執行一次"
+
+# 3. 讓它可執行
+chmod +x setup_cron.sh
+
+# 4. 執行
+./setup_cron.sh
 ```
 
-另外開啟一個terminal
+6. 執行
 ```bash
 cd dashboard
 python app.py
 ```
-接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`
 
-#### 以下代修改=============
-* **啟動爬蟲與分析排程器**
+### **`Windows`**
+
+1. 下載本專案
 ```bash
-python3 analyze_crisis.py
-python3 track_trends.py
-python3 scheduler.py
+git clone https://github.com/chanweiich/threads_moniter.git
+cd threads_moniter
 ```
-若未曾於電腦登入threads：
 
-彈出瀏覽視窗時，請在該視窗另開一分頁輸入threads.net，輸入帳號登入threads。
+2. 建立並啟動虛擬環境
+```bash
+py -m venv .venv
+.venv\Scripts\activate
+```
 
-* **啟動網頁戰情室 (Dashboard)**
-另外開啟一個terminal
+3. 安裝依賴套件與瀏覽器
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
+
+4. 設定環境變數 (.env)
+
+> 本系統目前優先採用 **Groq API (Llama 3)** 以確保極速分析與穩定性。請在專案根目錄建立 `.env` 檔案，寫入以下內容：
+```bash
+GROQ_API_KEY=您的_Groq_API_金鑰
+GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
+```
+> **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
+
+> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+
+5. 設定 Windows 工作排程器
+- 開啟「工作排程器」(taskschd.msc)
+- 點選「建立基本工作」
+- 設定觸發程序：每天 → 每隔 1 小時 重複
+- 設定動作(請依照實際路徑修改)：
+  - 程式：C:\Users\ggc\Desktop\threads_moniter\.venv\Scripts\python.exe
+  - 引數：hourly_scheduler.py
+  - 起始位置：C:\Users\ggc\Desktop\threads_moniter\hourly_crawler
+
+6.執行
 ```bash
 cd dashboard
-python3 app.py
+python app.py
 ```
-接著在瀏覽器中開啟 `http://127.0.0.1:5000`。
-#### =============
+接著在瀏覽器中開啟 `http://127.0.0.1:5000`
 
 ## ⚠️ 免責聲明
 本系統僅供國立政治大學校園研究、實習專案與公關趨勢監測使用。所擷取之數據僅作為內部決策輔助，請嚴格遵守相關社群平台（Meta / Threads）之使用規範與隱私條款，嚴禁將爬蟲數據用於非法窺探或商業營利。

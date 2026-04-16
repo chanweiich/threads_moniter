@@ -1,0 +1,43 @@
+[2026-04-16 18:01:28,391] INFO - ============================================================
+[2026-04-16 18:01:28,392] INFO - 🕐 Threads 每小時數據爬取排程器已啟動
+[2026-04-16 18:01:28,745] INFO - 💻 作業系統: Windows 11
+[2026-04-16 18:01:28,745] INFO - 🐍 Python: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]
+[2026-04-16 18:01:28,746] INFO - 設定：
+[2026-04-16 18:01:28,746] INFO -   - 每小時爬取新數據 → threads_posts.db
+[2026-04-16 18:01:28,746] INFO -   - 每小時運行趨勢分析 → trend_analysis表
+[2026-04-16 18:01:28,774] INFO -   - 日誌檔案：C:\Users\user\Desktop\秘書處AI實習\threads_moniter\logs\hourly_scheduler.log
+[2026-04-16 18:01:28,775] INFO -   - 虛擬環境：自動偵測 (Windows/Mac/Linux 相容)
+[2026-04-16 18:01:28,775] INFO - ============================================================
+[2026-04-16 18:01:28,775] INFO - 🚀 啟動每小時數據爬取...
+[2026-04-16 18:02:35,845] INFO - ✅ 數據爬取完成
+[2026-04-16 18:02:35,848] INFO - 輸出: h?after_date=2026-04-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 13 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：13 筆
+   - 新增貼文：3 筆
+
+[2026-04-16 18:02:35,848] INFO - 📊 啟動每小時趨勢分析...
+[2026-04-16 18:02:38,705] INFO - ✅ 趨勢分析完成
+[2026-04-16 18:02:38,706] INFO - 😴 等待下一個小時...
+[2026-04-16 19:02:38,749] INFO - 🚀 啟動每小時數據爬取...
+[2026-04-16 19:02:57,295] ERROR - ❌ 數據爬取失敗 (返回碼: 1)
+[2026-04-16 19:02:57,296] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-04-16 19:02:57,297] INFO - 📊 啟動每小時趨勢分析...
+[2026-04-16 19:03:02,031] INFO - ✅ 趨勢分析完成
+[2026-04-16 19:03:02,032] INFO - 😴 等待下一個小時...

@@ -29,19 +29,38 @@ def parse_number_text(text):
     except: return 0
 
 async def track_trends():
-    if not os.path.exists("crisis_watchlist.json"):
-        print("找不到 crisis_watchlist.json，無法進行追蹤。")
-        return
-        
+    # 從 SQLite 讀取 crisis_watchlist
     watchlist_urls = {}
-    if os.path.exists("crisis_watchlist.json"):
-        with open("crisis_watchlist.json", "r", encoding="utf-8") as f:
-            for item in json.load(f):
-                watchlist_urls[item['url']] = item
+    try:
+        import sqlite3
+        conn = sqlite3.connect("threads_posts.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT url, original_content, original_sentiment FROM crisis_watchlist")
+        for row in cursor.fetchall():
+            url, original_content, original_sentiment = row
+            watchlist_urls[url] = {
+                'url': url,
+                'original_content': original_content,
+                'original_sentiment': original_sentiment
+            }
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取 crisis_watchlist 錯誤: {e}")
+        return
 
-    if os.path.exists("history_db.json"):
-        with open("history_db.json", "r", encoding="utf-8") as f:
-            history_db = json.load(f)
+    # 從 SQLite 讀取 history_db
+    if watchlist_urls:  # 只在有 watchlist 時才檢查歷史數據
+        try:
+            conn = sqlite3.connect("threads_posts.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT key, data FROM history")
+            history_db = {}
+            for row in cursor.fetchall():
+                key, data_str = row
+                if data_str:
+                    history_db[key] = json.loads(data_str)
+            conn.close()
+            
             now = datetime.now()
             for url, data in history_db.items():
                 if data.get('crisis_score', 0) > 4:
@@ -55,7 +74,9 @@ async def track_trends():
                             'original_sentiment': '負面',
                             'original_content': '歷史監測高分貼文 (7天內 >4分)'
                         }
-                        
+        except Exception as e:
+            print(f"❌ 讀取 history_db 錯誤: {e}")
+    
     watchlist = list(watchlist_urls.values())
         
     if not watchlist:
@@ -64,20 +85,36 @@ async def track_trends():
         
     user_data_dir = os.path.join(os.getcwd(), "browser_data")
     
-    # 讀取既有 trend_data 和 time_series_data
+    # 從 SQLite 讀取 trend_results 和 time_series_data
     trend_results = {}
-    if os.path.exists("trend_data.json"):
-        try:
-            with open("trend_data.json", "r", encoding="utf-8") as f:
-                trend_results = json.load(f)
-        except: pass
-
     time_series_data = []
-    if os.path.exists("time_series_data.json"):
-        try:
-            with open("time_series_data.json", "r", encoding="utf-8") as f:
-                time_series_data = json.load(f)
-        except: pass
+    
+    try:
+        conn = sqlite3.connect("threads_posts.db")
+        cursor = conn.cursor()
+        
+        # 讀取 trend_analysis 表
+        cursor.execute("SELECT post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints FROM trend_analysis")
+        for row in cursor.fetchall():
+            trend_results[row[0]] = {
+                "trend": row[1],
+                "reasoning": row[2],
+                "gemini_sentiment_score": row[3],
+                "negative_words": json.loads(row[4]) if row[4] else [],
+                "pr_analysis": row[5],
+                "top_3_complaints": json.loads(row[6]) if row[6] else []
+            }
+        
+        # 讀取 time_series 表
+        cursor.execute("SELECT data FROM time_series ORDER BY date DESC LIMIT 1")
+        row = cursor.fetchone()
+        if row and row[0]:
+            time_series_data = json.loads(row[0])
+        
+        conn.close()
+    except Exception as e:
+        print(f"❌ 讀取趨勢數據錯誤: {e}")
+        # 如果讀取失敗，使用空的數據結構
 
     client = genai.Client()
     
@@ -126,23 +163,27 @@ async def track_trends():
             likes_num = parse_number_text(extract_digits(page_data['likes']))
             replies_num = parse_number_text(extract_digits(page_data['replies']))
             
-            # 將最新抓取的互動數據回寫至 threads_data.json
+            # 將最新抓取的互動數據回寫至 SQLite 資料庫
             try:
-                if os.path.exists("threads_data.json"):
-                    with open("threads_data.json", "r", encoding="utf-8") as f:
-                        t_data = json.load(f)
-                    for t in t_data:
-                        if t.get('url') == url:
-                            t['likes'] = page_data['likes']
-                            t['replies'] = page_data['replies']
-                            t['likes_numeric'] = likes_num
-                            t['replies_numeric'] = replies_num
-                            t['last_updated'] = datetime.now().isoformat()
-                            break
-                    with open("threads_data.json", "w", encoding="utf-8") as f:
-                        json.dump(t_data, f, ensure_ascii=False, indent=4)
+                conn = sqlite3.connect("threads_posts.db")
+                cursor = conn.cursor()
+                cursor.execute("""
+                    UPDATE posts 
+                    SET likes = ?, comments = ?, likes_numeric = ?, comments_numeric = ?, last_updated = ?
+                    WHERE url = ?
+                """, (
+                    page_data['likes'],
+                    page_data['replies'],  # comments field in DB
+                    likes_num,
+                    replies_num,
+                    datetime.now().isoformat(),
+                    url
+                ))
+                conn.commit()
+                conn.close()
+                print(f"✅ 已更新 {url} 的互動數據至 SQLite")
             except Exception as e:
-                print(f"⚠️ 無法更新 threads_data.json 數值: {e}")
+                print(f"⚠️ 無法更新 SQLite 數據: {e}")
             
             comments = page_data['comments']
             combined_comments = "\\n".join(comments[:25]) if comments else "無擷取到任何留言資訊"
@@ -206,11 +247,39 @@ async def track_trends():
             
         await context.close()
         
-    with open("trend_data.json", "w", encoding="utf-8") as f:
-        json.dump(trend_results, f, ensure_ascii=False, indent=4)
-        
-    with open("time_series_data.json", "w", encoding="utf-8") as f:
-        json.dump(time_series_data, f, ensure_ascii=False, indent=4)
+    # 寫入SQLite數據庫
+    import sqlite3
+    conn = sqlite3.connect("threads_posts.db")
+    cursor = conn.cursor()
+    
+    # 清空並寫入trend_analysis表
+    cursor.execute("DELETE FROM trend_analysis")
+    for url, data in trend_results.items():
+        cursor.execute("""
+            INSERT INTO trend_analysis (post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            url,
+            data.get("trend"),
+            data.get("reasoning"),
+            data.get("gemini_sentiment_score"),
+            json.dumps(data.get("negative_words", [])),
+            data.get("pr_analysis"),
+            json.dumps(data.get("top_3_complaints", []))
+        ))
+    
+    # 清空並寫入time_series表
+    cursor.execute("DELETE FROM time_series")
+    cursor.execute("""
+        INSERT INTO time_series (date, data)
+        VALUES (?, ?)
+    """, (
+        datetime.datetime.now().strftime("%Y-%m-%d"),
+        json.dumps(time_series_data)
+    ))
+    
+    conn.commit()
+    conn.close()
         
     print(f"\\n🎯 追蹤任務結束！已更新趨勢庫與時序資料。")
 

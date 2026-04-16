@@ -135,15 +135,28 @@ if __name__ == "__main__":
         # Scrape all keywords
         results = asyncio.run(main(keywords))
         
-        # Open Database
-        try:
-            with open("threads_data.json", "r", encoding="utf-8") as f:
-                existing_list = json.load(f)
-                existing_data = {item['url']: item for item in existing_list}
-        except:
-            existing_list = []
-            existing_data = {}
-    
+        # 從SQLite讀取現有數據
+        import sqlite3
+        conn = sqlite3.connect("threads_posts.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT url, author, content, post_date, likes, comments, reposts, shares, created_at, updated_at FROM posts")
+        existing_data = {}
+        for row in cursor.fetchall():
+            url = row[0]
+            existing_data[url] = {
+                'url': row[0],
+                'author': row[1],
+                'content': row[2],
+                'post_date': row[3],
+                'likes': row[4],
+                'comments': row[5],
+                'reposts': row[6],
+                'shares': row[7],
+                'created_at': row[8],
+                'updated_at': row[9]
+            }
+        conn.close()
+
         try:
             with open("nccu_risk_keywords.json", "r", encoding="utf-8") as f:
                 risk_keywords = json.load(f)
@@ -185,12 +198,31 @@ if __name__ == "__main__":
                 item['needs_reanalysis'] = True
                 item['is_new'] = True
                 item['last_updated'] = current_time
-                existing_list.insert(0, item)
                 existing_data[url] = item
                 new_posts_count += 1
     
-        with open("threads_data.json", "w", encoding="utf-8") as f:
-            json.dump(existing_list, f, ensure_ascii=False, indent=4)
+        # 寫入SQLite數據庫
+        conn = sqlite3.connect("threads_posts.db")
+        cursor = conn.cursor()
+        for url, item in existing_data.items():
+            cursor.execute("""
+                INSERT OR REPLACE INTO posts (url, author, content, post_date, likes, comments, reposts, shares, created_at, updated_at, needs_reanalysis)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                item['url'],
+                item['author'],
+                item['content'],
+                item['post_date'],
+                item.get('likes', 0),
+                item.get('comments', 0),
+                item.get('reposts', 0),
+                item.get('shares', 0),
+                item.get('created_at', current_time),
+                item.get('updated_at', current_time),
+                1 if item.get('needs_reanalysis') else 0
+            ))
+        conn.commit()
+        conn.close()
             
         venv_python = os.path.abspath(os.path.join(os.getcwd(), ".venv", "bin", "python3"))
         if not os.path.exists(venv_python):
