@@ -47,6 +47,9 @@ playwright install chromium
 GROQ_API_KEY=您的_Groq_API_金鑰
 GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
+> **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
+
+**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 5. 設定 Mac 工作排程器
 ```
@@ -101,6 +104,9 @@ playwright install chromium
 GROQ_API_KEY=您的_Groq_API_金鑰
 GEMINI_API_KEY=您的_Gemini_API_金鑰 (備援用)
 ```
+> **🔑 取得 API Key**：您可以前往 [Groq Console](https://console.groq.com/keys) 免費註冊並取得金鑰。
+
+**🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
 
 5. 設定 Windows 工作排程器
 - 開啟「工作排程器」(taskschd.msc)
