@@ -15,6 +15,29 @@
 * **AI 分析決策**：`Google Gemini 2.5 Pro / Flash` (透過 `google-genai` 與 Pydantic 結構解析)
 * **前端與數據視覺化**：原生 HTML/JS 搭配 `Chart.js` 及 Bootstrap
 
+## 專案架構
+```
+threads_moniter/
+├── .gitignore
+├── README.md                 
+├── requirements.txt          # Python 依賴套件
+├── logs/                     # 排程器與模組日誌
+├── threads_posts.db          # SQLite 資料庫
+├── analyze_crisis.py         # 危機分析 AI 模組
+├── track_trends.py           # 輿情 / 趨勢分析模組
+├── manual_add.py             # 手動單篇網址補抓模組
+├── hybrid_search.py          # 混合搜尋 / 即時小型爬取模組
+├── dashboard/                
+│   ├── app.py                # 儀表板入口、資料讀取與控制介面
+|   └── templates/  
+│       └── index.html        # 前端 HTML 模板
+└── hourly_crawler/           # 排程與爬蟲模組
+    ├── hourly_scheduler.py   # 定時執行器，負責排程呼叫爬蟲與分析
+    ├── hourly_scraper.py     # 每次爬取 Threads 貼文的核心爬蟲邏輯
+    ├── db_utils.py           # SQLite 資料讀取工具函式
+    └── READme.md             # hourly_crawler 子專案說明
+```
+
 ## 📦 安裝指南
 本專案依賴嚴格的 Python 隔離環境運行，請按照以下步驟部署
 
