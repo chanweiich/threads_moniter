@@ -81,6 +81,55 @@ def parse_threads_time(time_str, content_str=""):
         
     return None
 
+
+def get_actual_post_time(time_str, reference_datetime=None):
+    if not time_str:
+        return None
+    if not reference_datetime:
+        reference_datetime = datetime.now()
+
+    time_str = time_str.strip().lower()
+    
+    match = re.search(r'^(\d+)\s*天', time_str)
+    if match:
+        return reference_datetime - timedelta(days=int(match.group(1)))
+
+    match = re.search(r'^(\d+)\s*(h|小時)', time_str)
+    if match:
+        return reference_datetime - timedelta(hours=int(match.group(1)))
+
+    match = re.search(r'^(\d+)\s*(m|分鐘)', time_str)
+    if match:
+        return reference_datetime - timedelta(minutes=int(match.group(1)))
+
+    match = re.search(r'^(\d+)\s*(s|秒)', time_str)
+    if match:
+        return reference_datetime - timedelta(seconds=int(match.group(1)))
+
+    match = re.search(r'^(\d+)\s*(w|週)', time_str)
+    if match:
+        return reference_datetime - timedelta(weeks=int(match.group(1)))
+
+    match = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', time_str)
+    if match:
+        try:
+            return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        except:
+            return None
+
+    try:
+        parts = time_str.split('/')
+        if len(parts) == 3:
+            return datetime.strptime(time_str, "%m/%d/%y")
+        elif len(parts) == 2:
+            dt = datetime.strptime(time_str, "%m/%d")
+            return dt.replace(year=reference_datetime.year)
+    except:
+        pass
+
+    return None
+
+
 def run_scraper_and_analyzer():
     try:
         python_exec = get_python_executable()
@@ -105,7 +154,7 @@ def index():
             # 根據你提供的資料表結構進行查詢
             query = """
                 SELECT p.url, p.author, p.content, p.likes, p.comments, 
-                       p.reposts, p.shares, p.post_date,
+                       p.reposts, p.shares, p.post_date, p.created_at,
                        a.summary, a.sentiment, a.crisis_score
                 FROM posts p
                 LEFT JOIN post_analysis a ON p.url = a.post_url
@@ -115,15 +164,40 @@ def index():
             
             for row in rows:
                 post = dict(row)
+                created_at = post.get("created_at")
+                actual_post_dt = None
+                if created_at:
+                    try:
+                        actual_post_dt = datetime.fromisoformat(created_at)
+                    except:
+                        actual_post_dt = None
+
+                real_post_time = get_actual_post_time(post.get("post_date", ""), actual_post_dt)
+                if real_post_time:
+                    real_post_time_display = real_post_time.strftime('%Y/%m/%d %H:%M')
+                else:
+                    real_post_time_display = post.get("post_date", "") or '日期不明'
+
+                content_str = post.get("content", "") or ""
+                author_str = post.get("author", "") or ""
+                has_reply_marker = bool(re.search(r'正在回覆@|Replying to @', content_str))
+                content_starts_with_other = (
+                    bool(author_str) and
+                    bool(content_str.strip()) and
+                    not content_str.strip().startswith(author_str)
+                )
+                is_reply = has_reply_marker or content_starts_with_other
                 item = {
                     "url": post.get("url"),
                     "author": post.get("author", "未知帳號"),
-                    "content": post.get("content", ""),
+                    "content": content_str,
                     "likes": post.get("likes") or 0,
                     "comments": post.get("comments") or 0,
                     "reposts": post.get("reposts") or 0,
                     "shares": post.get("shares") or 0,
-                    "time": post.get("post_date", ""),  # 將資料庫的 post_date 映射到前端的 time
+                    "time": post.get("post_date", ""),
+                    "real_post_time_display": real_post_time_display,
+                    "is_reply": is_reply,
                     "analysis": {
                         "summary": post.get("summary") or "分析中...",
                         "sentiment": post.get("sentiment") or "中立",
@@ -136,11 +210,15 @@ def index():
             print(f"❌ 資料庫讀取錯誤: {e}")
 
     # --- 以下保持不變 (處理日期格式轉換、排序、圖表數據等) ---
-    # 從SQLite讀取trend_data
+    # 從SQLite讀取trend_data（沿用前面已開啟的連線）
     trend_data = {}
+    time_series = []
+    api_status = {"gemini": "Unknown", "groq": "Unknown", "last_updated": ""}
+    overall_summary = None
     try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
+        conn = get_db_connection()
         cursor = conn.cursor()
+
         cursor.execute("SELECT post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints FROM trend_analysis")
         for row in cursor.fetchall():
             post_url, trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints = row
@@ -152,9 +230,31 @@ def index():
                 "pr_analysis": pr_analysis,
                 "top_3_complaints": json.loads(top_3_complaints) if top_3_complaints else []
             }
+
+        cursor.execute("SELECT data FROM time_series ORDER BY date")
+        for row in cursor.fetchall():
+            data_str = row[0]
+            if data_str:
+                time_series.extend(json.loads(data_str))
+
+        cursor.execute("SELECT service_name, status, last_checked FROM api_status")
+        for row in cursor.fetchall():
+            service_name, status, last_checked = row
+            api_status[service_name.lower()] = status
+            if service_name.lower() in ("gemini", "groq"):
+                api_status["last_updated"] = last_checked
+
+        try:
+            cursor.execute("SELECT summary_text, generated_at FROM overall_summary ORDER BY id DESC LIMIT 1")
+            row = cursor.fetchone()
+            if row:
+                overall_summary = {"text": row[0], "generated_at": row[1]}
+        except:
+            pass
+
         conn.close()
     except Exception as e:
-        print(f"❌ 讀取trend_data錯誤: {e}")
+        print(f"❌ 讀取附加資料錯誤: {e}")
             
     extracted_count = 0
     for item in data:
@@ -191,41 +291,17 @@ def index():
         "scores": list(score_distribution.values()),
         "sentiments": [sentiment_distribution["正面"], sentiment_distribution["中立"], sentiment_distribution["負面"]]
     }
-            
-    # 從SQLite讀取time_series_data
-    time_series = []
-    try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
-        cursor = conn.cursor()
-        cursor.execute("SELECT data FROM time_series ORDER BY date")
-        for row in cursor.fetchall():
-            data_str = row[0]
-            if data_str:
-                time_series.extend(json.loads(data_str))
-        conn.close()
-    except Exception as e:
-        print(f"❌ 讀取time_series_data錯誤: {e}")
-            
+
     ts_by_url = collections.defaultdict(list)
     for row in time_series:
         ts_by_url[row['url']].append(row)
-        
-    api_status = {"gemini": "Unknown", "groq": "Unknown", "last_updated": ""}
-    # 從SQLite讀取api_status
-    try:
-        conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), "..", "threads_posts.db"))
-        cursor = conn.cursor()
-        cursor.execute("SELECT service_name, status, last_checked FROM api_status")
-        for row in cursor.fetchall():
-            service_name, status, last_checked = row
-            api_status[service_name.lower()] = status
-            if service_name.lower() == "gemini" or service_name.lower() == "groq":
-                api_status["last_updated"] = last_checked
-        conn.close()
-    except Exception as e:
-        print(f"❌ 讀取api_status錯誤: {e}")
             
-    return render_template('index.html', posts=data, chart_data=chart_data, ts_by_url=dict(ts_by_url), api_status=api_status)
+    if not os.environ.get('GROQ_API_KEY') and not os.environ.get('GEMINI_API_KEY'):
+        summary_text = "尚未設定 LLM API Key，摘要功能將於啟用後自動生成。"
+    else:
+        summary_text = "系統已啟用 LLM 摘要功能，將於下一次資料更新時產生本期間摘要。"
+
+    return render_template('index.html', posts=data, chart_data=chart_data, ts_by_url=dict(ts_by_url), api_status=api_status, summary_text=summary_text, overall_summary=overall_summary)
 
 def get_search_queries(keyword):
     associations = {
@@ -253,47 +329,76 @@ def search_intent():
     queries = get_search_queries(keyword)
     return jsonify({"status": "success", "queries": queries})
 
+VIRAL_ENGAGEMENT_THRESHOLD = 10000
+
 def filter_by_date_range(posts, start_date_str=None, end_date_str=None):
-    """根據時間範圍篩選貼文"""
+    """根據時間範圍篩選貼文。
+
+    除了發布日期在範圍內的貼文，也會納入發布在範圍外但在篩選期間
+    按讚數或留言數增加 >= VIRAL_ENGAGEMENT_THRESHOLD 的炎上貼文。
+    若尚無快照資料，以當前互動數 >= 門檻值作為近似判斷。
+    """
     if not start_date_str and not end_date_str:
         return posts
-    
-    filtered = []
-    
-    # 解析輸入的日期
+
     start_dt = None
     end_dt = None
-    
+
     if start_date_str:
         try:
             start_dt = datetime.fromisoformat(start_date_str)
         except:
             pass
-    
+
     if end_date_str:
         try:
             end_dt = datetime.fromisoformat(end_date_str)
-            # 設定為該天的 23:59:59 (以包含整個一天)
             end_dt = end_dt.replace(hour=23, minute=59, second=59)
         except:
             pass
-    
+
+    # 查詢快照資料，找出在篩選期間互動增量 >= 門檻值的貼文
+    viral_urls = set()
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        range_start = (start_dt or datetime(2000, 1, 1)).isoformat()
+        range_end = (end_dt or datetime.now()).isoformat()
+        cursor.execute("""
+            SELECT url,
+                MAX(likes) - MIN(likes) AS likes_growth,
+                MAX(comments) - MIN(comments) AS comments_growth
+            FROM post_snapshots
+            WHERE captured_at >= ? AND captured_at <= ?
+            GROUP BY url
+            HAVING likes_growth >= ? OR comments_growth >= ?
+        """, (range_start, range_end, VIRAL_ENGAGEMENT_THRESHOLD, VIRAL_ENGAGEMENT_THRESHOLD))
+        viral_urls = {row[0] for row in cursor.fetchall()}
+        conn.close()
+    except:
+        pass
+
+    filtered = []
     for post in posts:
-        # 使用 parse_threads_time 將 post_date 轉換為絕對時間
         post_dt = parse_threads_time(post.get('time', ''), post.get('content', ''))
-        
+
         if not post_dt:
             continue
-        
-        # 檢查是否在時間範圍內
-        # 注：如果 post_dt 只有日期部分（沒有時間），會以當天 00:00:00 計算
+
+        in_range = True
         if start_dt and post_dt < start_dt:
-            continue
+            in_range = False
         if end_dt and post_dt > end_dt:
-            continue
-        
-        filtered.append(post)
-    
+            in_range = False
+
+        if in_range:
+            filtered.append(post)
+        elif post.get('url') in viral_urls:
+            # 快照資料顯示此貼文在篩選期間互動暴增
+            post_copy = dict(post)
+            post_copy['viral_during_range'] = True
+            filtered.append(post_copy)
+
     return filtered
 
 @app.route('/api/search', methods=['GET'])
@@ -358,15 +463,22 @@ def search_posts():
                 time_display = time_str if time_str else '日期不明'
                 timestamp = 0.0
             
+            _content = post.get("content", "") or ""
+            _author = post.get("author", "") or ""
+            _is_reply = (
+                bool(re.search(r'正在回覆@|Replying to @', _content)) or
+                (bool(_author) and bool(_content.strip()) and not _content.strip().startswith(_author))
+            )
             data.append({
                 "url": post.get("url"),
-                "author": post.get("author", ""),
-                "content": post.get("content", ""),
+                "author": _author,
+                "content": _content,
                 "likes": post.get("likes", "0"),
                 "comments": post.get("comments", "0"),
                 "time": post.get("post_date", ""),
                 "time_display": time_display,
                 "timestamp": timestamp,
+                "is_reply": _is_reply,
                 "analysis": {
                     "summary": post.get("summary") or "",
                     "sentiment": post.get("sentiment") or "中立",
@@ -455,6 +567,113 @@ def search_posts():
         "new_count": new_count,
         "updated_count": updated_count
     })
+
+@app.route('/api/generate_summary', methods=['POST'])
+def generate_summary():
+    from google import genai as google_genai
+
+    if not os.environ.get('GEMINI_API_KEY'):
+        return jsonify({"status": "error", "message": "未設定 GEMINI_API_KEY"})
+
+    try:
+        body = request.get_json(silent=True) or {}
+        posts = body.get('posts', [])
+
+        if not posts:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT a.summary, a.sentiment, a.crisis_score
+                FROM post_analysis a
+                WHERE a.summary IS NOT NULL AND a.summary != '' AND a.summary != '分析中...'
+                ORDER BY a.crisis_score DESC
+                LIMIT 30
+            """)
+            posts = [dict(row) for row in cursor.fetchall()]
+            conn.close()
+
+        if not posts:
+            return jsonify({"status": "error", "message": "尚無分析資料可供摘要，請先執行危機分析。"})
+
+        post_summaries = "\n".join([
+            f"- [{p.get('sentiment', '中立')}｜危機{p.get('crisis_score', 0)}分] {p.get('summary', '')}"
+            for p in posts
+        ])
+
+        prompt = f"""你是政大秘書處的資深公關顧問。以下是近期 Threads 平台上與政大相關的 {len(posts)} 篇貼文分析摘要：
+
+{post_summaries}
+
+請根據以上資料，用繁體中文撰寫一份約 150-200 字的綜觀輿情摘要報告，說明：
+1. 目前學生最關注的主要議題
+2. 整體情緒傾向
+3. 是否有潛在危機需要關注
+4. 一句話的處置建議
+
+請直接輸出摘要內文，不要加任何標題或格式符號。"""
+
+        client = google_genai.Client()
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config=google_genai.types.GenerateContentConfig(temperature=0.3)
+        )
+        summary_result = response.text.strip()
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS overall_summary (
+                id INTEGER PRIMARY KEY,
+                summary_text TEXT,
+                generated_at TEXT,
+                post_count INTEGER
+            )
+        """)
+        cursor.execute("DELETE FROM overall_summary")
+        cursor.execute(
+            "INSERT INTO overall_summary (summary_text, generated_at, post_count) VALUES (?, ?, ?)",
+            (summary_result, datetime.now().isoformat(), len(posts))
+        )
+        conn.commit()
+        conn.close()
+
+        return jsonify({"status": "success", "summary": summary_result})
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+
+@app.route('/api/trend_info')
+def get_trend_info():
+    url = request.args.get('url', '').strip()
+    if not url:
+        return jsonify({"status": "error", "message": "Missing URL"})
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT trend, reasoning, gemini_sentiment_score, negative_words, pr_analysis, top_3_complaints
+            FROM trend_analysis WHERE post_url = ?
+        """, (url,))
+        row = cursor.fetchone()
+        conn.close()
+        if not row:
+            return jsonify({"status": "not_found"})
+        return jsonify({
+            "status": "success",
+            "trend_info": {
+                "trend": row['trend'],
+                "reasoning": row['reasoning'],
+                "gemini_sentiment_score": row['gemini_sentiment_score'],
+                "negative_words": json.loads(row['negative_words']) if row['negative_words'] else [],
+                "pr_analysis": row['pr_analysis'],
+                "top_3_complaints": json.loads(row['top_3_complaints']) if row['top_3_complaints'] else []
+            }
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
 
 @app.route('/api/scrape', methods=['POST'])
 def trigger_scrape():

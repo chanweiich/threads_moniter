@@ -4,725 +4,618 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Threads 危機監控儀表板 (NCCU)</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.2.2/wordcloud2.min.js" defer></script>
     <style>
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; border-radius: 12px; }
-        .card-header { background-color: #fff; border-bottom: 2px solid #f0f2f5; font-weight: bold; border-radius: 12px 12px 0 0 !important; }
-        .high-crisis { background-color: #fff0f0; border-left: 4px solid #dc3545; }
-        .mid-crisis { background-color: #fffaf0; border-left: 4px solid #ffc107; }
-        .low-crisis { background-color: #f0fff4; border-left: 4px solid #28a745; }
-        .btn-update { border-radius: 30px; padding: 10px 25px; font-weight: bold; }
-        .post-content { max-height: 80px; overflow-y: auto; font-size: 0.9em; color: #555; }
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: none; border-radius: 12px; }
+        .chart-container { position: relative; height: 280px; width: 100%; }
+        .doughnut-center { 
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; font-size: 2.5rem; font-weight: bold; pointer-events: none; 
+            color: #333;
+        }
+        .scrollable-list { max-height: calc(100vh - 200px); overflow-y: auto; }
+        .post-card { 
+            background: #fff; border-radius: 8px; padding: 15px; 
+            margin-bottom: 12px; border-left: 4px solid transparent; 
+            transition: all 0.2s;
+        }
+        .post-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .post-card.pos { border-left-color: #28a745; }
+        .post-card.neg { border-left-color: #dc3545; }
+        .post-card.neu { border-left-color: #6c757d; }
+        
+        /* Custom Scrollbar for list */
+        .scrollable-list::-webkit-scrollbar { width: 6px; }
+        .scrollable-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Threads 社群危機監控中心</h2>
-        <div class="d-flex align-items-center gap-3">
-            <div class="border rounded px-3 py-1 bg-white shadow-sm d-flex align-items-center">
-                <span class="me-3 fs-6">
-                    <strong>✨ Gemini:</strong> 
-                    {% if api_status.gemini == 'Healthy' %}
-                        <span class="badge bg-success">正常作動</span>
-                    {% elif api_status.gemini == 'RateLimited' %}
-                        <span class="badge bg-danger animate-pulse">限流冷卻中</span>
-                    {% else %}
-                        <span class="badge bg-secondary">待命中</span>
-                    {% endif %}
-                </span>
-                <span class="fs-6">
-                    <strong>🚀 Groq (Llama-3):</strong> 
-                    {% if api_status.groq == 'Active' %}
-                        <span class="badge bg-success animate-pulse">接管分析中</span>
-                    {% else %}
-                        <span class="badge bg-secondary">備援待命</span>
-                    {% endif %}
-                </span>
-            </div>
-            <button id="updateBtn" class="btn btn-primary btn-update" onclick="triggerUpdate()">🔄 即時更新數據</button>
+<div class="container-fluid py-4 px-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
+        <h3 class="m-0 fw-bold text-primary"><i class="fa-brands fa-threads"></i> Threads 專題監控</h3>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-calendar-alt text-secondary fs-5"></i>
+            <span class="text-secondary fw-bold">篩選區間：</span>
+            <input type="date" id="startDate" class="form-control form-control-sm" style="width: 140px;">
+            <span class="text-secondary">至</span>
+            <input type="date" id="endDate" class="form-control form-control-sm" style="width: 140px;">
+            <button class="btn btn-sm btn-primary px-3 fw-bold" onclick="filterByDate()">篩選</button>
+            <button class="btn btn-sm btn-outline-secondary px-3" onclick="clearFilter()">清除</button>
         </div>
     </div>
 
-    <!-- 🔗 手動新增監控貼文 -->
-    <div class="card mb-4 shadow-sm border-0 bg-white" style="border-radius: 12px; overflow: hidden;">
-        <div class="card-body bg-light">
-            <h5 class="fw-bold text-primary mb-3"><i class="fas fa-link"></i> 🔗 手動新增監控貼文</h5>
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" id="manualUrlInput" class="form-control border-start-0" placeholder="請貼上 Threads 貼文網址 (例如: https://www.threads.net/...)">
-                <button class="btn btn-primary px-4 fw-bold" type="button" onclick="submitManualPost()" id="manualSubmitBtn">開始監控</button>
-            </div>
-        </div>
-    </div>
+    <ul class="nav nav-pills mb-3 bg-white p-2 rounded shadow-sm" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active fw-bold px-4" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">綜觀</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold px-4" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">單一議題</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link fw-bold px-4" id="compare-tab" data-bs-toggle="tab" data-bs-target="#compare" type="button" role="tab">多議題比較</button>
+        </li>
+    </ul>
 
-    <!-- 🔍 專題關鍵字搜尋與分析系统 -->
-    <div class="card mb-4 shadow-sm border-0 bg-white" style="border-radius: 12px; overflow: hidden;">
-        <div class="card-body bg-light">
-            <h5 class="fw-bold text-success mb-3"><i class="fas fa-search"></i> 🔍 專題關鍵字深度分析</h5>
-            <div class="input-group mb-3">
-                <span class="input-group-text bg-white border-end-0"><i class="fas fa-filter text-muted"></i></span>
-                <input type="text" id="keywordSearchInput" class="form-control border-start-0" placeholder="輸入想分析的校園議題 (例如: 作弊、宿舍、指南夜市...)">
-                <button class="btn btn-success px-4 fw-bold" type="button" onclick="searchKeyword()" id="keywordSearchBtn">深度分析</button>
-            </div>
-            
-            <!-- 【新增】時間篩選區 -->
-            <div class="row g-2 mt-2 mb-3" id="dateRangeSection">
-                <div class="col-12">
-                    <small class="text-muted fw-bold">⏰ 時間篩選 (可選)：</small>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange('today')">📅 今天</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange('7days')">📅 過去7天</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange('month')">📅 本月</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange('year')">📅 本年度</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDateRange('clear')">🔄 清空篩選</button>
-                </div>
-                <div class="col-12">
-                    <div class="d-flex gap-2 align-items-center">
-                        <span class="text-muted">或自訂日期：</span>
-                        <input type="date" id="startDateInput" class="form-control form-control-sm" style="max-width: 150px;">
-                        <span class="text-muted">至</span>
-                        <input type="date" id="endDateInput" class="form-control form-control-sm" style="max-width: 150px;">
-                        <button class="btn btn-sm btn-primary" onclick="applyCustomDateRange()">套用</button>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <div class="row g-4">
+                
+                <div class="col-xl-7 col-lg-7">
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-5">
+                            <div class="card h-100 shadow-sm border-0">
+                                <div class="card-body position-relative">
+                                    <h6 class="card-title fw-bold text-secondary"><i class="fas fa-chart-pie"></i> 總體情緒分佈</h6>
+                                    <div class="chart-container" style="height: 220px;">
+                                        <canvas id="sentimentDoughnut"></canvas>
+                                    </div>
+                                    <div id="doughnutCenterText" class="doughnut-center">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card h-100 shadow-sm border-0 bg-light">
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="card-title fw-bold text-secondary mb-0"><i class="fas fa-robot"></i> LLM 綜觀摘要</h6>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="generateSummary()" id="summaryBtn">
+                                            <i class="fas fa-sync-alt"></i> {% if overall_summary %}更新摘要{% else %}生成摘要{% endif %}
+                                        </button>
+                                    </div>
+                                    <div id="summaryContent" style="line-height: 1.7; font-size: 0.92rem;">
+                                        {% if overall_summary %}
+                                            <p class="card-text text-dark mb-1" style="white-space: pre-line;">{{ overall_summary.text }}</p>
+                                            <small class="text-muted">上次更新：{{ overall_summary.generated_at[:16] | replace('T', ' ') }}</small>
+                                        {% else %}
+                                            <p class="card-text text-muted mb-0"><em>點擊「生成摘要」，由 Gemini AI 根據目前所有已分析貼文自動生成綜觀輿情報告。</em></p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold text-secondary"><i class="fas fa-cloud"></i> 核心文字雲</h6>
+                            <div id="wordCloudContainer" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 200px;">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold text-secondary"><i class="fas fa-chart-bar"></i> 互動熱度趨勢 (則數 / 愛心 / 留言數)</h6>
+                            <div class="chart-container">
+                                <canvas id="interactionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold text-secondary"><i class="fas fa-balance-scale"></i> 情緒趨勢與 P/N 比 (正面/負面)</h6>
+                            <div class="chart-container">
+                                <canvas id="pnRatioChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="dateRangeDisplay" class="col-12">
-                    <small class="text-primary fw-bold" id="activeDateRange"></small>
+
+                <div class="col-xl-5 col-lg-5">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-list-ul"></i> 監控貼文列表</span>
+                            <span class="badge bg-primary" id="listCountBadge">0 筆</span>
+                        </div>
+                        <div class="card-body p-3 scrollable-list bg-light" id="postListContainer">
+                            </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div id="searchStatusArea" class="alert alert-success fw-bold" style="display: none; border-left: 5px solid #28a745;"></div>
-        </div>
-    </div>
 
-    <!-- ⚡ 分數跳升預警 -->
-    {% set escalated_posts = posts | selectattr("analysis.is_escalating", "equalto", true) | list %}
-    {% if escalated_posts %}
-    <div class="alert alert-danger shadow-sm mb-4" style="border-left: 5px solid #dc3545;">
-        <h5 class="fw-bold mb-2">⚡ 分數跳升預警 (突發炎上)</h5>
-        <ul class="mb-0">
-        {% for ep in escalated_posts %}
-            <li><a href="{{ ep.url }}" target="_blank" class="text-danger fw-bold text-decoration-none">{{ ep.content[:50] }}...</a> 
-                <span class="badge bg-danger ms-2">↑ 原分數: {{ ep.analysis.old_score }} ➡️ 新分數: {{ ep.analysis.crisis_score }}</span>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    <!-- 圖表區 -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="card h-100">
-                <div class="card-header">危機指數分佈圖 (分數 1-10)</div>
-                <div class="card-body">
-                    <canvas id="scoreChart"></canvas>
-                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-header">整體情緒佔比</div>
-                <div class="card-body">
-                    <canvas id="sentimentChart"></canvas>
-                </div>
-            </div>
+        
+        <div class="tab-pane fade p-4 bg-white rounded shadow-sm text-center text-muted" id="single" role="tabpanel">
+            <i class="fas fa-hammer fs-1 mb-3 mt-4"></i>
+            <h5>單一議題介面建置中...</h5>
         </div>
-    </div>
-
-    <!-- 動態文字雲 (預設隱藏，搜尋後顯示) -->
-    <div class="card mb-4 shadow-sm" id="wordcloudCard" style="display: none;">
-        <div class="card-header bg-white fw-bold"><i class="fas fa-cloud"></i> 專題核心文字雲</div>
-        <div class="card-body text-center">
-            <canvas id="wordcloudCanvas" width="800" height="300" style="width: 100%; max-width: 800px; height: 300px;"></canvas>
-        </div>
-    </div>
-
-    <!-- 表格區 -->
-    <div class="card">
-        <div class="card-header">監控貼文列表 (雙重排序：1. 危機指數降序 2. 發文時間降序)</div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0 align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th width="8%">分數</th>
-                            <th width="8%">情緒</th>
-                            <th width="10%">輿情走向</th>
-                            <th width="12%">發文時間</th>
-                            <th>按讚</th>    <th>回覆</th>    <th width="24%">AI 分析摘要</th>
-                            <th width="28%">原文內容節錄</th>
-                            <th width="10%">操作選項</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for post in posts %}
-                        {% set score = post.analysis.crisis_score %}
-                        <tr class="{% if score >= 7 %}high-crisis{% elif score >= 4 %}mid-crisis{% elif score == 0 %}bg-white{% else %}low-crisis{% endif %}">
-                            <td class="text-center fw-bold fs-5 
-                                {% if score >= 7 %}text-danger{% elif score >= 4 %}text-warning{% elif score == 0 %}text-secondary{% else %}text-success{% endif %}">
-                                {% if score == 0 %}-{% else %}{{ score }}{% endif %}
-                            </td>
-                            <td>
-                                {% if post.analysis.sentiment == '正面' %}
-                                    <span class="badge bg-success">正面</span>
-                                {% elif post.analysis.sentiment == '負面' %}
-                                    <span class="badge bg-danger">負面</span>
-                                {% elif post.analysis.sentiment == '-' %}
-                                    <span class="badge bg-secondary">序列中</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">中立</span>
-                                {% endif %}
-                            </td>
-                            <td class="text-center">
-                                {% if score >= 7 or post.trend_info %}
-                                    <span class="badge bg-danger mb-1" style="cursor: pointer" onclick="openModal('{{ post.url }}')"><i class="fas fa-fire"></i> 持續監控中 (點擊看趨勢)</span><br>
-                                    {% if post.trend_info %}
-                                        <span class="fw-bold fs-6">
-                                        {% if post.trend_info.trend in ['擴大中', '上升中 📈', '出現反彈聲浪'] %}
-                                            🔥 升溫中
-                                        {% elif post.trend_info.trend in ['已平息 ✅', '校方已平息情緒'] %}
-                                            🧊 冷卻中
-                                        {% else %}
-                                            {{ post.trend_info.trend }}
-                                        {% endif %}
-                                        </span>
-                                    {% else %}
-                                        <span class="text-muted" style="font-size: 0.85em;">分析中...</span>
-                                    {% endif %}
-                                {% elif post.analysis.is_escalating %}
-                                    <span class="badge bg-warning text-dark"><i class="fas fa-fire"></i> 炎上預警</span>
-                                {% else %}
-                                    <span class="text-muted">-</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <strong style="white-space: nowrap; color: #495057;">🕒 {{ post.time_display if post.time_display else '未知時間' }}</strong>
-                            </td>
-
-                            <td class="text-center">
-                                {% set likes = post.likes|int %}
-                                <span class="{% if likes > 50 %}text-danger animate-pulse fw-bold{% else %}text-muted{% endif %}"><i class="far fa-thumbs-up"></i> {{ post.likes or 0 }}</span>
-                            </td>
-
-                            <td class="text-center">
-                                {% set comments = post.comments|int %}
-                                <span class="{% if comments > 50 %}text-danger animate-pulse fw-bold{% else %}text-muted{% endif %}"><i class="far fa-comment"></i> {{ post.comments or 0 }}</span>
-                            </td>
-
-                            <td class="fw-bold {% if score == 0 %}text-muted fst-italic{% endif %}">
-                                {% if post.analysis.engine == 'Groq' %}
-                                    <span title="Groq Llama-3 備援引擎生成">🚀</span>
-                                {% elif post.analysis.engine == 'Gemini' %}
-                                    <span title="Gemini 引擎生成">✨</span>
-                                {% endif %}
-                                {{ post.analysis.summary }}
-                            </td>
-                            <td>
-                                {% if post.is_new %}
-                                    <span class="badge bg-success mb-1 mt-1"><i class="fas fa-plus-circle"></i> 🆕 新發現</span>
-                                {% endif %}
-                                {% if post.source == 'Manual_Report' %}
-                                    <span class="badge bg-danger mb-1 mt-1 animate-pulse"><i class="fas fa-bullhorn"></i> 🚨 人工緊急通報</span>
-                                {% endif %}
-                                {% if post.is_updated %}
-                                    <span class="badge bg-info text-dark mb-1 mt-1"><i class="fas fa-sync-alt"></i> 🔄 已更新數據</span><br>
-                                {% endif %}
-                                {% if post.risk_tag %}
-                                    <span class="badge bg-danger mb-1 mt-1 animate-pulse"><i class="fas fa-exclamation-circle"></i> ⚠️ 歷史敏感話題</span><br>
-                                {% endif %}
-                                <div class="post-content">{{ post.content }}</div>
-                            </td>
-                            <td>
-                                <a href="{{ post.url }}" target="_blank" class="btn btn-sm btn-outline-secondary mb-1">前往</a>
-                                <button class="btn btn-sm btn-outline-danger mb-1" onclick="deletePost('{{ post.url }}')">🗑️ 刪除</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        
-                        {% if not posts %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">目前尚無數據，請點擊右上角按鈕更新獲取新資料。</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
+        
+        <div class="tab-pane fade p-4 bg-white rounded shadow-sm text-center text-muted" id="compare" role="tabpanel">
+            <i class="fas fa-tools fs-1 mb-3 mt-4"></i>
+            <h5>多議題比較介面建置中...</h5>
         </div>
     </div>
 </div>
 
-<!-- 【新增】高危機貼文實時追蹤 Modal -->
-<div class="modal fade" id="trendModal" tabindex="-1" aria-labelledby="trendModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header bg-light">
-        <h5 class="modal-title fw-bold text-danger" id="trendModalLabel">🔥 高危機貼文實時追蹤</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          
-        <!-- 詞雲區塊 -->
-        <div class="mb-4">
-            <h6 class="fw-bold text-secondary">💬 即時負面關鍵詞雲 (最新留言萃取)</h6>
-            <div id="wordCloudContainer" class="d-flex flex-wrap gap-2 p-3 rounded" style="background-color: #f8f9fa; min-height: 60px;">
-                <!-- Labels dynamically injected here -->
+<!-- 輿情走向 Modal -->
+<div class="modal fade" id="trendModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold"><i class="fas fa-chart-line text-info"></i> 輿情走向分析</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="trendModalBody"></div>
+            <div class="modal-footer">
+                <a id="trendModalLink" href="#" target="_blank" class="btn btn-outline-primary btn-sm"><i class="fas fa-external-link-alt"></i> 前往貼文</a>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">關閉</button>
             </div>
         </div>
-
-        <!-- PR 處置區塊 -->
-        <div class="row">
-            <div class="col-12 mt-2 mb-4">
-               <h6 class="fw-bold text-secondary">📋 政大公關處置分析報告 (Gemini 即時產出)</h6>
-               <div id="prAnalysisContainer" class="p-3 bg-light rounded text-dark fs-6 shadow-sm mt-2" style="border-left: 4px solid #dc3545;">
-                   <!-- PR Analysis injected here -->
-               </div>
-            </div>
-        </div>
-
-        <div class="row">
-           <div class="col-md-6 mb-3">
-               <h6 class="fw-bold text-secondary">📈 熱度走向 (按讚數與留言數)</h6>
-               <div style="height: 300px;">
-                   <canvas id="heatChart"></canvas>
-               </div>
-           </div>
-           <div class="col-md-6 mb-3">
-               <h6 class="fw-bold text-secondary">📉 情緒演變走向 (Gemini 負面分數 1-10)</h6>
-               <div style="height: 300px;">
-                   <canvas id="sentimentTrendChart"></canvas>
-               </div>
-           </div>
-        </div>
-
-      </div>
     </div>
-  </div>
 </div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // 渲染主要圖表
-    const chartData = {{ chart_data | tojson | safe }};
-    
-    // 柱狀圖：危機指數
-    const ctxScore = document.getElementById('scoreChart').getContext('2d');
-    window.scoreChartInstance = new Chart(ctxScore, {
-        type: 'bar',
-        data: {
-            labels: ['1分', '2分', '3分', '4分', '5分', '6分', '7分', '8分', '9分', '10分'],
-            datasets: [{
-                label: '貼文數量',
-                data: chartData.scores,
-                backgroundColor: [
-                    '#28a745','#28a745','#28a745', // 1-3
-                    '#ffc107','#ffc107','#ffc107', // 4-6
-                    '#dc3545','#dc3545','#dc3545','#dc3545' // 7-10
-                ],
-                borderRadius: 4
-            }]
-        },
-        options: {
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-        }
-    });
+    // 從後端接收所有資料 (全域變數)
+    const allPostsData = {{ posts | tojson | safe }};
 
-    // 圓餅圖：情緒
-    const ctxSentiment = document.getElementById('sentimentChart').getContext('2d');
-    window.sentimentChartInstance = new Chart(ctxSentiment, {
-        type: 'doughnut',
-        data: {
-            labels: ['正面', '中立', '負面'],
-            datasets: [{
-                data: chartData.sentiments,
-                backgroundColor: ['#28a745', '#6c757d', '#dc3545'],
-                hoverOffset: 4
-            }]
-        }
-    });
+    // 目前套用篩選後的貼文（供摘要使用）
+    let currentFilteredPosts = allPostsData;
 
-    // ==========================================
-    // 【新增】動態 Modal 追蹤圖表邏輯
-    // ==========================================
-    const tsData = {{ ts_by_url | tojson | safe }};
-    let heatChartInst = null;
-    let sentChartInst = null;
-    const trendModal = new bootstrap.Modal(document.getElementById('trendModal'));
+    // 全域圖表實例 (用來銷毀重建)
+    let chartInstDoughnut = null;
+    let chartInstInteraction = null;
+    let chartInstPn = null;
 
-    function openModal(url) {
-        let records = tsData[url] || [];
-        if(records.length === 0) {
-            alert('此貼文目前尚無時序追蹤數據！程式可能正在背景搜集中，請稍後重試。');
-            return;
-        }
+    // 格式化資料，供圖表使用
+    function processData(posts) {
+        let totalCount = posts.length;
+        let posCount = 0, negCount = 0, neuCount = 0;
+        let dailyStats = {};
+        let wordsCount = {};
         
-        let labels = records.map(r => new Date(r.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
-        let likes = records.map(r => r.likes);
-        let replies = records.map(r => r.replies);
-        let scores = records.map(r => r.gemini_sentiment_score);
-        
-        // 渲染詞雲 (收集所有出現過的負面字，亦可只取最後一筆)
-        let latestRecord = records[records.length - 1];
-        let words = latestRecord.negative_words || [];
-        
-        // 渲染 PR 公關分析報告
-        let latestPrAnalysis = latestRecord.pr_analysis || "尚未產生公關處置分析報告...";
-        document.getElementById('prAnalysisContainer').innerText = latestPrAnalysis;
-        
-        let wordCloudHtml = words.map(w => `<span class="badge bg-dark fs-5 text-light px-3 py-2 shadow-sm">${w}</span>`).join('');
-        document.getElementById('wordCloudContainer').innerHTML = wordCloudHtml || '<span class="text-muted mt-2">目前暫無明顯負面關鍵字</span>';
-
-        // 渲染熱度圖 A
-        if(heatChartInst) heatChartInst.destroy();
-        heatChartInst = new Chart(document.getElementById('heatChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: '按讚數', data: likes, borderColor: '#ffc107', backgroundColor: 'rgba(255, 193, 7, 0.1)', fill: true, tension: 0.3 },
-                    { label: '留言數', data: replies, borderColor: '#0dcaf0', backgroundColor: 'rgba(13, 202, 240, 0.1)', fill: true, tension: 0.3 }
-                ]
-            },
-            options: { maintainAspectRatio: false }
-        });
-
-        // 渲染情緒圖 B
-        if(sentChartInst) sentChartInst.destroy();
-        sentChartInst = new Chart(document.getElementById('sentimentTrendChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: '負面情緒分數', data: scores, borderColor: '#dc3545', backgroundColor: 'rgba(220, 53, 69, 0.2)', fill: true, tension: 0.3, pointRadius: 5 }
-                ]
-            },
-            options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 10, ticks: { stepSize: 1 } } } }
+        posts.forEach(post => {
+            // 1. 計算情緒數量
+            let sentiment = post.analysis.sentiment || '中立';
+            if (sentiment === '正面') posCount++;
+            else if (sentiment === '負面') negCount++;
+            else neuCount++;
+            
+            // 2. 計算每日數據
+            let date = post.time_display; // 預期格式如 YYYY/MM/DD
+            if (!dailyStats[date]) {
+                dailyStats[date] = { count: 0, likes: 0, comments: 0, pos: 0, neg: 0 };
+            }
+            dailyStats[date].count++;
+            dailyStats[date].likes += parseInt(post.likes) || 0;
+            dailyStats[date].comments += parseInt(post.comments) || 0;
+            
+            if (sentiment === '正面') dailyStats[date].pos++;
+            if (sentiment === '負面') dailyStats[date].neg++;
+            
+            // 3. 文字雲詞頻計算 (擷取摘要中的詞彙當作備案)
+            if (post.trend_info && post.trend_info.negative_words && post.trend_info.negative_words.length > 0) {
+                post.trend_info.negative_words.forEach(word => {
+                    wordsCount[word] = (wordsCount[word] || 0) + 1;
+                });
+            } else if (post.analysis && post.analysis.summary) {
+                // 退一步：若沒有提供關鍵字，從 summary 拆解長度 >=2 的詞充當示範
+                let words = post.analysis.summary.split(/[\s,，、。！!？?]+/).filter(w => w.length >= 2);
+                words.forEach(word => {
+                    wordsCount[word] = (wordsCount[word] || 0) + 1;
+                });
+            }
         });
         
-        trendModal.show();
+        // 將每日數據轉為陣列並照日期排序
+        let sortedDates = Object.keys(dailyStats).sort();
+        let interactionChartData = {
+            labels: sortedDates,
+            counts: sortedDates.map(d => dailyStats[d].count),
+            likes: sortedDates.map(d => dailyStats[d].likes),
+            comments: sortedDates.map(d => dailyStats[d].comments)
+        };
+        let pnChartData = {
+            labels: sortedDates,
+            pos: sortedDates.map(d => dailyStats[d].pos),
+            neg: sortedDates.map(d => dailyStats[d].neg),
+            ratio: sortedDates.map(d => dailyStats[d].neg === 0 ? dailyStats[d].pos : (dailyStats[d].pos / dailyStats[d].neg).toFixed(2))
+        };
+        
+        // 轉換文字雲陣列格式 [ ['詞', 權重], ... ]
+        let wordsList = Object.keys(wordsCount).map(k => [k, wordsCount[k] * 12]);
+        if (wordsList.length === 0) {
+            wordsList = [['政大', 50], ['無相關關鍵字', 20]]; 
+        }
+        
+        return { totalCount, posCount, negCount, neuCount, interactionChartData, pnChartData, wordsList };
     }
 
-    // 刪除貼文
+    // 渲染右側列表（過濾掉回覆貼文，只顯示原始貼文）
+    function renderList(posts) {
+        posts = posts.filter(p => !p.is_reply);
+        const container = document.getElementById('postListContainer');
+        document.getElementById('listCountBadge').innerText = `${posts.length} 筆`;
+        container.innerHTML = '';
+        
+        if(posts.length === 0) {
+            container.innerHTML = `<div class="text-center text-muted mt-5"><i class="fas fa-folder-open fs-1 mb-2"></i><br>此期間查無貼文</div>`;
+            return;
+        }
+
+        let htmlParts = [];
+        posts.forEach(post => {
+            let sentiment = post.analysis.sentiment || '中立';
+            let sentClass = sentiment === '正面' ? 'pos' : (sentiment === '負面' ? 'neg' : 'neu');
+            let badgeClass = sentiment === '正面' ? 'bg-success' : (sentiment === '負面' ? 'bg-danger' : 'bg-secondary');
+
+            let contentExcerpt = post.content ? post.content.substring(0, 200) : '';
+            if(post.content && post.content.length > 200) contentExcerpt += '...';
+
+            let timeDisplay = post.real_post_time_display || '未知時間';
+            let title = post.analysis.summary || '無標題';
+            let author = post.author || '未知帳號';
+            let viralBadge = (post.viral_during_range || post._viral_during_range)
+                ? '<span class="badge bg-warning text-dark mb-1 ms-1 fs-6"><i class="fas fa-fire"></i> 炎上（高互動）</span>'
+                : '';
+
+            htmlParts.push(`
+                <div class="post-card border shadow-sm ${sentClass}">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="badge ${badgeClass} mb-1 fs-6">${sentiment}</span>${viralBadge}
+                            <div class="fw-bold text-dark mt-1" style="font-size: 1.05rem;">${title}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-primary fw-bold">@${author}</span>
+                        <span class="small text-muted"><i class="fas fa-clock"></i> ${timeDisplay}</span>
+                    </div>
+
+                    <div class="small mb-3 text-secondary bg-white border p-2 rounded" style="line-height: 1.5;">
+                        <strong>原文節錄：</strong> ${contentExcerpt}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
+                        <div class="fw-bold fs-6">
+                            <span class="me-3 text-secondary"><i class="fas fa-comment"></i> 回覆: <span class="text-dark">${post.comments || 0}</span></span>
+                            <span class="text-secondary"><i class="fas fa-heart text-danger"></i> 讚數: <span class="text-dark">${post.likes || 0}</span></span>
+                        </div>
+                        <div class="btn-group">
+                            <a href="${post.url}" target="_blank" class="btn btn-sm btn-outline-primary fw-bold">前往貼文</a>
+                            <button class="btn btn-sm btn-outline-info fw-bold" onclick="openModal('${post.url}')">看輿情走向</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${post.url}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+        container.innerHTML = htmlParts.join('');
+    }
+
+    // 主渲染引擎 (統一更新圖表與清單)
+    function renderDashboard(posts) {
+        renderList(posts);
+        let stats = processData(posts);
+        
+        // 1. Doughnut Chart (甜甜圈圖)
+        const centerTextDiv = document.getElementById('doughnutCenterText');
+        centerTextDiv.innerText = stats.totalCount;
+
+        if (chartInstDoughnut) chartInstDoughnut.destroy();
+        chartInstDoughnut = new Chart(document.getElementById('sentimentDoughnut').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['正面', '中立', '負面'],
+                datasets: [{
+                    data: [stats.posCount, stats.neuCount, stats.negCount],
+                    backgroundColor: ['#28a745', '#6c757d', '#dc3545'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                cutout: '75%',
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                onClick: (event, elements, chart) => {
+                    if (elements.length > 0) {
+                        const idx = elements[0].index;
+                        centerTextDiv.innerText = chart.data.datasets[0].data[idx];
+                    } else {
+                        centerTextDiv.innerText = stats.totalCount;
+                    }
+                }
+            }
+        });
+
+        // 2. 文字雲
+        const wcContainer = document.getElementById('wordCloudContainer');
+        wcContainer.innerHTML = '<canvas id="wordCloudCanvas" style="width: 100%; height: 200px;"></canvas>';
+        WordCloud(document.getElementById('wordCloudCanvas'), { 
+            list: stats.wordsList,
+            weightFactor: 1, // 調整文字大小權重
+            fontFamily: '微軟正黑體, sans-serif',
+            color: 'random-dark',
+            backgroundColor: 'transparent',
+            gridSize: 8
+        });
+
+        // 3. Interaction Chart (複合圖：則數/愛心/留言)
+        if (chartInstInteraction) chartInstInteraction.destroy();
+        chartInstInteraction = new Chart(document.getElementById('interactionChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: stats.interactionChartData.labels,
+                datasets: [
+                    { type: 'bar', label: '每日則數', data: stats.interactionChartData.counts, backgroundColor: '#0dcaf0', yAxisID: 'y', borderRadius: 4 },
+                    { type: 'line', label: '愛心總和', data: stats.interactionChartData.likes, borderColor: '#ffc107', backgroundColor: '#ffc107', tension: 0.2, borderWidth: 3, yAxisID: 'y1' },
+                    { type: 'line', label: '留言總和', data: stats.interactionChartData.comments, borderColor: '#6f42c1', backgroundColor: '#6f42c1', tension: 0.2, borderWidth: 3, yAxisID: 'y1' }
+                ]
+            },
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { 
+                    y: { type: 'linear', position: 'left', title: {display:true, text:'則數'} }, 
+                    y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: {display:true, text:'數量'} } 
+                } 
+            }
+        });
+
+        // 4. P/N Ratio Chart (正負面與比例)
+        if (chartInstPn) chartInstPn.destroy();
+        chartInstPn = new Chart(document.getElementById('pnRatioChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: stats.pnChartData.labels,
+                datasets: [
+                    { type: 'bar', label: '正面則數', data: stats.pnChartData.pos, backgroundColor: '#28a745', borderRadius: 4 },
+                    { type: 'bar', label: '負面則數', data: stats.pnChartData.neg, backgroundColor: '#dc3545', borderRadius: 4 },
+                    { type: 'line', label: 'P/N比 (黑線)', data: stats.pnChartData.ratio, borderColor: '#343a40', backgroundColor: '#343a40', borderWidth: 2, tension: 0.1, yAxisID: 'y1' }
+                ]
+            },
+            options: { 
+                maintainAspectRatio: false, 
+                scales: { 
+                    y: { stacked: false, title: {display:true, text:'則數'} }, 
+                    y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: {display:true, text:'比例'} } 
+                } 
+            }
+        });
+    }
+
+    // --- 互動與 API 函數 ---
+
+    // 日期篩選功能 (前端直接 Filter 不需重整畫面)
+    function filterByDate() {
+        let startVal = document.getElementById('startDate').value;
+        let endVal = document.getElementById('endDate').value;
+
+        let filteredPosts = allPostsData;
+
+        if (startVal || endVal) {
+            let startDt = startVal ? new Date(startVal + "T00:00:00") : new Date(0);
+            let endDt = endVal ? new Date(endVal + "T23:59:59") : new Date("2100-01-01");
+
+            filteredPosts = allPostsData.map(p => ({ ...p, _viral_during_range: false })).filter(p => {
+                if(!p.real_post_time_display) return true;
+                let dtStr = p.real_post_time_display.replace(/\//g, '-');
+                let pDt = new Date(dtStr);
+                if (isNaN(pDt.getTime())) return true;
+
+                // 發布日期在篩選範圍內：正常顯示
+                if (pDt >= startDt && pDt <= endDt) return true;
+
+                // 後端透過快照計算後標記的炎上貼文
+                if (p.viral_during_range) {
+                    p._viral_during_range = true;
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+        currentFilteredPosts = filteredPosts;
+        renderDashboard(filteredPosts);
+        generateSummaryForPosts(filteredPosts);
+    }
+
+    // 清除篩選 → 回到預設 7 天
+    function clearFilter() {
+        const today = new Date();
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+        document.getElementById('startDate').value = sevenDaysAgo.toISOString().split('T')[0];
+        filterByDate();
+    }
+
+    // 手動按鈕：使用目前篩選的貼文重新生成
+    function generateSummary() {
+        generateSummaryForPosts(currentFilteredPosts);
+    }
+
+    // 核心：根據傳入的貼文清單呼叫 Gemini 生成摘要
+    function generateSummaryForPosts(posts) {
+        const analyzedPosts = posts
+            .filter(p => p.analysis?.summary && p.analysis.summary !== '分析中...' && p.analysis.summary !== '分析失敗')
+            .map(p => ({
+                summary: p.analysis.summary,
+                sentiment: p.analysis.sentiment,
+                crisis_score: p.analysis.crisis_score
+            }));
+
+        const btn = document.getElementById('summaryBtn');
+        const content = document.getElementById('summaryContent');
+
+        if (analyzedPosts.length === 0) {
+            content.innerHTML = '<p class="text-muted small mb-0"><em>此時間段內無已分析的貼文，無法生成摘要。</em></p>';
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> 生成摘要';
+            btn.disabled = false;
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 生成中...';
+
+        fetch('/api/generate_summary', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ posts: analyzedPosts })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const now = new Date().toLocaleString('zh-TW', { hour12: false });
+                content.innerHTML = `<p class="card-text text-dark mb-1" style="white-space:pre-line;">${escHtml(data.summary)}</p><small class="text-muted">更新於 ${now}（共 ${analyzedPosts.length} 筆）</small>`;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> 更新摘要';
+            } else {
+                content.innerHTML = `<p class="text-danger small mb-0">生成失敗：${escHtml(data.message)}</p>`;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> 重試';
+            }
+        })
+        .catch(err => {
+            content.innerHTML = `<p class="text-danger small mb-0">發生錯誤：${escHtml(String(err))}</p>`;
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> 重試';
+        })
+        .finally(() => { btn.disabled = false; });
+    }
+
+    // 刪除貼文 (串接您原有的 API)
     function deletePost(url) {
-        if(confirm('確定要移除這篇貼文嗎？這將停止對該文的追蹤。')) {
+        if(confirm('確定要從資料庫中刪除這筆貼文嗎？')) {
             fetch('/api/delete_post', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: url })
             })
-            .then(res => res.json())
+            .then(r => r.json())
             .then(data => {
                 if(data.status === 'success') {
-                    location.reload(); 
+                    alert('刪除成功');
+                    location.reload(); // 重新載入以獲取最新資料
                 } else {
-                    alert('刪除失敗：' + data.message);
+                    alert('刪除失敗: ' + data.message);
                 }
             })
             .catch(err => alert("發生錯誤：" + err));
         }
     }
-
-    // 手動新增貼文
-    function submitManualPost() {
-        const input = document.getElementById('manualUrlInput');
-        const btn = document.getElementById('manualSubmitBtn');
-        const rawUrl = input.value.trim();
-        
-        let url = rawUrl.split('?')[0].replace('threads.com', 'threads.net');
-        if(url.endsWith('/')) { url = url.slice(0, -1); }
-        
-        if(!url.includes('threads.net') || !url.includes('@') || !url.includes('post')) {
-            alert('❌ 錯誤：請輸入有效的 Threads 貼文網址。');
-            return;
-        }
-        
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 擷取分析中...';
-        btn.disabled = true;
-        input.disabled = true;
-        
-        fetch('/api/add_manual_post', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === 'success') {
-                alert('✅ 貼文已成功納入監控系統！\\n目前危機評分為：' + data.score + ' 分');
-                location.reload();
-            } else {
-                alert('手動新增失敗：' + data.message);
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                input.disabled = false;
-            }
-        })
-        .catch(err => {
-            alert("發生錯誤：" + err);
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            input.disabled = false;
-        });
+    
+    // HTML 跳脫，防止 XSS
+    function escHtml(str) {
+        return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    // 專題關鍵字搜尋
-    let currentDateRange = { start: null, end: null, isCustom: false };
-    
-    function setDateRange(type) {
-        const now = new Date();
-        let start, end;
-        
-        switch(type) {
-            case 'today':
-                start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-                break;
-            case '7days':
-                start = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                end = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-                break;
-            case 'month':
-                start = new Date(now.getFullYear(), now.getMonth(), 1);
-                end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-                break;
-            case 'year':
-                start = new Date(now.getFullYear(), 0, 1);
-                end = new Date(now.getFullYear() + 1, 0, 1);
-                break;
-            case 'clear':
-                currentDateRange = { start: null, end: null, isCustom: false };
-                document.getElementById('startDateInput').value = '';
-                document.getElementById('endDateInput').value = '';
-                document.getElementById('activeDateRange').textContent = '';
-                return;
-            default:
-                return;
-        }
-        
-        currentDateRange = { start, end, isCustom: false };
-        
-        // 更新日期輸入框（快捷按鈕時，顯示的結束日期要減一天）
-        document.getElementById('startDateInput').value = start.toISOString().split('T')[0];
-        document.getElementById('endDateInput').value = new Date(end.getTime() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        
-        // 更新顯示
-        updateDateRangeDisplay();
-        
-        // 【新增】快捷按鈕也自動觸發搜尋
-        const keyword = document.getElementById('keywordSearchInput').value.trim();
-        if (keyword) {
-            searchKeyword();
-        }
-    }
-    
-    function applyCustomDateRange() {
-        const startStr = document.getElementById('startDateInput').value;
-        const endStr = document.getElementById('endDateInput').value;
-        
-        if (!startStr || !endStr) {
-            alert('請同時選擇起始日期和結束日期');
-            return;
-        }
-        
-        currentDateRange = {
-            start: new Date(startStr),
-            end: new Date(endStr),
-            isCustom: true  // 標記為自定義日期
-        };
-        
-        updateDateRangeDisplay();
-        
-        // 【新增】自動觸發搜尋（如果已有關鍵字）
-        const keyword = document.getElementById('keywordSearchInput').value.trim();
-        if (keyword) {
-            searchKeyword();
-        } else {
-            alert('請先輸入搜尋關鍵字，然後套用日期');
-        }
-    }
-    
-    function updateDateRangeDisplay() {
-        if (currentDateRange.start && currentDateRange.end) {
-            const startStr = currentDateRange.start.toLocaleDateString('zh-TW');
-            const endStr = currentDateRange.end.toLocaleDateString('zh-TW');
-            document.getElementById('activeDateRange').textContent = `✅ 已篩選時間範圍：${startStr} 至 ${endStr}`;
-        } else {
-            document.getElementById('activeDateRange').textContent = '';
-        }
-    }
+    // 看輿情走向：直接向後端查 DB，避免靜態資料 URL 不匹配的問題
+    function openModal(url) {
+        document.getElementById('trendModalLink').href = url;
+        document.getElementById('trendModalBody').innerHTML = `
+            <div class="text-center py-4">
+                <i class="fas fa-spinner fa-spin fs-2 text-secondary"></i>
+                <p class="mt-2 text-muted">載入中...</p>
+            </div>`;
+        new bootstrap.Modal(document.getElementById('trendModal')).show();
 
-    // 專題關鍵字搜尋
-    function searchKeyword() {
-        const keyword = document.getElementById('keywordSearchInput').value.trim();
-        if (!keyword) {
-            alert('請輸入想分析的關鍵字！'); return;
-        }
-        
-        const btn = document.getElementById('keywordSearchBtn');
-        const origText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 實時同步中...';
-        btn.disabled = true;
-        
-        const statusArea = document.getElementById('searchStatusArea');
-        statusArea.style.display = 'block';
-        statusArea.innerHTML = '🔍 正在分析上下文與掃描實時情資...';
-        
-        // 構建 API URL（包含日期範圍）
-        let searchUrl = '/api/search?keyword=' + encodeURIComponent(keyword);
-        if (currentDateRange.start) {
-            searchUrl += '&start_date=' + currentDateRange.start.toISOString().split('T')[0];
-        }
-        if (currentDateRange.end) {
-            // 【修复】只有快捷按钮才需要减一天，自定义日期不减
-            let endDate = currentDateRange.end;
-            if (!currentDateRange.isCustom) {
-                endDate = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
-            }
-            searchUrl += '&end_date=' + endDate.toISOString().split('T')[0];
-        }
-        
-        // 1. 先執行 Intent 解析獲取擴充關鍵字
-        fetch('/api/search_intent?keyword=' + encodeURIComponent(keyword))
-            .then(res => res.json())
-            .then(intentData => {
-                if(intentData.status === 'success' && intentData.queries.length > 0) {
-                    const mappedStr = intentData.queries.join('、');
-                    statusArea.innerHTML = `🔍 正在為您搜尋關於「${mappedStr}」的即時情資...`;
-                }
-                
-                // 2. 發送混合搜尋請求（帶時間範圍）
-                return fetch(searchUrl);
-            })
-            .then(res => res.json())
+        fetch('/api/trend_info?url=' + encodeURIComponent(url))
+            .then(r => r.json())
             .then(data => {
-                btn.innerHTML = origText;
-                btn.disabled = false;
-                
-                if (data.status === 'success') {
-                    // 更新狀態文字
-                    let newCount = Math.min(data.new_count || 0, data.posts.length);
-                    let historyCount = data.posts.length - newCount;
-                    statusArea.innerHTML = `✅ 已篩選 ${data.posts.length} 篇相關貼文。`;
-                    
-                    // 重繪表格
-                    const tbody = document.querySelector('table tbody');
-                    tbody.innerHTML = '';
-                    
-                    if (data.posts.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-muted">目前查無「${keyword}」相關文章</td></tr>`;
-                    } else {
-                        data.posts.forEach(post => {
-                            let score = post.analysis?.crisis_score || 0;
-                            let rowClass = score >= 7 ? 'high-crisis' : (score >= 4 ? 'mid-crisis' : (score === 0 ? 'bg-white' : 'low-crisis'));
-                            let scoreColor = score >= 7 ? 'text-danger' : (score >= 4 ? 'text-warning' : (score === 0 ? 'text-secondary' : 'text-success'));
-                            let sentimentBadge = '';
-                            if (post.analysis?.sentiment === '正面') sentimentBadge = '<span class="badge bg-success">正面</span>';
-                            else if (post.analysis?.sentiment === '負面') sentimentBadge = '<span class="badge bg-danger">負面</span>';
-                            else sentimentBadge = '<span class="badge bg-secondary">中立</span>';
-                            
-                            let likes = post.likes || 0;
-                            let comments = post.comments || 0;
-                            
-                            tbody.innerHTML += `
-                                <tr class="${rowClass}">
-                                    <td class="text-center fw-bold fs-5 ${scoreColor}">${score === 0 ? '-' : score}</td>
-                                    <td>${sentimentBadge}</td>
-                                    <td class="text-center"><span class="text-muted">-</span></td>
-                                    <td><strong style="color: #495057;">🕒 ${post.time_display || '未知時間'}</strong></td>
-                                    <td class="text-center">${likes}</td>
-                                    <td class="text-center">${comments}</td>
-                                    <td class="fw-bold">${post.analysis?.summary || ''}</td>
-                                    <td>
-                                        <div class="post-content">${post.content}</div>
-                                    </td>
-                                    <td>
-                                        <a href="${post.url}" target="_blank" class="btn btn-sm btn-outline-secondary mb-1">前往</a>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${post.url.replace(/'/g, "\\'")}')">刪除</button>
-                                    </td>
-                                </tr>
-                            `;
-                        });
-                    }
-                    
-                    // 更新圖表
-                    if (data.chart_data && window.scoreChartInstance && window.sentimentChartInstance) {
-                        window.scoreChartInstance.data.datasets[0].data = data.chart_data.scores;
-                        window.scoreChartInstance.update();
-                        
-                        window.sentimentChartInstance.data.datasets[0].data = data.chart_data.sentiments;
-                        window.sentimentChartInstance.update();
-                    }
-                    
-                    // 更新文字雲
-                    const wcCard = document.getElementById('wordcloudCard');
-                    if (data.wordcloud && data.wordcloud.length > 0) {
-                        wcCard.style.display = 'block';
-                        
-                        // WordCloud2JS require canvas element
-                        WordCloud(document.getElementById('wordcloudCanvas'), {
-                            list: data.wordcloud,
-                            fontFamily: 'Inter, system-ui, sans-serif',
-                            shape: 'circle',
-                            backgroundColor: 'transparent',
-                            color: function(word, weight) {
-                                const colors = ['#0A2540', '#FF3B30', '#FF9500', '#34C759', '#007AFF', '#5856D6', '#E24C00'];
-                                return colors[(word.charCodeAt(0) + weight) % colors.length];
-                            },
-                            weightFactor: function (size) {
-                                return (size * 5) + 16;
-                            }
-                        });
-                    } else {
-                        wcCard.style.display = 'none';
-                    }
+                if (data.status === 'not_found') {
+                    document.getElementById('trendModalBody').innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle fs-2 mb-2 d-block"></i>
+                            <p class="mb-1">此貼文尚無輿情走向分析資料。</p>
+                            <small>輿情走向分析針對 crisis_score &ge; 3 的負面貼文，每 6 小時執行一次。</small>
+                        </div>`;
+                } else if (data.status === 'success') {
+                    renderTrendModal(data.trend_info);
                 } else {
-                    alert('搜尋失敗: ' + data.message);
+                    document.getElementById('trendModalBody').innerHTML = `
+                        <div class="text-center text-danger py-4">載入失敗：${escHtml(data.message || '未知錯誤')}</div>`;
                 }
             })
             .catch(err => {
-                alert("發生錯誤：" + err);
-                btn.innerHTML = origText;
-                btn.disabled = false;
+                document.getElementById('trendModalBody').innerHTML = `
+                    <div class="text-center text-danger py-4">網路錯誤：${escHtml(String(err))}</div>`;
             });
     }
 
-    // 觸發更新
-    function triggerUpdate() {
-        const btn = document.getElementById('updateBtn');
-        btn.disabled = true;
-        btn.innerText = "⏳ 爬取與分析中 (約需 1-2 分鐘)...";
-        
-        fetch('/api/scrape', { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                btn.innerText = "重新載入頁面";
-            })
-            .catch(err => {
-                alert("發生錯誤：" + err);
-                btn.disabled = false;
-                btn.innerText = "🔄 即時更新數據";
-            });
+    function renderTrendModal(t) {
+        const trendBadgeMap = {
+            '擴大中': '<span class="badge bg-danger fs-6">擴大中</span>',
+            '出現反彈聲浪': '<span class="badge bg-warning text-dark fs-6">出現反彈聲浪</span>',
+            '校方已平息情緒': '<span class="badge bg-success fs-6">校方已平息情緒</span>'
+        };
+        const badge = trendBadgeMap[t.trend] || `<span class="badge bg-secondary">${escHtml(t.trend)}</span>`;
+        const score = t.gemini_sentiment_score || 0;
+        // 1-5 分量表：4-5 危險，3 警告，1-2 安全
+        const scoreColor = score >= 4 ? 'danger' : score >= 3 ? 'warning' : 'success';
+        const wordsHtml = t.negative_words?.length
+            ? t.negative_words.map(w => `<span class="badge bg-danger me-1 mb-1">${escHtml(w)}</span>`).join('')
+            : '<span class="text-muted">無</span>';
+        const complaintsHtml = t.top_3_complaints?.length
+            ? `<ol class="mb-0 ps-3">${t.top_3_complaints.map(c => `<li>${escHtml(c)}</li>`).join('')}</ol>`
+            : '<span class="text-muted small">留言數不足，無法列出</span>';
+
+        document.getElementById('trendModalBody').innerHTML = `
+            <div class="mb-3 d-flex align-items-center gap-3 flex-wrap">
+                ${badge}
+                <div class="flex-grow-1">
+                    <small class="text-muted d-block mb-1">負面情緒分數 ${score}/5</small>
+                    <div class="progress" style="height:10px;">
+                        <div class="progress-bar bg-${scoreColor}" style="width:${score * 20}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <strong class="text-secondary"><i class="fas fa-comment-alt"></i> 走向說明</strong>
+                <p class="mt-1 mb-0">${escHtml(t.reasoning)}</p>
+            </div>
+            <div class="mb-3">
+                <strong class="text-secondary"><i class="fas fa-exclamation-triangle"></i> 負面關鍵詞</strong>
+                <div class="mt-1">${wordsHtml}</div>
+            </div>
+            <div class="mb-3">
+                <strong class="text-secondary"><i class="fas fa-list-ol"></i> 學生最不滿的三點</strong>
+                <div class="mt-1">${complaintsHtml}</div>
+            </div>
+            <div class="border-top pt-3">
+                <strong class="text-secondary"><i class="fas fa-briefcase"></i> 公關處置分析報告</strong>
+                <p class="mt-2 mb-0" style="line-height:1.75; white-space:pre-line;">${escHtml(t.pr_analysis)}</p>
+            </div>`;
     }
+
+    // 初始化頁面：預設近 7 天，並觸發篩選（含摘要生成）
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const sevenDaysAgo = new Date(today);
+        sevenDaysAgo.setDate(today.getDate() - 7);
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+        document.getElementById('startDate').value = sevenDaysAgo.toISOString().split('T')[0];
+        filterByDate();
+    });
+
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

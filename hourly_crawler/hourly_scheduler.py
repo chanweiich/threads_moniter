@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
 """
-每小時數據爬取排程器
-負責每小時運行一次數據爬取，將新數據存入 threads_posts.db
+每小時數據排程器 (一次性執行，由 Windows 工作排程器每小時呼叫)
 
-適用於 Windows 任務計劃程序定時執行 & Mac cron 定時執行
+執行邏輯：
+  每次呼叫 → 執行 hourly_scraper.py + hourly_update.py
+  每 6 小時 → 額外執行 trend_update.py（依 trend_analysis 表的最新 analyzed_at 判斷）
 """
-import time
 import subprocess
 import datetime
 import os
 import sys
 import logging
 import platform
+import sqlite3
 
-# 獲取專案根目錄（hourly_scheduler.py 的上層目錄）
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOURLY_CRAWLER_DIR = os.path.join(PROJECT_ROOT, "hourly_crawler")
+DB_PATH = os.path.join(PROJECT_ROOT, "threads_posts.db")
 LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
 LOG_FILE = os.path.join(LOG_DIR, "hourly_scheduler.log")
 
-# 建立 logs 目錄
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# 設定日誌
 logging.basicConfig(
     level=logging.INFO,
     format='[%(asctime)s] %(levelname)s - %(message)s',
@@ -32,96 +31,87 @@ logging.basicConfig(
     ]
 )
 
+
 def get_venv_python():
-    """
-    跨平台獲取虛擬環境中的 Python 路徑
-    Windows: .venv\Scripts\python.exe
-    Mac/Linux: .venv/bin/python
-    """
     if platform.system() == "Windows":
         venv_python = os.path.join(PROJECT_ROOT, ".venv", "Scripts", "python.exe")
-    else:  # Mac, Linux
+    else:
         venv_python = os.path.join(PROJECT_ROOT, ".venv", "bin", "python")
-    
-    # 如果虛擬環境不存在，使用當前 Python 直譯器
+
     if not os.path.exists(venv_python):
         logging.warning(f"虛擬環境未找到 ({venv_python})，使用當前 Python")
         return sys.executable
-    
+
     return venv_python
 
-def run_hourly_scraper():
-    """運行每小時數據爬取"""
-    logging.info("🚀 啟動每小時數據爬取...")
 
+def make_env():
+    """建立子 process 環境變數，強制 UTF-8 輸出（修正 Windows CP950 emoji 錯誤）"""
+    return {**os.environ, 'PYTHONIOENCODING': 'utf-8'}
+
+
+def should_run_trend():
+    """
+    查詢 trend_analysis 表的最新 analyzed_at，
+    若距今超過 6 小時（或從未分析過）則回傳 True
+    """
     try:
-        venv_python = get_venv_python()
-        
-        # 運行 hourly_scraper.py（在 hourly_crawler 目錄中執行）
-        result = subprocess.run([venv_python, "hourly_scraper.py"],
-                              cwd=HOURLY_CRAWLER_DIR,
-                              capture_output=True,
-                              text=True,
-                              timeout=300)  # 5分鐘超時
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT MAX(analyzed_at) FROM trend_analysis")
+        row = cursor.fetchone()
+        conn.close()
+        if not row or not row[0]:
+            return True
+        last = datetime.datetime.fromisoformat(row[0])
+        elapsed = (datetime.datetime.now() - last).total_seconds()
+        return elapsed >= 6 * 3600
+    except Exception as e:
+        logging.warning(f"無法查詢 trend_analysis，預設執行趨勢分析：{e}")
+        return True
 
+
+def run_script(script_name, cwd, timeout, label):
+    """通用腳本執行函式"""
+    logging.info(f"啟動 {label}...")
+    try:
+        result = subprocess.run(
+            [get_venv_python(), script_name],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            env=make_env(),
+            timeout=timeout
+        )
         if result.returncode == 0:
-            logging.info("✅ 數據爬取完成")
+            logging.info(f"{label} 完成")
             if result.stdout:
-                logging.info(f"輸出: {result.stdout[-200:]}")
+                logging.info(f"輸出: {result.stdout[-300:]}")
         else:
-            logging.error(f"❌ 數據爬取失敗 (返回碼: {result.returncode})")
+            logging.error(f"{label} 失敗 (返回碼: {result.returncode})")
             if result.stderr:
                 logging.error(f"錯誤: {result.stderr[-500:]}")
-
     except subprocess.TimeoutExpired:
-        logging.warning("⏰ 數據爬取超時")
+        logging.warning(f"{label} 超時")
     except Exception as e:
-        logging.error(f"❌ 數據爬取異常: {e}")
+        logging.error(f"{label} 異常: {e}")
 
-def run_analysis_if_needed():
-    """每小時運行趨勢分析"""
-    logging.info("📊 啟動每小時趨勢分析...")
-
-    try:
-        venv_python = get_venv_python()
-
-        # 運行 track_trends.py（在根目錄執行）
-        result = subprocess.run([venv_python, "track_trends.py"],
-                              cwd=PROJECT_ROOT,
-                              capture_output=True,
-                              text=True,
-                              timeout=600)  # 10分鐘超時
-
-        if result.returncode == 0:
-            logging.info("✅ 趨勢分析完成")
-        else:
-            logging.error("❌ 趨勢分析失敗")
-            if result.stderr:
-                logging.error(f"錯誤: {result.stderr[-500:]}")
-
-    except subprocess.TimeoutExpired:
-        logging.warning("⏰ 趨勢分析超時")
-    except Exception as e:
-        logging.error(f"❌ 趨勢分析異常: {e}")
 
 if __name__ == "__main__":
     logging.info("=" * 60)
-    logging.info("🕐 Threads 每小時數據爬取排程器已啟動")
-    logging.info(f"💻 作業系統: {platform.system()} {platform.release()}")
-    logging.info(f"🐍 Python: {sys.version}")
-    logging.info("設定：")
-    logging.info("  - 每小時爬取新數據 → threads_posts.db")
-    logging.info("  - 每小時運行趨勢分析 → trend_analysis表")
-    logging.info(f"  - 日誌檔案：{LOG_FILE}")
-    logging.info("  - 虛擬環境：自動偵測 (Windows/Mac/Linux 相容)")
+    logging.info(f"排程器啟動 | {platform.system()} {platform.release()} | Python {sys.version.split()[0]}")
+
+    # 每次都執行：爬取新貼文 + 更新近 3 天指標
+    run_script("hourly_scraper.py", HOURLY_CRAWLER_DIR, timeout=600,  label="每小時爬蟲")
+    run_script("hourly_update.py",  PROJECT_ROOT,       timeout=1800, label="指標更新（近 3 天）")
+
+    # 每 6 小時執行：趨勢分析
+    if should_run_trend():
+        logging.info("距上次趨勢分析已超過 6 小時，執行趨勢分析...")
+        run_script("trend_update.py", PROJECT_ROOT, timeout=1800, label="趨勢分析")
+    else:
+        logging.info("趨勢分析距上次不足 6 小時，跳過。")
+
+    logging.info("本次排程執行完畢。")
     logging.info("=" * 60)
-
-    while True:
-        # 每小時運行數據爬取
-        run_hourly_scraper()
-
-        # 每小時運行趨勢分析
-        run_analysis_if_needed()
-
-        logging.info("😴 等待下一個小時...")
-        time.sleep(3600)  # 休眠 1 小時
