@@ -39,48 +39,6 @@ def get_python_executable():
     return sys.executable
 
 
-def parse_threads_time(time_str, content_str=""):
-    now = datetime.now()
-    
-    if content_str:
-        match_content = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', content_str)
-        if match_content:
-            try: return datetime(int(match_content.group(1)), int(match_content.group(2)), int(match_content.group(3)))
-            except: pass
-                
-    if not time_str: return None
-    time_str = time_str.strip().lower()
-    
-    match = re.search(r'^(\d+)\s*天', time_str)
-    if match: return now - timedelta(days=int(match.group(1)))
-        
-    match = re.search(r'^(\d+)\s*(h|小時)', time_str)
-    if match: return now - timedelta(hours=int(match.group(1)))
-        
-    match = re.search(r'^(\d+)\s*(m|分鐘)', time_str)
-    if match: return now - timedelta(minutes=int(match.group(1)))
-        
-    match = re.search(r'^(\d+)\s*(s|秒)', time_str)
-    if match: return now - timedelta(seconds=int(match.group(1)))
-        
-    match = re.search(r'^(\d+)\s*(w|週)', time_str)
-    if match: return now - timedelta(weeks=int(match.group(1)))
-        
-    match = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', time_str)
-    if match:
-        try: return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)))
-        except: pass
-            
-    try:
-        parts = time_str.split('/')
-        if len(parts) == 3: return datetime.strptime(time_str, "%m/%d/%y")
-        elif len(parts) == 2:
-            dt = datetime.strptime(time_str, "%m/%d")
-            return dt.replace(year=now.year)
-    except: pass
-        
-    return None
-
 
 def get_actual_post_time(time_str, reference_datetime=None):
     if not time_str:
@@ -176,7 +134,7 @@ def index():
                 if real_post_time:
                     real_post_time_display = real_post_time.strftime('%Y/%m/%d %H:%M')
                 else:
-                    real_post_time_display = post.get("post_date", "") or '日期不明'
+                    real_post_time_display = '日期不明'
 
                 content_str = post.get("content", "") or ""
                 author_str = post.get("author", "") or ""
@@ -256,18 +214,20 @@ def index():
     except Exception as e:
         print(f"❌ 讀取附加資料錯誤: {e}")
             
-    extracted_count = 0
     for item in data:
-        # parse_threads_time 會嘗試解析資料庫中的 post_date 內容
-        dt = parse_threads_time(item.get('time', ''), item.get('content', ''))
-        if dt:
-            item['timestamp'] = dt.timestamp()
-            item['time_display'] = dt.strftime('%Y/%m/%d')
-            extracted_count += 1
+        rpt = item.get('real_post_time_display', '')
+        if rpt and rpt != '日期不明':
+            try:
+                dt = datetime.strptime(rpt[:10], '%Y/%m/%d')
+                item['timestamp'] = dt.timestamp()
+                item['time_display'] = dt.strftime('%Y/%m/%d')
+            except:
+                item['timestamp'] = 0.0
+                item['time_display'] = '日期不明'
         else:
             item['timestamp'] = 0.0
-            item['time_display'] = item.get('time') if item.get('time') else '日期不明'
-            
+            item['time_display'] = '日期不明'
+
         item['trend_info'] = trend_data.get(item.get('url'))
             
     # 排序邏輯：危機分數高者在前，分數相同則日期新者在前
@@ -380,9 +340,12 @@ def filter_by_date_range(posts, start_date_str=None, end_date_str=None):
 
     filtered = []
     for post in posts:
-        post_dt = parse_threads_time(post.get('time', ''), post.get('content', ''))
-
-        if not post_dt:
+        rpt = post.get('real_post_time_display', '')
+        if not rpt or rpt == '日期不明':
+            continue
+        try:
+            post_dt = datetime.strptime(rpt[:10], '%Y/%m/%d')
+        except:
             continue
 
         in_range = True
@@ -443,7 +406,7 @@ def search_posts():
         conn = get_db_connection()
         cursor = conn.cursor()
         query = """
-            SELECT p.url, p.author, p.content, p.likes, p.comments, p.post_date,
+            SELECT p.url, p.author, p.content, p.likes, p.comments, p.post_date, p.created_at,
                    a.summary, a.sentiment, a.crisis_score
             FROM posts p
             LEFT JOIN post_analysis a ON p.url = a.post_url
@@ -452,15 +415,20 @@ def search_posts():
         rows = cursor.fetchall()
         for row in rows:
             post = dict(row)
-            
-            # 【重點】計算 time_display
-            time_str = post.get("post_date", "")
-            dt = parse_threads_time(time_str, post.get("content", ""))
-            if dt:
-                time_display = dt.strftime('%Y/%m/%d')
-                timestamp = dt.timestamp()
+
+            created_at = post.get("created_at")
+            actual_post_dt = None
+            if created_at:
+                try:
+                    actual_post_dt = datetime.fromisoformat(created_at)
+                except:
+                    pass
+            real_post_time = get_actual_post_time(post.get("post_date", ""), actual_post_dt)
+            if real_post_time:
+                time_display = real_post_time.strftime('%Y/%m/%d')
+                timestamp = real_post_time.timestamp()
             else:
-                time_display = time_str if time_str else '日期不明'
+                time_display = '日期不明'
                 timestamp = 0.0
             
             _content = post.get("content", "") or ""

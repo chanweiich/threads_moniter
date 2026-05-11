@@ -186,7 +186,7 @@
     let chartInstPn = null;
 
     // 格式化資料，供圖表使用
-    function processData(posts) {
+    function processData(posts, startVal, endVal) {
         let totalCount = posts.length;
         let posCount = 0, negCount = 0, neuCount = 0;
         let dailyStats = {};
@@ -199,17 +199,30 @@
             else if (sentiment === '負面') negCount++;
             else neuCount++;
             
-            // 2. 計算每日數據
-            let date = post.time_display; // 預期格式如 YYYY/MM/DD
-            if (!dailyStats[date]) {
-                dailyStats[date] = { count: 0, likes: 0, comments: 0, pos: 0, neg: 0 };
+            // 2. 計算每日數據（僅限在選取區間內的日期）
+            // 使用 real_post_time_display（以 created_at 為基準）確保與 filter 邏輯一致
+            let rawDisplay = post.real_post_time_display || '';
+            let date = (rawDisplay.length >= 10 && rawDisplay !== '日期不明')
+                ? rawDisplay.substring(0, 10)
+                : '日期不明';
+            let skipDate = false;
+            if (startVal && endVal && date && date !== '日期不明') {
+                let parts = date.split('/');
+                let postDt = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+                let startDt = new Date(startVal + "T00:00:00");
+                let endDt = new Date(endVal + "T23:59:59");
+                if (postDt < startDt || postDt > endDt) skipDate = true;
             }
-            dailyStats[date].count++;
-            dailyStats[date].likes += parseInt(post.likes) || 0;
-            dailyStats[date].comments += parseInt(post.comments) || 0;
-            
-            if (sentiment === '正面') dailyStats[date].pos++;
-            if (sentiment === '負面') dailyStats[date].neg++;
+            if (!skipDate) {
+                if (!dailyStats[date]) {
+                    dailyStats[date] = { count: 0, likes: 0, comments: 0, pos: 0, neg: 0 };
+                }
+                dailyStats[date].count++;
+                dailyStats[date].likes += parseInt(post.likes) || 0;
+                dailyStats[date].comments += parseInt(post.comments) || 0;
+                if (sentiment === '正面') dailyStats[date].pos++;
+                if (sentiment === '負面') dailyStats[date].neg++;
+            }
             
             // 3. 文字雲詞頻計算 (擷取摘要中的詞彙當作備案)
             if (post.trend_info && post.trend_info.negative_words && post.trend_info.negative_words.length > 0) {
@@ -225,6 +238,22 @@
             }
         });
         
+        // 產生選取區間內的連續日期（若有指定）
+        if (startVal && endVal) {
+            let cur = new Date(startVal + "T00:00:00");
+            let end = new Date(endVal + "T00:00:00");
+            while (cur <= end) {
+                let key = cur.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/');
+                // 格式統一為 YYYY/MM/DD
+                let y = cur.getFullYear();
+                let m = String(cur.getMonth() + 1).padStart(2, '0');
+                let d = String(cur.getDate()).padStart(2, '0');
+                key = `${y}/${m}/${d}`;
+                if (!dailyStats[key]) dailyStats[key] = { count: 0, likes: 0, comments: 0, pos: 0, neg: 0 };
+                cur.setDate(cur.getDate() + 1);
+            }
+        }
+
         // 將每日數據轉為陣列並照日期排序
         let sortedDates = Object.keys(dailyStats).sort();
         let interactionChartData = {
@@ -237,7 +266,12 @@
             labels: sortedDates,
             pos: sortedDates.map(d => dailyStats[d].pos),
             neg: sortedDates.map(d => dailyStats[d].neg),
-            ratio: sortedDates.map(d => dailyStats[d].neg === 0 ? dailyStats[d].pos : (dailyStats[d].pos / dailyStats[d].neg).toFixed(2))
+            ratio: sortedDates.map(d => {
+                let pos = dailyStats[d].pos, neg = dailyStats[d].neg;
+                if (pos === 0 && neg === 0) return null;
+                if (neg === 0) return null; // 全正面無法計算比例，不顯示點
+                return parseFloat((pos / neg).toFixed(2));
+            })
         };
         
         // 轉換文字雲陣列格式 [ ['詞', 權重], ... ]
@@ -314,7 +348,9 @@
     // 主渲染引擎 (統一更新圖表與清單)
     function renderDashboard(posts) {
         renderList(posts);
-        let stats = processData(posts);
+        let startVal = document.getElementById('startDate').value;
+        let endVal = document.getElementById('endDate').value;
+        let stats = processData(posts, startVal, endVal);
         
         // 1. Doughnut Chart (甜甜圈圖)
         const centerTextDiv = document.getElementById('doughnutCenterText');
@@ -366,9 +402,9 @@
             data: {
                 labels: stats.interactionChartData.labels,
                 datasets: [
-                    { type: 'bar', label: '每日則數', data: stats.interactionChartData.counts, backgroundColor: '#0dcaf0', yAxisID: 'y', borderRadius: 4 },
-                    { type: 'line', label: '愛心總和', data: stats.interactionChartData.likes, borderColor: '#ffc107', backgroundColor: '#ffc107', tension: 0.2, borderWidth: 3, yAxisID: 'y1' },
-                    { type: 'line', label: '留言總和', data: stats.interactionChartData.comments, borderColor: '#6f42c1', backgroundColor: '#6f42c1', tension: 0.2, borderWidth: 3, yAxisID: 'y1' }
+                    { type: 'bar', label: '每日則數', data: stats.interactionChartData.counts, backgroundColor: '#0dcaf0', yAxisID: 'y', borderRadius: 4, order: 2 },
+                    { type: 'line', label: '愛心總和', data: stats.interactionChartData.likes, borderColor: '#ffc107', backgroundColor: '#ffc107', tension: 0.2, borderWidth: 3, yAxisID: 'y1', order: 1 },
+                    { type: 'line', label: '留言總和', data: stats.interactionChartData.comments, borderColor: '#6f42c1', backgroundColor: '#6f42c1', tension: 0.2, borderWidth: 3, yAxisID: 'y1', order: 1 }
                 ]
             },
             options: { 
@@ -387,9 +423,9 @@
             data: {
                 labels: stats.pnChartData.labels,
                 datasets: [
-                    { type: 'bar', label: '正面則數', data: stats.pnChartData.pos, backgroundColor: '#28a745', borderRadius: 4 },
-                    { type: 'bar', label: '負面則數', data: stats.pnChartData.neg, backgroundColor: '#dc3545', borderRadius: 4 },
-                    { type: 'line', label: 'P/N比 (黑線)', data: stats.pnChartData.ratio, borderColor: '#343a40', backgroundColor: '#343a40', borderWidth: 2, tension: 0.1, yAxisID: 'y1' }
+                    { type: 'bar', label: '正面則數', data: stats.pnChartData.pos, backgroundColor: '#28a745', borderRadius: 4, order: 2 },
+                    { type: 'bar', label: '負面則數', data: stats.pnChartData.neg, backgroundColor: '#dc3545', borderRadius: 4, order: 2 },
+                    { type: 'line', label: 'P/N比 (黑線)', data: stats.pnChartData.ratio, borderColor: '#343a40', backgroundColor: '#343a40', borderWidth: 2, tension: 0.1, yAxisID: 'y1', order: 1 }
                 ]
             },
             options: { 
@@ -416,21 +452,21 @@
             let endDt = endVal ? new Date(endVal + "T23:59:59") : new Date("2100-01-01");
 
             filteredPosts = allPostsData.map(p => ({ ...p, _viral_during_range: false })).filter(p => {
-                if(!p.real_post_time_display) return true;
-                let dtStr = p.real_post_time_display.replace(/\//g, '-');
+                let dtStr = p.real_post_time_display ? p.real_post_time_display.replace(/\//g, '-') : '';
                 let pDt = new Date(dtStr);
-                if (isNaN(pDt.getTime())) return true;
+                let validDate = dtStr && !isNaN(pDt.getTime());
 
-                // 發布日期在篩選範圍內：正常顯示
-                if (pDt >= startDt && pDt <= endDt) return true;
-
-                // 後端透過快照計算後標記的炎上貼文
+                // 後端透過快照計算後標記的炎上貼文（日期可能在範圍外）
                 if (p.viral_during_range) {
                     p._viral_during_range = true;
                     return true;
                 }
 
-                return false;
+                // 無法解析日期的貼文不納入
+                if (!validDate) return false;
+
+                // 發布日期在篩選範圍內
+                return pDt >= startDt && pDt <= endDt;
             });
         }
 
