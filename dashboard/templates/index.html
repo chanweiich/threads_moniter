@@ -18,7 +18,7 @@
             text-align: center; font-size: 2.5rem; font-weight: bold; pointer-events: none; 
             color: #333;
         }
-        .scrollable-list { max-height: calc(100vh - 200px); overflow-y: auto; }
+        .scrollable-list { flex: 1 1 0; min-height: 0; overflow-y: auto; }
         .post-card { 
             background: #fff; border-radius: 8px; padding: 15px; 
             margin-bottom: 12px; border-left: 4px solid transparent; 
@@ -72,12 +72,12 @@
                     <div class="row g-3 mb-3">
                         <div class="col-md-5">
                             <div class="card h-100 shadow-sm border-0">
-                                <div class="card-body position-relative">
+                                <div class="card-body">
                                     <h6 class="card-title fw-bold text-secondary"><i class="fas fa-chart-pie"></i> 總體情緒分佈</h6>
                                     <div class="chart-container" style="height: 220px;">
                                         <canvas id="sentimentDoughnut"></canvas>
+                                        <div id="doughnutCenterText" class="doughnut-center">0</div>
                                     </div>
-                                    <div id="doughnutCenterText" class="doughnut-center">0</div>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                     <div class="card mb-3 shadow-sm border-0">
                         <div class="card-body">
                             <h6 class="card-title fw-bold text-secondary"><i class="fas fa-cloud"></i> 核心文字雲</h6>
-                            <div id="wordCloudContainer" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 200px;">
+                            <div id="wordCloudContainer" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px;">
                                 </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                 </div>
 
                 <div class="col-xl-5 col-lg-5">
-                    <div class="card shadow-sm border-0 h-100">
+                    <div class="card shadow-sm border-0 h-100 d-flex flex-column">
                         <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-list-ul"></i> 監控貼文列表</span>
                             <span class="badge bg-primary" id="listCountBadge">0 筆</span>
@@ -224,18 +224,7 @@
                 if (sentiment === '負面') dailyStats[date].neg++;
             }
             
-            // 3. 文字雲詞頻計算 (擷取摘要中的詞彙當作備案)
-            if (post.trend_info && post.trend_info.negative_words && post.trend_info.negative_words.length > 0) {
-                post.trend_info.negative_words.forEach(word => {
-                    wordsCount[word] = (wordsCount[word] || 0) + 1;
-                });
-            } else if (post.analysis && post.analysis.summary) {
-                // 退一步：若沒有提供關鍵字，從 summary 拆解長度 >=2 的詞充當示範
-                let words = post.analysis.summary.split(/[\s,，、。！!？?]+/).filter(w => w.length >= 2);
-                words.forEach(word => {
-                    wordsCount[word] = (wordsCount[word] || 0) + 1;
-                });
-            }
+            // 文字雲改由後端 jieba 處理，前端不再計算
         });
         
         // 產生選取區間內的連續日期（若有指定）
@@ -283,9 +272,8 @@
         return { totalCount, posCount, negCount, neuCount, interactionChartData, pnChartData, wordsList };
     }
 
-    // 渲染右側列表（過濾掉回覆貼文，只顯示原始貼文）
+    // 渲染右側列表（回覆已在 renderDashboard 統一過濾）
     function renderList(posts) {
-        posts = posts.filter(p => !p.is_reply);
         const container = document.getElementById('postListContainer');
         document.getElementById('listCountBadge').innerText = `${posts.length} 筆`;
         container.innerHTML = '';
@@ -301,12 +289,12 @@
             let sentClass = sentiment === '正面' ? 'pos' : (sentiment === '負面' ? 'neg' : 'neu');
             let badgeClass = sentiment === '正面' ? 'bg-success' : (sentiment === '負面' ? 'bg-danger' : 'bg-secondary');
 
-            let contentExcerpt = post.content ? post.content.substring(0, 200) : '';
+            let contentExcerpt = escHtml(post.content ? post.content.substring(0, 200) : '');
             if(post.content && post.content.length > 200) contentExcerpt += '...';
 
-            let timeDisplay = post.real_post_time_display || '未知時間';
-            let title = post.analysis.summary || '無標題';
-            let author = post.author || '未知帳號';
+            let timeDisplay = escHtml(post.real_post_time_display || '未知時間');
+            let title = escHtml(post.analysis.summary || '無標題');
+            let author = escHtml(post.author || '未知帳號');
             let viralBadge = (post.viral_during_range || post._viral_during_range)
                 ? '<span class="badge bg-warning text-dark mb-1 ms-1 fs-6"><i class="fas fa-fire"></i> 炎上（高互動）</span>'
                 : '';
@@ -331,7 +319,8 @@
                     <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
                         <div class="fw-bold fs-6">
                             <span class="me-3 text-secondary"><i class="fas fa-comment"></i> 回覆: <span class="text-dark">${post.comments || 0}</span></span>
-                            <span class="text-secondary"><i class="fas fa-heart text-danger"></i> 讚數: <span class="text-dark">${post.likes || 0}</span></span>
+                            <span class="me-3 text-secondary"><i class="fas fa-heart text-danger"></i> 讚數: <span class="text-dark">${post.likes || 0}</span></span>
+                            <span class="text-secondary"><i class="fas fa-eye text-info"></i> 瀏覽: <span class="text-dark">${post.views || 0}</span></span>
                         </div>
                         <div class="btn-group">
                             <a href="${post.url}" target="_blank" class="btn btn-sm btn-outline-primary fw-bold">前往貼文</a>
@@ -345,8 +334,70 @@
         container.innerHTML = htmlParts.join('');
     }
 
+    const wcPalette = [
+        '#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c',
+        '#3498db','#9b59b6','#e91e63','#00bcd4','#ff5722',
+        '#8bc34a','#673ab7','#ff9800','#03a9f4','#4caf50'
+    ];
+
+    function drawWordCloud(wordsList) {
+        const wcContainer = document.getElementById('wordCloudContainer');
+        const wcW = wcContainer.offsetWidth || 600;
+        const wcH = 300;
+        wcContainer.innerHTML = `<canvas id="wordCloudCanvas" width="${wcW}" height="${wcH}"></canvas>`;
+
+        if (!wordsList || wordsList.length === 0) {
+            wcContainer.innerHTML = '<span class="text-muted small">詞彙不足，無法產生文字雲</span>';
+            return;
+        }
+
+        const weights = wordsList.map(w => w[1]);
+        const wcMax = Math.max(...weights) || 1;
+        const wcMin = Math.min(...weights) || 1;
+
+        WordCloud(document.getElementById('wordCloudCanvas'), {
+            list: wordsList,
+            weightFactor: size => {
+                const normalized = (size - wcMin) / (wcMax - wcMin || 1);
+                return Math.round(14 + normalized * 52);
+            },
+            fontFamily: 'Microsoft JhengHei, 微軟正黑體, sans-serif',
+            fontWeight: 'bold',
+            color: () => wcPalette[Math.floor(Math.random() * wcPalette.length)],
+            backgroundColor: 'transparent',
+            gridSize: 10,
+            rotateRatio: 0,
+            minSize: 12,
+            drawOutOfBound: false,
+            shrinkToFit: true
+        });
+    }
+
+    function renderWordCloud(posts) {
+        const wcContainer = document.getElementById('wordCloudContainer');
+        wcContainer.innerHTML = '<span class="text-muted small"><i class="fas fa-spinner fa-spin"></i> 產生中...</span>';
+
+        const urls = posts.map(p => p.url).filter(Boolean);
+        if (urls.length === 0) { drawWordCloud([]); return; }
+
+        fetch('/api/wordcloud', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ urls })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') drawWordCloud(data.words);
+            else wcContainer.innerHTML = `<span class="text-danger small">文字雲載入失敗</span>`;
+        })
+        .catch(() => {
+            wcContainer.innerHTML = '<span class="text-danger small">文字雲載入失敗</span>';
+        });
+    }
+
     // 主渲染引擎 (統一更新圖表與清單)
     function renderDashboard(posts) {
+        posts = posts.filter(p => !p.is_reply);
         renderList(posts);
         let startVal = document.getElementById('startDate').value;
         let endVal = document.getElementById('endDate').value;
@@ -383,17 +434,8 @@
             }
         });
 
-        // 2. 文字雲
-        const wcContainer = document.getElementById('wordCloudContainer');
-        wcContainer.innerHTML = '<canvas id="wordCloudCanvas" style="width: 100%; height: 200px;"></canvas>';
-        WordCloud(document.getElementById('wordCloudCanvas'), { 
-            list: stats.wordsList,
-            weightFactor: 1, // 調整文字大小權重
-            fontFamily: '微軟正黑體, sans-serif',
-            color: 'random-dark',
-            backgroundColor: 'transparent',
-            gridSize: 8
-        });
+        // 2. 文字雲：呼叫後端 jieba API
+        renderWordCloud(posts);
 
         // 3. Interaction Chart (複合圖：則數/愛心/留言)
         if (chartInstInteraction) chartInstInteraction.destroy();
@@ -470,9 +512,10 @@
             });
         }
 
-        currentFilteredPosts = filteredPosts;
-        renderDashboard(filteredPosts);
-        generateSummaryForPosts(filteredPosts);
+        const nonReplyPosts = filteredPosts.filter(p => !p.is_reply);
+        currentFilteredPosts = nonReplyPosts;
+        renderDashboard(nonReplyPosts);
+        generateSummaryForPosts(nonReplyPosts);
     }
 
     // 清除篩選 → 回到預設 7 天

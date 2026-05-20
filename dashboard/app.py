@@ -47,7 +47,10 @@ def get_actual_post_time(time_str, reference_datetime=None):
         reference_datetime = datetime.now()
 
     time_str = time_str.strip().lower()
-    
+
+    if time_str in ('近期', '剛剛', 'now', 'just now', 'recently'):
+        return reference_datetime
+
     match = re.search(r'^(\d+)\s*天', time_str)
     if match:
         return reference_datetime - timedelta(days=int(match.group(1)))
@@ -67,6 +70,17 @@ def get_actual_post_time(time_str, reference_datetime=None):
     match = re.search(r'^(\d+)\s*(w|週)', time_str)
     if match:
         return reference_datetime - timedelta(weeks=int(match.group(1)))
+
+    # ISO 8601 含時間，例如 2026-05-19T07:44:00.000Z
+    match = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})[t ](\d{1,2}):(\d{2})', time_str)
+    if match:
+        try:
+            from datetime import timezone
+            dt_utc = datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)),
+                              int(match.group(4)), int(match.group(5)), tzinfo=timezone.utc)
+            return dt_utc.astimezone().replace(tzinfo=None)
+        except:
+            pass
 
     match = re.search(r'(\d{4})[-/](\d{1,2})[-/](\d{1,2})', time_str)
     if match:
@@ -111,8 +125,8 @@ def index():
             cursor = conn.cursor()
             # 根據你提供的資料表結構進行查詢
             query = """
-                SELECT p.url, p.author, p.content, p.likes, p.comments, 
-                       p.reposts, p.shares, p.post_date, p.created_at,
+                SELECT p.url, p.author, p.content, p.likes, p.comments,
+                       p.reposts, p.shares, p.views, p.post_date, p.created_at,
                        a.summary, a.sentiment, a.crisis_score
                 FROM posts p
                 LEFT JOIN post_analysis a ON p.url = a.post_url
@@ -153,6 +167,7 @@ def index():
                     "comments": post.get("comments") or 0,
                     "reposts": post.get("reposts") or 0,
                     "shares": post.get("shares") or 0,
+                    "views": post.get("views") or 0,
                     "time": post.get("post_date", ""),
                     "real_post_time_display": real_post_time_display,
                     "is_reply": is_reply,
@@ -708,6 +723,80 @@ def delete_post():
     except Exception as e:
         print(f"資料庫刪除錯誤: {e}")
         return jsonify({"status": "error", "message": f"刪除失敗：{str(e)}"}), 500
+
+@app.route('/api/wordcloud', methods=['POST'])
+def get_wordcloud():
+    body = request.get_json(silent=True) or {}
+    urls = body.get('urls', [])
+    if not urls:
+        return jsonify({'status': 'success', 'words': []})
+
+    try:
+        import jieba
+        import logging as _logging
+        jieba.setLogLevel(_logging.WARNING)
+
+        placeholders = ','.join('?' * len(urls))
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            f"SELECT author, content FROM posts WHERE url IN ({placeholders})",
+            urls
+        )
+        rows = cursor.fetchall()
+        conn.close()
+
+        stopwords = {
+            '的','了','是','在','有','和','也','都','而','及','與','著','或','被','把',
+            '讓','給','向','對','從','到','於','但','如','若','雖','因','所','以',
+            '我','你','他','她','它','我們','你們','他們','她們','自己','大家',
+            '這','那','這個','那個','這些','那些','這樣','那樣','這裡','那裡',
+            '什麼','哪裡','誰','怎麼','為什麼','如何','怎樣',
+            '今天','昨天','明天','現在','以後','以前','之後','之前','最近','當時',
+            '真的','確實','其實','一直','一些','一起','一個','已經','還是','只是',
+            '可以','應該','必須','需要','希望','認為','覺得','感覺','感到','知道',
+            '看到','說到','沒有','不是','不會','不要','不能','還有','也有','就是',
+            '非常','十分','很','太','最','比較','超','特別','相當','真',
+            '謝謝','感謝','哈哈','哈','啊','喔','喜歡','開心','好',
+            '政大','nccu',
+        }
+
+        emoji_re = re.compile(
+            '[\U0001F300-\U0001F9FF\U0001FA00-\U0001FAFF'
+            '\U00002600-\U000027BF\U0001F1E0-\U0001F1FF]+',
+            flags=re.UNICODE
+        )
+
+        word_count = {}
+        for row in rows:
+            text = row['content'] or ''
+            author = row['author'] or ''
+
+            if author:
+                text = text.replace(author, ' ')
+            text = re.sub(r'\d+\s*(小時|分鐘|秒|天|週|周|個月|年)前?', ' ', text)
+            text = re.sub(r'#\S+', ' ', text)
+            text = re.sub(r'https?://\S+', ' ', text)
+            text = emoji_re.sub(' ', text)
+            text = re.sub(r'\d+', ' ', text)
+            text = re.sub(r'[^一-鿿㄀-ㄯ˙a-zA-Z\s]', ' ', text)
+
+            for word in jieba.cut(text):
+                word = word.strip()
+                if len(word) < 2:
+                    continue
+                if word.lower() in stopwords:
+                    continue
+                if re.fullmatch(r'[\d\s]+', word):
+                    continue
+                word_count[word] = word_count.get(word, 0) + 1
+
+        top_words = sorted(word_count.items(), key=lambda x: x[1], reverse=True)[:80]
+        return jsonify({'status': 'success', 'words': [[w, c] for w, c in top_words]})
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)})
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
