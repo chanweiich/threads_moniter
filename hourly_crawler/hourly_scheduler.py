@@ -13,6 +13,7 @@ import sys
 import logging
 import platform
 import sqlite3
+import time
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOURLY_CRAWLER_DIR = os.path.join(PROJECT_ROOT, "hourly_crawler")
@@ -103,12 +104,14 @@ if __name__ == "__main__":
     logging.info(f"排程器啟動 | {platform.system()} {platform.release()} | Python {sys.version.split()[0]}")
 
     # 每次都執行：爬取新貼文 + 更新近 3 天指標
-    run_script("hourly_scraper.py", HOURLY_CRAWLER_DIR, timeout=600,  label="每小時爬蟲")
+    run_script("hourly_scraper.py", HOURLY_CRAWLER_DIR, timeout=1800, label="每小時爬蟲")
+    time.sleep(10)
     run_script("hourly_update.py",  PROJECT_ROOT,       timeout=1800, label="指標更新（近 3 天）")
 
     # 每 6 小時執行：趨勢分析
     if should_run_trend():
         logging.info("距上次趨勢分析已超過 6 小時，執行趨勢分析...")
+        time.sleep(10)
         run_script("trend_update.py", PROJECT_ROOT, timeout=1800, label="趨勢分析")
     else:
         logging.info("趨勢分析距上次不足 6 小時，跳過。")

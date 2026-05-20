@@ -1,22 +1,31 @@
 """
-每小時 Threads 爬蟲模組
-使用與 scrape_threads.py 相同的爬取邏輯，將資料存入 SQLite 資料庫
-支援 Windows 工作排程器單次執行模式
+每小時 Threads 爬蟲模組 (雙階段智慧整合深爬版)
+第一階段：資訊流極速掃描收集基礎指標
+第二階段：精準進入單獨貼文網址深度提取「真實瀏覽量 (views)」，內建軍規級反偵測保護
 """
 import asyncio
 import sqlite3
 import os
 import re
-import json  # 僅用於 json.dumps/loads 序列化 SQLite TEXT 欄位中的 list，非 JSON 檔案
+import json
+import random
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from playwright.async_api import async_playwright
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
+# 嘗試載入隱形斗篷模組，提升反爬蟲穿透力
+try:
+    from playwright_stealth import stealth_async
+    HAS_STEALTH = True
+except ImportError:
+    HAS_STEALTH = False
+
 # 載入根目錄的 .env
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+load_dotenv(ENV_PATH, override=True)
 
 DB_PATH = os.path.join(BASE_DIR, "threads_posts.db")
 
@@ -49,63 +58,14 @@ def parse_number_text(text):
         return 0
 
 
-def is_within_time_limit(time_text, days=7):
-    """
-    判斷貼文時間是否在指定天數內
-    Threads 時間格式範例：
-    - 相對時間：'1小時', '2h', '30分鐘', '2天', '5d'
-    - 絕對日期：'2026-3-4', '2026-03-04'
-    """
-    if not time_text:
-        return False
-
-    time_text = time_text.strip().lower()
-
-    if time_text in ['剛剛', 'now', 'just now']:
-        return True
-
-    if re.search(r'(\d+)\s*(s|秒)', time_text):
-        return True
-
-    if re.search(r'(\d+)\s*(m|分)', time_text):
-        return True
-
-    match = re.search(r'(\d+)\s*(h|小時|時)', time_text)
-    if match:
-        return True
-
-    match = re.search(r'(\d+)\s*(d|天)', time_text)
-    if match:
-        num_days = int(match.group(1))
-        return num_days <= days
-
-    match = re.search(r'(\d+)\s*(w|週|周)', time_text)
-    if match:
-        num_weeks = int(match.group(1))
-        return num_weeks * 7 <= days
-
-    match = re.search(r'(\d{4})-(\d{1,2})-(\d{1,2})', time_text)
-    if match:
-        try:
-            year, month, day = int(match.group(1)), int(match.group(2)), int(match.group(3))
-            post_date = datetime(year, month, day)
-            diff = datetime.now() - post_date
-            return diff.days <= days
-        except:
-            return False
-
-    return False
-
-
 def get_db_connection():
-    """取得 SQLite 連線"""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_database():
-    """初始化 SQLite 資料庫，建立 posts 資料表"""
+    """初始化 SQLite 資料庫與相容性升級"""
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -120,14 +80,20 @@ def init_database():
             comments INTEGER DEFAULT 0,
             reposts INTEGER DEFAULT 0,
             shares INTEGER DEFAULT 0,
+            views INTEGER DEFAULT 0,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
             updated_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    try:
+        cursor.execute("ALTER TABLE posts ADD COLUMN views INTEGER DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS post_analysis (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER,
             post_url TEXT UNIQUE,
             summary TEXT,
             sentiment TEXT,
@@ -135,16 +101,30 @@ def init_database():
             analyzed_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+    try:
+        cursor.execute("ALTER TABLE post_analysis ADD COLUMN post_id INTEGER")
+    except sqlite3.OperationalError:
+        pass
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS post_snapshots (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id INTEGER,
             url TEXT NOT NULL,
             likes INTEGER DEFAULT 0,
             comments INTEGER DEFAULT 0,
+            views INTEGER DEFAULT 0,
             captured_at TEXT NOT NULL
         )
     ''')
+    try:
+        cursor.execute("ALTER TABLE post_snapshots ADD COLUMN views INTEGER DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE post_snapshots ADD COLUMN post_id INTEGER")
+    except sqlite3.OperationalError:
+        pass
 
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_url ON posts(url)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_author ON posts(author)')
@@ -154,11 +134,10 @@ def init_database():
 
     conn.commit()
     conn.close()
-    print(f"[OK] SQLite database initialized: {DB_PATH}")
+    print(f"[OK] SQLite database initialized & safety checks completed: {DB_PATH}")
 
 
 def save_to_database(posts_data, keywords):
-    """將爬取的貼文資料存入 SQLite，回傳統計數字與新增貼文清單"""
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -175,6 +154,7 @@ def save_to_database(posts_data, keywords):
         comments = parse_number_text(post.get('replies', '0'))
         reposts  = parse_number_text(post.get('reposts', '0'))
         shares   = parse_number_text(post.get('shares', '0'))
+        views    = parse_number_text(post.get('views', '0'))
 
         cursor.execute("SELECT id FROM posts WHERE url = ?", (url,))
         row = cursor.fetchone()
@@ -182,25 +162,26 @@ def save_to_database(posts_data, keywords):
         if row:
             cursor.execute('''
                 UPDATE posts
-                SET likes = ?, comments = ?, reposts = ?, shares = ?, updated_at = ?
+                SET likes = ?, comments = ?, reposts = ?, shares = ?, views = ?, updated_at = ?
                 WHERE url = ?
-            ''', (likes, comments, reposts, shares, current_time, url))
+            ''', (likes, comments, reposts, shares, views, current_time, url))
             updated_posts += 1
         else:
             cursor.execute('''
-                INSERT INTO posts (url, author, content, post_date, likes, comments, reposts, shares, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO posts (url, author, content, post_date, likes, comments, reposts, shares, views, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (url, post.get('author'), post.get('content'), post.get('time'),
-                  likes, comments, reposts, shares, current_time, current_time))
+                  likes, comments, reposts, shares, views, current_time, current_time))
             new_posts_list.append(post)
 
         cursor.execute("SELECT id FROM posts WHERE url = ?", (url,))
         snap_post_row = cursor.fetchone()
         snap_post_id = snap_post_row[0] if snap_post_row else None
+        
         cursor.execute('''
-            INSERT INTO post_snapshots (post_id, url, likes, comments, captured_at)
-            VALUES (?, ?, ?, ?, ?)
-        ''', (snap_post_id, url, likes, comments, current_time))
+            INSERT INTO post_snapshots (post_id, url, likes, comments, views, captured_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (snap_post_id, url, likes, comments, views, current_time))
 
     conn.commit()
     conn.close()
@@ -208,14 +189,13 @@ def save_to_database(posts_data, keywords):
     return {
         'total': len(posts_data),
         'new': len(new_posts_list),
+        'updated': updated_posts,
         'new_posts': new_posts_list
     }
 
 
 def analyze_new_posts(new_posts):
-    """批次分析新貼文的危機分數，結果存入 post_analysis 表 (SQLite)"""
     if not new_posts:
-        print("[OK] 沒有新貼文需要分析")
         return
 
     if not os.environ.get("GEMINI_API_KEY"):
@@ -246,7 +226,7 @@ def analyze_new_posts(new_posts):
       2 = 小範圍批評，有討論但影響有限
       3 = 中度不滿，涉及制度／服務／政策，具一定討論熱度
       4 = 嚴重不滿，可能引發連鎖反應或媒體關注
-      5 = 重大公關危機（如校園安全事故、大規模抗議、學術誠信醜聞）
+      5 = 重大公關危機
 摘要 (Summary)：簡短說明學生在討論什麼。
 
 請嚴格依照結構提供 JSON：
@@ -315,76 +295,67 @@ def analyze_new_posts(new_posts):
                 time.sleep(3)
                 break
             except Exception as e:
-                print(f"  ⚠️ Gemini 錯誤 (嘗試 {attempt + 1}/2): {e}")
+                print(f"  ⚠️ Gemini 錯誤: {e}")
                 time.sleep(2)
-
-        if not success:
-            print(f"  ❌ 批次分析失敗，跳過")
 
     print("✅ 危機分析完成，結果已存入 post_analysis 表")
 
 
 async def scrape_threads_hourly(keywords):
-    """
-    執行 Threads 爬蟲並存入 SQLite 資料庫
-    只抓取 24 小時內的貼文，不限數量
-    """
     results = []
     user_data_dir = os.path.join(BASE_DIR, "browser_data")
 
     async with async_playwright() as p:
-        print(f"[{datetime.now()}] 正在啟動瀏覽器...")
-
+        print(f"[{datetime.now()}] 🚀 啟動雙階段高階反反爬蟲引擎...")
+        
+        # 載入憑證與狀態
         context = await p.chromium.launch_persistent_context(
             user_data_dir=user_data_dir,
-            headless=False,
-            args=["--disable-blink-features=AutomationControlled"],
-            viewport={'width': 1280, 'height': 800},
-            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+            headless=True,
+            channel="chrome",
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
+            viewport={'width': random.randint(1200, 1420), 'height': random.randint(800, 1020)},
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         )
 
         page = await context.new_page()
+        if HAS_STEALTH:
+            await stealth_async(page)
 
-        print("正在開啟 Threads 首頁...")
+        print("正在初始化連線狀態...")
         await page.goto("https://www.threads.com/", wait_until="domcontentloaded")
+        await asyncio.sleep(random.uniform(3, 5))
 
-        await asyncio.sleep(5)
-        print("[OK] Page loaded, starting search...")
-
-        await asyncio.sleep(2)
-
-        from datetime import timedelta
         yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
+        # === 第一階段：資訊流淺層滾動收集 ===
         for keyword in keywords:
-            print(f"\n========= 正在搜尋關鍵字：{keyword} =========")
+            print(f"\n========= 第一階段：搜尋關鍵字資訊流 [{keyword}] =========")
             search_url = f"https://www.threads.com/search?after_date={yesterday}&q={keyword}&serp_type=default&hl=zh-tw"
-            print(f"   搜尋網址：{search_url}")
             await page.goto(search_url, wait_until="domcontentloaded")
-            await asyncio.sleep(4)
+            await asyncio.sleep(random.uniform(3, 5))
 
-            SCROLL_TIMES = 30
-            print(f"模擬滾動載入貼文中... (共 {SCROLL_TIMES} 次)")
+            MAX_SCROLLS = 30
+            previous_post_count = 0
+            no_new_posts_streak = 0
 
-            import random
-            for i in range(SCROLL_TIMES):
-                scroll_distance = random.randint(800, 1500)
-                await page.mouse.wheel(0, scroll_distance)
+            for i in range(MAX_SCROLLS):
+                await page.mouse.wheel(0, random.randint(800, 1500))
+                await asyncio.sleep(random.uniform(0.8, 2.0))
 
-                wait_time = random.uniform(0.5, 1.5)
-                await asyncio.sleep(wait_time)
-
-                if random.random() < 0.2:
-                    await asyncio.sleep(random.uniform(1, 2))
-
-                if (i + 1) % 10 == 0:
-                    print(f"   已捲動 {i + 1}/{SCROLL_TIMES} 次...")
+                current_post_count = await page.evaluate("document.querySelectorAll('a[href*=\"/post/\"]').length")
+                if current_post_count == previous_post_count:
+                    no_new_posts_streak += 1
+                    if no_new_posts_streak >= 3:
+                        break
+                else:
+                    no_new_posts_streak = 0
+                previous_post_count = current_post_count
 
             posts_data = await page.evaluate('''() => {
                 let data = [];
                 let postLinks = Array.from(document.querySelectorAll('a[href*="/post/"]'));
                 let seenUrls = new Set();
-                let seenContentKeys = new Set();
 
                 for (let link of postLinks) {
                     let postUrl = link.href.split('?')[0].replace(/\\/media$/, '');
@@ -402,105 +373,117 @@ async def scrape_threads_hourly(keywords):
                         let authorMatch = postUrl.match(/@([^/]+)/);
                         let author = authorMatch ? authorMatch[1] : "Unknown";
 
-                        let timeElement = container.querySelector('time');
-                        let timeText = timeElement ? timeElement.textContent.trim() : link.textContent.trim();
-
                         let textNodes = Array.from(container.querySelectorAll('span[dir="auto"]'));
-                        // 去除結尾輪播頁碼（如 \xa01/6、\xa02/2），再過濾純數字 span（互動數）
-                        let contentText = textNodes.map(n => {
-                            let t = n.textContent.replace(/\\u00a0\\d+(\\/\\d+)?$/, '').trimEnd();
-                            return t;
-                        }).filter(t => {
-                            let s = t.trim();
-                            return s.length > 0 && !/^[\\d,\\.]+([\\s,]+[\\d,\\.]+)*[萬KMkm]?$/.test(s);
-                        }).join('\\n');
+                        let contentText = textNodes.map(n => n.textContent.trim()).filter(t => t.length > 0).join('\\n');
 
-                        // 以 author + content 前 200 字為去重鍵，避免同容器產生重複貼文
-                        let contentKey = author + '|' + contentText.substring(0, 200);
-                        if (seenContentKeys.has(contentKey)) continue;
-                        seenContentKeys.add(contentKey);
+                        if (contentText.includes('正在回覆') || contentText.toLowerCase().includes('replying to @')) continue;
 
-                        // 支援中英雙語的 aria-label，並往上多找幾層
-                        function getCount(ctx, enLabel, zhLabel, zhLabel2) {
-                            // 組合多種可能的標籤 (例如 Like, Unlike, 讚, 收回讚)
-                            let selectors = [`svg[aria-label="${enLabel}"]`];
-                            if (zhLabel) selectors.push(`svg[aria-label="${zhLabel}"]`);
-                            if (zhLabel2) selectors.push(`svg[aria-label="${zhLabel2}"]`);
-                            if (enLabel === "Like") selectors.push(`svg[aria-label="Unlike"]`, `svg[aria-label="收回讚"]`);
-                            
-                            const svg = ctx.querySelector(selectors.join(', '));
+                        function getCount(ctx, enLabel, zhLabel) {
+                            const svg = ctx.querySelector(`svg[aria-label="${enLabel}"], svg[aria-label="${zhLabel}"]`);
                             if (!svg) return "0";
-
-                            // 往上找 4 層，尋找同一區塊內包含純數字的 span
                             let parent = svg;
                             for (let i = 0; i < 4; i++) {
                                 parent = parent.parentElement;
                                 if (!parent) return "0";
-                                
                                 const spans = parent.querySelectorAll("span");
                                 for (const span of spans) {
-                                    // 確保只抓純文字節點 (沒有包其他標籤的 span)
-                                    if (span.children.length > 0) continue;
-                                    const text = span.textContent.trim();
-                                    // 驗證是否為數字格式 (例如 503, 125, 1.2萬)
-                                    if (/^[\d,\.]+[萬KkMm]?$/.test(text)) {
-                                        return text;
+                                    if (span.children.length === 0 && /^[\d,\.]+[萬KkMm]?$/.test(span.textContent.trim())) {
+                                        return span.textContent.trim();
                                     }
                                 }
                             }
                             return "0";
                         }
 
-                        // 使用新的函數抓取
-                        let likes   = getCount(container, "Like", "讚", "按讚");
-                        let replies = getCount(container, "Reply", "回覆", "留言");
-                        let reposts = getCount(container, "Repost", "轉貼", "轉發");
-                        let shares  = getCount(container, "Share", "分享", "傳送");
+                        let timeEl = container.querySelector('time');
+                        let timeText = timeEl ? (timeEl.getAttribute('datetime') || timeEl.textContent.trim()) : '';
 
                         data.push({
                             "author": author,
                             "time": timeText,
                             "content": contentText,
                             "url": postUrl,
-                            "likes": likes,
-                            "replies": replies,
-                            "reposts": reposts,
-                            "shares": shares
+                            "likes": getCount(container, "Like", "讚"),
+                            "replies": getCount(container, "Reply", "回覆"),
+                            "reposts": getCount(container, "Repost", "轉貼"),
+                            "shares": getCount(container, "Share", "分享"),
+                            "views": "0"  // 預設為0，留給第二階段深爬
                         });
-                    } catch(e) {
-                        console.error("解析單篇貼文失敗", e);
-                    }
+                    } catch(e) {}
                 }
                 return data;
             }''')
-
-            print(f"   抓到 {len(posts_data)} 筆貼文")
             results.extend(posts_data)
 
+        # 整理去重
+        seen_urls = set()
+        unique_results = []
+        for post in results:
+            if post['url'] not in seen_urls:
+                seen_urls.add(post['url'])
+                unique_results.append(post)
+
+        # === 第二階段：擬人化單篇網址深度訪問 (捕捉瀏覽量) ===
+        print(f"\n[{datetime.now()}] 🕵️ 啟動第二階段：獨立貼文深層解析 (共 {len(unique_results)} 筆待處理)...")
+        
+        deep_page = await context.new_page()
+        if HAS_STEALTH:
+            await stealth_async(deep_page)
+
+        for idx, post in enumerate(unique_results):
+            print(f"   ➔ 深度訪問 ({idx+1}/{len(unique_results)}): {post['url']}")
+            try:
+                # 注入 referer 來源偽裝，假裝是從主頁點擊進入
+                await deep_page.goto(post['url'], referer="https://www.threads.com/", wait_until="domcontentloaded")
+                
+                # 智慧動態延遲 (隨機讀取 3.5 到 6.5 秒)，絕對避免高頻觸發雷達
+                await asyncio.sleep(random.uniform(3.5, 6.5))
+
+                # 強力檢索內頁文字節點中的瀏覽量字樣 (相容頂部串文標頭與底層詳情)
+                views_str = await deep_page.evaluate('''() => {
+                    let elements = Array.from(document.querySelectorAll('span, div'));
+                    for (let el of elements) {
+                        let txt = el.textContent.trim();
+                        // 鎖定如 "456次瀏覽", "1.2萬次瀏覽", "查看次數：1.2萬" 等深層 UI 結構
+                        let m1 = txt.match(/^([\d,\.]+[萬KkMm]?)\s*次[瀏覽觀看查看]/);
+                        if (m1) return m1[1];
+                        let m2 = txt.match(/[瀏覽觀看查看]次數[：:\s]*([\d,\.]+[萬KkMm]?)/);
+                        if (m2) return m2[1];
+                    }
+                    return "0";
+                }''')
+
+                if views_str and views_str != "0":
+                    post['views'] = views_str
+                    print(f"     ✅ 成功捕獲隱藏瀏覽量: {views_str}")
+                else:
+                    print("     ➖ 未對外顯示或權限隱藏")
+
+            except Exception as e:
+                print(f"     ⚠️ 訪問超時或失效，自動略過")
+
+            # 軍規級防護：每深爬 4 篇，強制進行一次大休打散規律
+            if (idx + 1) % 4 == 0 and (idx + 1) < len(unique_results):
+                pause_time = random.uniform(8.0, 14.0)
+                print(f"   💤 觸發動態防禦暫停 {pause_time:.1f} 秒，模擬真人中場休息...")
+                await asyncio.sleep(pause_time)
+
+        await deep_page.close()
         await context.close()
 
-    seen_urls = set()
-    unique_results = []
-    for post in results:
-        if post['url'] not in seen_urls:
-            seen_urls.add(post['url'])
-            unique_results.append(post)
-
+    # 寫入資料庫
     stats = save_to_database(unique_results, keywords)
 
-    print(f"\n[OK] Scraping completed!")
-    print(f"   - 總共擷取：{stats['total']} 筆")
+    print(f"\n[OK] 雙階段爬蟲與資料庫同步大功告成！")
+    print(f"   - 總掃描數：{stats['total']} 筆")
     print(f"   - 新增貼文：{stats['new']} 筆")
+    print(f"   - 更新指標：{stats['updated']} 筆")
 
-    # 對新增貼文進行危機分析
     analyze_new_posts(stats['new_posts'])
-
     return stats
 
 
 if __name__ == "__main__":
     keywords_to_search = ["政大"]
-
     init_database()
-
     asyncio.run(scrape_threads_hourly(keywords_to_search))

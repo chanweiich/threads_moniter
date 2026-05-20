@@ -10017,3 +10017,3873 @@ Call log:
 [2026-05-10 23:42:50,004] INFO - 趨勢分析距上次不足 6 小時，跳過。
 [2026-05-10 23:42:50,005] INFO - 本次排程執行完畢。
 [2026-05-10 23:42:50,006] INFO - ============================================================
+[2026-05-11 10:16:04,419] INFO - ============================================================
+[2026-05-11 10:16:04,859] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 10:16:04,862] INFO - 啟動 每小時爬蟲...
+[2026-05-11 10:20:06,699] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-11 10:20:06,703] ERROR - 錯誤: asic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --no-sandbox --disable-blink-features=AutomationControlled --user-data-dir=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=14052
+
+
+[2026-05-11 10:20:06,704] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 11:23:34,454] INFO - ============================================================
+[2026-05-11 11:23:34,923] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 11:23:34,926] INFO - 啟動 每小時爬蟲...
+[2026-05-11 11:26:18,154] INFO - 每小時爬蟲 完成
+[2026-05-11 11:26:18,182] INFO - 輸出: e=2026-05-10&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：8 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-11 11:26:18,182] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 11:36:44,895] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 11:36:44,902] INFO - 輸出: www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7
+Call log:
+  - navigating to "https://www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 148 篇貼文。
+
+[2026-05-11 11:36:45,088] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-11 11:36:45,088] INFO - 啟動 趨勢分析...
+[2026-05-11 11:37:22,512] INFO - 趨勢分析 完成
+[2026-05-11 11:37:22,514] INFO - 輸出: nshuen56789/post/DYLg5KFgQvL
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@shuenshuen56789/post/DYLg5KFgQvL
+Call log:
+  - navigating to "https://www.threads.com/@shuenshuen56789/post/DYLg5KFgQvL", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-11 11:37:22,516] INFO - 本次排程執行完畢。
+[2026-05-11 11:37:22,519] INFO - ============================================================
+[2026-05-11 11:41:12,191] INFO - ============================================================
+[2026-05-11 11:41:12,624] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 11:41:12,624] INFO - 啟動 每小時爬蟲...
+[2026-05-11 11:41:24,889] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-11 11:41:24,891] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-11 11:41:24,891] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 11:41:34,473] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 11:41:34,475] INFO - 輸出: www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7
+Call log:
+  - navigating to "https://www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 148 篇貼文。
+
+[2026-05-11 11:41:34,497] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-11 11:41:34,498] INFO - 啟動 趨勢分析...
+[2026-05-11 11:41:41,728] INFO - 趨勢分析 完成
+[2026-05-11 11:41:41,729] INFO - 輸出: nshuen56789/post/DYLg5KFgQvL
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@shuenshuen56789/post/DYLg5KFgQvL
+Call log:
+  - navigating to "https://www.threads.com/@shuenshuen56789/post/DYLg5KFgQvL", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-11 11:41:41,731] INFO - 本次排程執行完畢。
+[2026-05-11 11:41:41,731] INFO - ============================================================
+[2026-05-11 13:48:58,326] INFO - ============================================================
+[2026-05-11 13:48:59,370] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 13:48:59,372] INFO - 啟動 每小時爬蟲...
+[2026-05-11 13:51:50,786] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-11 13:51:50,792] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-11 13:51:50,794] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 14:09:49,063] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 14:09:49,073] INFO - 輸出: 342，回覆 36，轉發 12，分享 504
+  更新指標：https://www.threads.com/@b660957/post/DYENr0IExbQ
+    讚 342，回覆 36，轉發 12，分享 504
+  更新指標：https://www.threads.com/@___cy0801/post/DYEPyFpCb60
+    讚 14，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@natsu.ko0808/post/DYDx3uTj-x7
+    讚 0，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 148 篇貼文。
+
+[2026-05-11 14:09:49,131] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-11 14:09:49,132] INFO - 啟動 趨勢分析...
+[2026-05-11 14:15:43,180] INFO - 趨勢分析 完成
+[2026-05-11 14:15:43,184] INFO - 輸出: //www.threads.com/@minlunlee/post/DYIBiYmkwA6
+  完成 出現反彈聲浪（情緒分數: 2）
+
+  分析 (crisis_score=3)：https://www.threads.com/@papadise1127/post/DYLbCdzj_oE
+  完成 出現反彈聲浪（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@shuenshuen56789/post/DYLg5KFgQvL
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-11 14:15:43,195] INFO - 本次排程執行完畢。
+[2026-05-11 14:15:43,196] INFO - ============================================================
+[2026-05-11 14:41:06,533] INFO - ============================================================
+[2026-05-11 14:41:07,562] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 14:41:07,563] INFO - 啟動 每小時爬蟲...
+[2026-05-11 14:43:22,898] INFO - 每小時爬蟲 完成
+[2026-05-11 14:43:22,903] INFO - 輸出: 2026-05-10&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 14 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：14 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-11 14:43:22,904] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 15:03:45,314] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 15:03:45,324] INFO - 輸出: 221，分享 1222
+  更新指標：https://www.threads.com/@s.tar_scre.am._/post/DYEZ0RfGHF0
+    讚 6326，回覆 588，轉發 221，分享 1222
+  更新指標：https://www.threads.com/@im_reemmm/post/DYCkllCD98z
+    讚 21，回覆 0，轉發 1，分享 2
+  更新指標：https://www.threads.com/@justa_d774/post/DYCig5Nk1SX
+    讚 21，回覆 0，轉發 1，分享 2
+完成 指標更新完成，共處理 152 篇貼文。
+
+[2026-05-11 15:03:45,422] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-11 15:03:45,438] INFO - 本次排程執行完畢。
+[2026-05-11 15:03:45,440] INFO - ============================================================
+[2026-05-11 15:41:06,925] INFO - ============================================================
+[2026-05-11 15:41:07,580] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 15:41:07,583] INFO - 啟動 每小時爬蟲...
+[2026-05-11 15:43:41,995] INFO - 每小時爬蟲 完成
+[2026-05-11 15:43:42,000] INFO - 輸出: e=2026-05-10&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-11 15:43:42,000] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 16:07:33,426] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 16:07:33,440] INFO - 輸出: 1，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@shichan_huang.tw/post/DYAmj6lEj6H
+    讚 6，回覆 2，轉發 1，分享 0
+  更新指標：https://www.threads.com/@rachel.skyhi/post/DYCwr-ZkzSx
+    讚 59，回覆 0，轉發 0，分享 65
+  更新指標：https://www.threads.com/@jun._0925/post/DYBsMWDgGWo
+    讚 171，回覆 6，轉發 2，分享 4
+完成 指標更新完成，共處理 148 篇貼文。
+
+[2026-05-11 16:07:33,604] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-11 16:07:33,605] INFO - 本次排程執行完畢。
+[2026-05-11 16:07:33,605] INFO - ============================================================
+[2026-05-11 16:41:07,810] INFO - ============================================================
+[2026-05-11 16:41:08,277] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 16:41:08,279] INFO - 啟動 每小時爬蟲...
+[2026-05-11 16:43:18,009] INFO - 每小時爬蟲 完成
+[2026-05-11 16:43:18,013] INFO - 輸出: e=2026-05-10&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 15 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：15 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-11 16:43:18,014] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 17:02:11,203] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 17:02:11,211] INFO - 輸出: 1，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@shichan_huang.tw/post/DYAmj6lEj6H
+    讚 6，回覆 2，轉發 1，分享 0
+  更新指標：https://www.threads.com/@rachel.skyhi/post/DYCwr-ZkzSx
+    讚 59，回覆 0，轉發 0，分享 65
+  更新指標：https://www.threads.com/@jun._0925/post/DYBsMWDgGWo
+    讚 171，回覆 6，轉發 2，分享 4
+完成 指標更新完成，共處理 157 篇貼文。
+
+[2026-05-11 17:02:11,302] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-11 17:02:11,303] INFO - 本次排程執行完畢。
+[2026-05-11 17:02:11,304] INFO - ============================================================
+[2026-05-11 20:58:33,442] INFO - ============================================================
+[2026-05-11 20:58:34,185] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 20:58:34,190] INFO - 啟動 每小時爬蟲...
+[2026-05-11 22:07:53,910] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-11 22:07:53,922] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-11 22:07:53,923] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 22:09:22,185] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 22:09:22,191] INFO - 輸出: com/@shichan_huang.tw/post/DYAmj6lEj6H
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@shichan_huang.tw/post/DYAmj6lEj6H
+Call log:
+  - navigating to "https://www.threads.com/@shichan_huang.tw/post/DYAmj6lEj6H", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 155 篇貼文。
+
+[2026-05-11 22:09:22,266] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-11 22:09:22,267] INFO - 啟動 趨勢分析...
+[2026-05-11 22:09:42,052] INFO - 趨勢分析 完成
+[2026-05-11 22:09:42,054] INFO - 輸出: _abasedgirl/post/DYKRTJfDznN
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN
+Call log:
+  - navigating to "https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-11 22:09:42,056] INFO - 本次排程執行完畢。
+[2026-05-11 22:09:42,056] INFO - ============================================================
+[2026-05-11 22:41:06,325] INFO - ============================================================
+[2026-05-11 22:41:06,724] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-11 22:41:06,727] INFO - 啟動 每小時爬蟲...
+[2026-05-11 22:41:26,367] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-11 22:41:26,382] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-11 22:41:26,383] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-11 22:41:39,027] INFO - 指標更新（近 3 天） 完成
+[2026-05-11 22:41:39,028] INFO - 輸出: ：https://www.threads.com/@ying2004_/post/DYFGHcyk_x4
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@ying2004_/post/DYFGHcyk_x4
+Call log:
+  - navigating to "https://www.threads.com/@ying2004_/post/DYFGHcyk_x4", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 142 篇貼文。
+
+[2026-05-11 22:41:39,038] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-11 22:41:39,038] INFO - 啟動 趨勢分析...
+[2026-05-11 22:41:46,424] INFO - 趨勢分析 完成
+[2026-05-11 22:41:46,424] INFO - 輸出: _abasedgirl/post/DYKRTJfDznN
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN
+Call log:
+  - navigating to "https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-11 22:41:46,425] INFO - 本次排程執行完畢。
+[2026-05-11 22:41:46,426] INFO - ============================================================
+[2026-05-12 08:41:05,682] INFO - ============================================================
+[2026-05-12 08:41:05,792] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 08:41:05,794] INFO - 啟動 每小時爬蟲...
+[2026-05-12 08:41:13,876] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-12 08:41:13,877] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-12 08:41:13,877] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 08:41:20,752] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 08:41:20,752] INFO - 輸出: tps://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+Call log:
+  - navigating to "https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 124 篇貼文。
+
+[2026-05-12 08:41:20,757] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-12 08:41:20,758] INFO - 啟動 趨勢分析...
+[2026-05-12 08:41:26,640] INFO - 趨勢分析 完成
+[2026-05-12 08:41:26,641] INFO - 輸出: _abasedgirl/post/DYKRTJfDznN
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN
+Call log:
+  - navigating to "https://www.threads.com/@self_abasedgirl/post/DYKRTJfDznN", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-12 08:41:26,641] INFO - 本次排程執行完畢。
+[2026-05-12 08:41:26,642] INFO - ============================================================
+[2026-05-12 09:41:06,875] INFO - ============================================================
+[2026-05-12 09:41:07,118] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 09:41:07,118] INFO - 啟動 每小時爬蟲...
+[2026-05-12 09:43:19,485] INFO - 每小時爬蟲 完成
+[2026-05-12 09:43:19,487] INFO - 輸出: 2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 10 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：10 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 09:43:19,487] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 09:58:53,642] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 09:58:53,646] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3851，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3851，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 134 篇貼文。
+
+[2026-05-12 09:58:53,664] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-12 09:58:53,664] INFO - 啟動 趨勢分析...
+[2026-05-12 10:45:35,630] INFO - ============================================================
+[2026-05-12 10:45:35,755] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 10:45:35,755] INFO - 啟動 每小時爬蟲...
+[2026-05-12 10:47:16,129] INFO - 每小時爬蟲 完成
+[2026-05-12 10:47:16,130] INFO - 輸出: 2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 10 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：10 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 10:47:16,130] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 10:51:05,450] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 10:51:05,456] INFO - 輸出: tps://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+Call log:
+  - navigating to "https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 144 篇貼文。
+
+[2026-05-12 10:51:05,497] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 10:51:05,497] INFO - 本次排程執行完畢。
+[2026-05-12 10:51:05,498] INFO - ============================================================
+[2026-05-12 11:41:05,857] INFO - ============================================================
+[2026-05-12 11:41:06,165] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 11:41:06,165] INFO - 啟動 每小時爬蟲...
+[2026-05-12 11:42:50,971] INFO - 每小時爬蟲 完成
+[2026-05-12 11:42:50,974] INFO - 輸出: ate=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 11:42:50,974] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 11:59:09,776] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 11:59:09,778] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3851，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3851，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 150 篇貼文。
+
+[2026-05-12 11:59:09,793] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 11:59:09,793] INFO - 本次排程執行完畢。
+[2026-05-12 11:59:09,793] INFO - ============================================================
+[2026-05-12 12:41:05,482] INFO - ============================================================
+[2026-05-12 12:41:05,764] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 12:41:05,764] INFO - 啟動 每小時爬蟲...
+[2026-05-12 12:41:13,995] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-12 12:41:13,997] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-12 12:41:13,998] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 12:41:24,762] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 12:41:24,773] INFO - 輸出: tps://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+Call log:
+  - navigating to "https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 150 篇貼文。
+
+[2026-05-12 12:41:24,811] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 12:41:24,811] INFO - 本次排程執行完畢。
+[2026-05-12 12:41:24,812] INFO - ============================================================
+[2026-05-12 13:41:05,460] INFO - ============================================================
+[2026-05-12 13:41:05,674] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 13:41:05,675] INFO - 啟動 每小時爬蟲...
+[2026-05-12 13:43:16,776] INFO - 每小時爬蟲 完成
+[2026-05-12 13:43:16,779] INFO - 輸出: ate=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 13:43:16,779] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 14:00:03,125] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 14:00:03,130] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3852，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3852，回覆 641，轉發 110，分享 662
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 157 篇貼文。
+
+[2026-05-12 14:00:03,148] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 14:00:03,149] INFO - 本次排程執行完畢。
+[2026-05-12 14:00:03,149] INFO - ============================================================
+[2026-05-12 14:41:05,295] INFO - ============================================================
+[2026-05-12 14:41:05,512] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 14:41:05,513] INFO - 啟動 每小時爬蟲...
+[2026-05-12 14:42:51,304] INFO - 每小時爬蟲 完成
+[2026-05-12 14:42:51,305] INFO - 輸出: ate=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 14:42:51,306] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 15:00:51,672] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 15:00:51,673] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3852，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3852，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 164 篇貼文。
+
+[2026-05-12 15:00:51,686] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 15:00:51,686] INFO - 本次排程執行完畢。
+[2026-05-12 15:00:51,687] INFO - ============================================================
+[2026-05-12 15:41:05,399] INFO - ============================================================
+[2026-05-12 15:41:05,629] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 15:41:05,629] INFO - 啟動 每小時爬蟲...
+[2026-05-12 15:42:46,041] INFO - 每小時爬蟲 完成
+[2026-05-12 15:42:46,043] INFO - 輸出: ate=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 15:42:46,044] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 16:01:16,088] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 16:01:16,091] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3853，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3853，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 170 篇貼文。
+
+[2026-05-12 16:01:16,103] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 16:01:16,103] INFO - 本次排程執行完畢。
+[2026-05-12 16:01:16,104] INFO - ============================================================
+[2026-05-12 16:41:05,611] INFO - ============================================================
+[2026-05-12 16:41:05,826] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 16:41:05,827] INFO - 啟動 每小時爬蟲...
+[2026-05-12 16:42:26,693] INFO - 每小時爬蟲 完成
+[2026-05-12 16:42:26,695] INFO - 輸出: www.threads.com/search?after_date=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 16:42:26,696] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 17:01:29,523] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 17:01:29,527] INFO - 輸出: 回覆 2，轉發 1，分享 1
+  更新指標：https://www.threads.com/@cianchag/post/DYE8vWiEqTy
+    讚 3853，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@mlchens/post/DYHjtPbmFUS
+    讚 3853，回覆 641，轉發 110，分享 663
+  更新指標：https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+    讚 2，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 175 篇貼文。
+
+[2026-05-12 17:01:29,547] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-12 17:01:29,548] INFO - 啟動 趨勢分析...
+[2026-05-12 17:09:00,316] INFO - 趨勢分析 完成
+[2026-05-12 17:09:00,317] INFO - 輸出: threads.com/@maeve_glow_up_diary/post/DYNspbnEwYZ
+  完成 擴大中（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@hui.juan_0520/post/DYMYc_mEZsN
+  完成 出現反彈聲浪（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@corleone_0912/post/DYMqvwLEgzP
+  完成 擴大中（情緒分數: 4）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-12 17:09:00,318] INFO - 本次排程執行完畢。
+[2026-05-12 17:09:00,318] INFO - ============================================================
+[2026-05-12 21:53:03,570] INFO - ============================================================
+[2026-05-12 21:53:51,039] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 21:53:51,415] INFO - 啟動 每小時爬蟲...
+[2026-05-12 21:57:04,799] INFO - 每小時爬蟲 完成
+[2026-05-12 21:57:04,805] INFO - 輸出: www.threads.com/search?after_date=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 21:57:04,805] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-12 22:05:39,143] INFO - 指標更新（近 3 天） 完成
+[2026-05-12 22:05:39,148] INFO - 輸出: tps://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1
+Call log:
+  - navigating to "https://www.threads.com/@wtfso_sexy/post/DYDciptEpx1", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 180 篇貼文。
+
+[2026-05-12 22:05:39,194] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-12 22:05:39,194] INFO - 本次排程執行完畢。
+[2026-05-12 22:05:39,194] INFO - ============================================================
+[2026-05-12 22:41:05,423] INFO - ============================================================
+[2026-05-12 22:41:05,675] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-12 22:41:05,677] INFO - 啟動 每小時爬蟲...
+[2026-05-12 22:42:48,279] INFO - 每小時爬蟲 完成
+[2026-05-12 22:42:48,282] INFO - 輸出: www.threads.com/search?after_date=2026-05-11&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 4 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：4 筆
+   - 新增貼文：3 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-12 22:42:48,283] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 08:41:05,805] INFO - ============================================================
+[2026-05-13 08:41:05,921] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 08:41:05,922] INFO - 啟動 每小時爬蟲...
+[2026-05-13 08:41:17,429] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-13 08:41:17,431] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-13 08:41:17,432] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 08:41:27,514] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 08:41:27,514] INFO - 輸出: www.threads.com/@vitamind.ing/post/DYInnquE1vH
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@vitamind.ing/post/DYInnquE1vH
+Call log:
+  - navigating to "https://www.threads.com/@vitamind.ing/post/DYInnquE1vH", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 157 篇貼文。
+
+[2026-05-13 08:41:27,553] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-13 08:41:27,554] INFO - 啟動 趨勢分析...
+[2026-05-13 08:41:34,526] INFO - 趨勢分析 完成
+[2026-05-13 08:41:34,526] INFO - 輸出: com/@henrywang926/post/DYMaczKkm--
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@henrywang926/post/DYMaczKkm--
+Call log:
+  - navigating to "https://www.threads.com/@henrywang926/post/DYMaczKkm--", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-13 08:41:34,527] INFO - 本次排程執行完畢。
+[2026-05-13 08:41:34,527] INFO - ============================================================
+[2026-05-13 09:41:05,729] INFO - ============================================================
+[2026-05-13 09:41:05,984] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 09:41:05,986] INFO - 啟動 每小時爬蟲...
+[2026-05-13 09:42:27,053] INFO - 每小時爬蟲 完成
+[2026-05-13 09:42:27,055] INFO - 輸出: ate=2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 09:42:27,056] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 10:01:58,037] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 10:01:58,049] INFO - 輸出: 覆 19，轉發 0，分享 1
+  更新指標：https://www.threads.com/@tidy1001101000/post/DYHj9ZpCS2N
+    讚 3，回覆 19，轉發 0，分享 1
+  更新指標：https://www.threads.com/@tank104105/post/DYH1DZXiVsg
+    讚 67，回覆 13，轉發 3，分享 25
+  更新指標：https://www.threads.com/@vitamind.ing/post/DYInnquE1vH
+    讚 67，回覆 13，轉發 3，分享 25
+完成 指標更新完成，共處理 163 篇貼文。
+
+[2026-05-13 10:01:58,171] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-13 10:01:58,172] INFO - 啟動 趨勢分析...
+[2026-05-13 10:14:34,495] INFO - 趨勢分析 完成
+[2026-05-13 10:14:36,534] INFO - 輸出: tps://www.threads.com/@hui.juan_0520/post/DYMYc_mEZsN
+  完成 擴大中（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@corleone_0912/post/DYMqvwLEgzP
+  完成 擴大中（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@henrywang926/post/DYMaczKkm--
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-13 10:14:36,537] INFO - 本次排程執行完畢。
+[2026-05-13 10:14:36,538] INFO - ============================================================
+[2026-05-13 10:41:06,691] INFO - ============================================================
+[2026-05-13 10:41:06,956] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 10:41:06,959] INFO - 啟動 每小時爬蟲...
+[2026-05-13 10:42:55,588] INFO - 每小時爬蟲 完成
+[2026-05-13 10:42:55,595] INFO - 輸出: 2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 13 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：13 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 10:42:55,596] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 11:08:02,633] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 11:08:02,642] INFO - 輸出: 0，轉發 1，分享 1
+  更新指標：https://www.threads.com/@nccurtvcamp/post/DYFbbsXEqES
+    讚 3，回覆 0，轉發 1，分享 1
+  更新指標：https://www.threads.com/@benlinmarketing/post/DYGa-VmE92w
+    讚 24，回覆 1，轉發 2，分享 1
+  更新指標：https://www.threads.com/@goforbroke1927520/post/DYH6StHEZyO
+    讚 17，回覆 12，轉發 0，分享 0
+完成 指標更新完成，共處理 165 篇貼文。
+
+[2026-05-13 11:08:03,242] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 11:08:03,242] INFO - 本次排程執行完畢。
+[2026-05-13 11:08:03,242] INFO - ============================================================
+[2026-05-13 11:41:06,180] INFO - ============================================================
+[2026-05-13 11:41:06,348] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 11:41:06,349] INFO - 啟動 每小時爬蟲...
+[2026-05-13 11:42:43,759] INFO - 每小時爬蟲 完成
+[2026-05-13 11:42:43,761] INFO - 輸出: e=2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 14 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：14 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 11:42:43,762] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 12:06:18,727] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 12:06:18,818] INFO - 輸出: /@goforbroke1927520/post/DYH6StHEZyO
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@goforbroke1927520/post/DYH6StHEZyO
+Call log:
+  - navigating to "https://www.threads.com/@goforbroke1927520/post/DYH6StHEZyO", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 174 篇貼文。
+
+[2026-05-13 12:06:20,247] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 12:06:20,248] INFO - 本次排程執行完畢。
+[2026-05-13 12:06:20,249] INFO - ============================================================
+[2026-05-13 12:41:50,581] INFO - ============================================================
+[2026-05-13 12:41:53,289] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 12:41:53,300] INFO - 啟動 每小時爬蟲...
+[2026-05-13 12:45:19,396] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-13 12:45:19,396] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-13 12:45:19,397] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 12:46:12,261] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 12:46:12,261] INFO - 輸出: /@goforbroke1927520/post/DYH6StHEZyO
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@goforbroke1927520/post/DYH6StHEZyO
+Call log:
+  - navigating to "https://www.threads.com/@goforbroke1927520/post/DYH6StHEZyO", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 174 篇貼文。
+
+[2026-05-13 12:46:12,288] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 12:46:12,288] INFO - 本次排程執行完畢。
+[2026-05-13 12:46:12,288] INFO - ============================================================
+[2026-05-13 13:41:07,160] INFO - ============================================================
+[2026-05-13 13:41:07,461] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 13:41:07,462] INFO - 啟動 每小時爬蟲...
+[2026-05-13 13:42:45,597] INFO - 每小時爬蟲 完成
+[2026-05-13 13:42:45,599] INFO - 輸出: ate=2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：8 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 13:42:45,600] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 14:03:07,015] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 14:03:07,026] INFO - 輸出:  讚 5，回覆 8，轉發 0，分享 0
+  更新指標：https://www.threads.com/@straw_hat_wukong/post/DYIw5JfAe5x
+    讚 1，回覆 0，轉發 0，分享 2
+  更新指標：https://www.threads.com/@yaaaaaahsin/post/DYFmwZ7EqVI
+    讚 3，回覆 0，轉發 1，分享 1
+  更新指標：https://www.threads.com/@nccurtvcamp/post/DYFbbsXEqES
+    讚 3，回覆 0，轉發 1，分享 1
+完成 指標更新完成，共處理 180 篇貼文。
+
+[2026-05-13 14:03:07,053] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 14:03:07,053] INFO - 本次排程執行完畢。
+[2026-05-13 14:03:07,053] INFO - ============================================================
+[2026-05-13 14:41:05,314] INFO - ============================================================
+[2026-05-13 14:41:05,538] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 14:41:05,539] INFO - 啟動 每小時爬蟲...
+[2026-05-13 14:42:29,418] INFO - 每小時爬蟲 完成
+[2026-05-13 14:42:29,419] INFO - 輸出: ate=2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 14:42:29,419] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 15:03:14,550] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 15:03:14,554] INFO - 輸出: 讚 14，回覆 2，轉發 0，分享 1
+  更新指標：https://www.threads.com/@_luoluo_66/post/DYHtl4ZknXj
+    讚 522，回覆 133，轉發 2，分享 171
+  更新指標：https://www.threads.com/@minlunlee/post/DYIBiYmkwA6
+    讚 522，回覆 133，轉發 2，分享 171
+  更新指標：https://www.threads.com/@tkb.yzu/post/DYG6wK0GTUA
+    讚 7，回覆 1，轉發 0，分享 0
+完成 指標更新完成，共處理 180 篇貼文。
+
+[2026-05-13 15:03:14,564] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 15:03:14,564] INFO - 本次排程執行完畢。
+[2026-05-13 15:03:14,565] INFO - ============================================================
+[2026-05-13 15:41:05,369] INFO - ============================================================
+[2026-05-13 15:41:05,606] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 15:41:05,607] INFO - 啟動 每小時爬蟲...
+[2026-05-13 15:42:41,120] INFO - 每小時爬蟲 完成
+[2026-05-13 15:42:41,122] INFO - 輸出: ate=2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 15:42:41,122] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 16:01:40,312] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 16:01:40,316] INFO - 輸出: 22，回覆 3，轉發 14，分享 4
+  更新指標：https://www.threads.com/@acacbbb12445/post/DYHBJiJFJKJ
+    讚 408，回覆 86，轉發 1，分享 71
+  更新指標：https://www.threads.com/@la_mk.d.qs/post/DYFheSGkvrO
+    讚 77，回覆 4，轉發 0，分享 1
+  更新指標：https://www.threads.com/@andyjen0226/post/DYHjxt-AeGa
+    讚 18，回覆 5，轉發 0，分享 1
+完成 指標更新完成，共處理 174 篇貼文。
+
+[2026-05-13 16:01:40,339] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-13 16:01:40,340] INFO - 本次排程執行完畢。
+[2026-05-13 16:01:40,340] INFO - ============================================================
+[2026-05-13 16:41:05,257] INFO - ============================================================
+[2026-05-13 16:41:05,461] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-13 16:41:05,462] INFO - 啟動 每小時爬蟲...
+[2026-05-13 16:42:30,695] INFO - 每小時爬蟲 完成
+[2026-05-13 16:42:30,695] INFO - 輸出: 2026-05-12&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 13 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：13 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-13 16:42:30,695] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-13 17:02:09,762] INFO - 指標更新（近 3 天） 完成
+[2026-05-13 17:02:09,763] INFO - 輸出: 回覆 1，轉發 0，分享 0
+  更新指標：https://www.threads.com/@nccu_artfestival/post/DYHwTr5GF0O
+    讚 6，回覆 0，轉發 1，分享 0
+  更新指標：https://www.threads.com/@nccu.careering/post/DYHclUWkSfB
+    讚 4，回覆 1，轉發 1，分享 0
+  更新指標：https://www.threads.com/@nowayinout/post/DYGRaEAEzKo
+    讚 122，回覆 3，轉發 14，分享 4
+完成 指標更新完成，共處理 181 篇貼文。
+
+[2026-05-13 17:02:09,771] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-13 17:02:09,772] INFO - 啟動 趨勢分析...
+[2026-05-13 17:11:58,954] INFO - 趨勢分析 完成
+[2026-05-13 17:11:58,954] INFO - 輸出: tps://www.threads.com/@hui.juan_0520/post/DYMYc_mEZsN
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@corleone_0912/post/DYMqvwLEgzP
+  完成 擴大中（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@henrywang926/post/DYMaczKkm--
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-13 17:11:58,955] INFO - 本次排程執行完畢。
+[2026-05-13 17:11:58,955] INFO - ============================================================
+[2026-05-14 09:17:18,343] INFO - ============================================================
+[2026-05-14 09:17:18,765] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 09:17:18,765] INFO - 啟動 每小時爬蟲...
+[2026-05-14 09:25:06,900] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-14 09:25:06,906] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-14 09:25:06,907] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 09:42:35,241] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 09:42:35,249] INFO - 輸出: 轉發 0，分享 0
+  更新指標：https://www.threads.com/@wan_in_house/post/DYKMuMDlCw4
+    讚 3，回覆 3，轉發 0，分享 1
+  更新指標：https://www.threads.com/@takecareby_u/post/DWdvbGLFKio
+    讚 0，回覆 4755，轉發 2884，分享 0
+  更新指標：https://www.threads.com/@rb26dett1985/post/DYLp8eFjxMf
+    讚 0，回覆 4755，轉發 2884，分享 0
+完成 指標更新完成，共處理 148 篇貼文。
+
+[2026-05-14 09:42:35,300] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-14 09:42:35,302] INFO - 啟動 趨勢分析...
+[2026-05-14 09:53:00,718] INFO - 趨勢分析 完成
+[2026-05-14 09:53:00,726] INFO - 輸出: tps://www.threads.com/@hui.juan_0520/post/DYMYc_mEZsN
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@corleone_0912/post/DYMqvwLEgzP
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@henrywang926/post/DYMaczKkm--
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-14 09:53:00,726] INFO - 本次排程執行完畢。
+[2026-05-14 09:53:00,727] INFO - ============================================================
+[2026-05-14 10:41:06,016] INFO - ============================================================
+[2026-05-14 10:41:06,338] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 10:41:06,339] INFO - 啟動 每小時爬蟲...
+[2026-05-14 10:42:45,478] INFO - 每小時爬蟲 完成
+[2026-05-14 10:42:45,479] INFO - 輸出: ate=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 10:42:45,480] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 10:59:22,885] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 10:59:22,889] INFO - 輸出: 轉發 0，分享 0
+  更新指標：https://www.threads.com/@wan_in_house/post/DYKMuMDlCw4
+    讚 3，回覆 3，轉發 0，分享 1
+  更新指標：https://www.threads.com/@takecareby_u/post/DWdvbGLFKio
+    讚 0，回覆 4754，轉發 2887，分享 0
+  更新指標：https://www.threads.com/@rb26dett1985/post/DYLp8eFjxMf
+    讚 0，回覆 4754，轉發 2887，分享 0
+完成 指標更新完成，共處理 157 篇貼文。
+
+[2026-05-14 10:59:22,910] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 10:59:22,920] INFO - 本次排程執行完畢。
+[2026-05-14 10:59:22,921] INFO - ============================================================
+[2026-05-14 11:41:06,296] INFO - ============================================================
+[2026-05-14 11:41:06,626] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 11:41:06,627] INFO - 啟動 每小時爬蟲...
+[2026-05-14 11:42:47,289] INFO - 每小時爬蟲 完成
+[2026-05-14 11:42:47,291] INFO - 輸出: ate=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：8 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 11:42:47,292] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 14:54:23,155] INFO - ============================================================
+[2026-05-14 14:54:23,411] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 14:54:23,413] INFO - 啟動 每小時爬蟲...
+[2026-05-14 14:55:49,554] INFO - 每小時爬蟲 完成
+[2026-05-14 14:55:49,555] INFO - 輸出: e=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 14:55:49,556] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 15:17:06,918] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 15:17:06,956] INFO - 輸出: 更新指標：https://www.threads.com/@aberminscotland/post/DYKJnKNCI3b
+    讚 198，回覆 66，轉發 1，分享 11
+  更新指標：https://www.threads.com/@mkgrodw/post/DYL9LOhkXYg
+    讚 2659，回覆 380，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYL9rnvEaWw
+    讚 2659，回覆 380，轉發 118，分享 884
+完成 指標更新完成，共處理 156 篇貼文。
+
+[2026-05-14 15:17:07,117] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 15:17:07,118] INFO - 本次排程執行完畢。
+[2026-05-14 15:17:07,118] INFO - ============================================================
+[2026-05-14 15:41:07,135] INFO - ============================================================
+[2026-05-14 15:41:07,623] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 15:41:07,625] INFO - 啟動 每小時爬蟲...
+[2026-05-14 15:42:56,291] INFO - 每小時爬蟲 完成
+[2026-05-14 15:42:56,297] INFO - 輸出: ate=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 15:42:56,298] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 16:02:46,963] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 16:02:46,970] INFO - 輸出: 更新指標：https://www.threads.com/@aberminscotland/post/DYKJnKNCI3b
+    讚 198，回覆 66，轉發 1，分享 11
+  更新指標：https://www.threads.com/@mkgrodw/post/DYL9LOhkXYg
+    讚 2659，回覆 380，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYL9rnvEaWw
+    讚 2659，回覆 380，轉發 118，分享 884
+完成 指標更新完成，共處理 162 篇貼文。
+
+[2026-05-14 16:02:47,073] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-14 16:02:47,074] INFO - 啟動 趨勢分析...
+[2026-05-14 16:14:08,283] INFO - 趨勢分析 完成
+[2026-05-14 16:14:08,289] INFO - 輸出: ps://www.threads.com/@henrywang926/post/DYMaczKkm--
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@ohashi_mikaaa809/post/DYR4FnGmnL0
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@yuukiopp_67/post/DYR4K81E8yA
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-14 16:14:08,289] INFO - 本次排程執行完畢。
+[2026-05-14 16:14:08,290] INFO - ============================================================
+[2026-05-14 17:20:01,197] INFO - ============================================================
+[2026-05-14 17:20:01,892] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 17:20:01,896] INFO - 啟動 每小時爬蟲...
+[2026-05-14 17:23:05,057] INFO - 每小時爬蟲 完成
+[2026-05-14 17:23:05,060] INFO - 輸出: ate=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 17:23:05,063] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 17:40:29,310] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 17:40:29,317] INFO - 輸出: ，分享 18
+  更新指標：https://www.threads.com/@h.jhyun_s2/post/DYL9qMMgUZC
+    讚 2659，回覆 380，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYLjkEDnWiN
+    讚 2659，回覆 380，轉發 118，分享 884
+  更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+    讚 5，回覆 4，轉發 1，分享 1
+完成 指標更新完成，共處理 156 篇貼文。
+
+[2026-05-14 17:40:29,442] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 17:40:29,443] INFO - 本次排程執行完畢。
+[2026-05-14 17:40:29,444] INFO - ============================================================
+[2026-05-14 17:41:05,698] INFO - ============================================================
+[2026-05-14 17:41:06,130] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 17:41:06,130] INFO - 啟動 每小時爬蟲...
+[2026-05-14 17:42:42,150] INFO - 每小時爬蟲 完成
+[2026-05-14 17:42:42,153] INFO - 輸出: e=2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 10 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：10 筆
+   - 新增貼文：8 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 17:42:42,153] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 21:21:31,054] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 21:21:31,062] INFO - 輸出: ，分享 18
+  更新指標：https://www.threads.com/@h.jhyun_s2/post/DYL9qMMgUZC
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYLjkEDnWiN
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+    讚 5，回覆 4，轉發 1，分享 1
+完成 指標更新完成，共處理 164 篇貼文。
+
+[2026-05-14 21:21:31,160] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 21:21:31,161] INFO - 本次排程執行完畢。
+[2026-05-14 21:21:31,161] INFO - ============================================================
+[2026-05-14 21:41:05,899] INFO - ============================================================
+[2026-05-14 21:41:06,580] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 21:41:06,583] INFO - 啟動 每小時爬蟲...
+[2026-05-14 21:42:52,412] INFO - 每小時爬蟲 完成
+[2026-05-14 21:42:52,414] INFO - 輸出: 0 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 20 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：20 筆
+   - 新增貼文：16 筆
+
+🤖 開始批次分析 16 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 4：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 21:42:52,415] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 22:02:12,910] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 22:02:12,916] INFO - 輸出:   更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@canot77/post/DYMDJPbCUnf
+Call log:
+  - navigating to "https://www.threads.com/@canot77/post/DYMDJPbCUnf", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 180 篇貼文。
+
+[2026-05-14 22:02:12,996] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 22:02:12,996] INFO - 本次排程執行完畢。
+[2026-05-14 22:02:12,997] INFO - ============================================================
+[2026-05-14 22:18:55,527] INFO - ============================================================
+[2026-05-14 22:18:55,881] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 22:18:55,883] INFO - 啟動 每小時爬蟲...
+[2026-05-14 22:21:09,030] INFO - 每小時爬蟲 完成
+[2026-05-14 22:21:09,033] INFO - 輸出: 2026-05-13&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 13 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：13 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-14 22:21:09,034] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 22:45:38,410] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 22:45:38,436] INFO - 輸出: ，分享 18
+  更新指標：https://www.threads.com/@h.jhyun_s2/post/DYL9qMMgUZC
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYLjkEDnWiN
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+    讚 5，回覆 4，轉發 1，分享 1
+完成 指標更新完成，共處理 190 篇貼文。
+
+[2026-05-14 22:45:38,642] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-14 22:45:38,643] INFO - 啟動 趨勢分析...
+[2026-05-14 22:59:47,500] INFO - 趨勢分析 完成
+[2026-05-14 22:59:47,549] INFO - 輸出: s://www.threads.com/@yuukiopp_67/post/DYR4K81E8yA
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@twen__/post/DVvpDdZjzeH
+  完成 出現反彈聲浪（情緒分數: 1）
+
+  分析 (crisis_score=3)：https://www.threads.com/@schneider__jasper/post/DYUXiLdiSpa
+  完成 出現反彈聲浪（情緒分數: 1）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-14 22:59:47,550] INFO - 本次排程執行完畢。
+[2026-05-14 22:59:47,550] INFO - ============================================================
+[2026-05-14 23:19:00,252] INFO - ============================================================
+[2026-05-14 23:19:00,679] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-14 23:19:00,681] INFO - 啟動 每小時爬蟲...
+[2026-05-14 23:20:00,191] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-14 23:20:00,195] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-14 23:20:00,223] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-14 23:44:56,367] INFO - 指標更新（近 3 天） 完成
+[2026-05-14 23:44:56,407] INFO - 輸出: aded"
+
+  更新指標：https://www.threads.com/@h.jhyun_s2/post/DYL9qMMgUZC
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYLjkEDnWiN
+    讚 2659，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+    讚 5，回覆 4，轉發 1，分享 1
+完成 指標更新完成，共處理 190 篇貼文。
+
+[2026-05-14 23:44:56,469] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-14 23:44:56,469] INFO - 本次排程執行完畢。
+[2026-05-14 23:44:56,470] INFO - ============================================================
+[2026-05-15 09:18:56,124] INFO - ============================================================
+[2026-05-15 09:18:56,278] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 09:18:56,279] INFO - 啟動 每小時爬蟲...
+[2026-05-15 09:20:58,394] INFO - 每小時爬蟲 完成
+[2026-05-15 09:20:58,402] INFO - 輸出: ult&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 13 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：13 筆
+   - 新增貼文：11 筆
+
+🤖 開始批次分析 11 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 09:20:58,402] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 09:43:25,294] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 09:43:25,302] INFO - 輸出: ，分享 18
+  更新指標：https://www.threads.com/@h.jhyun_s2/post/DYL9qMMgUZC
+    讚 2660，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@unhappyman.54878/post/DYLjkEDnWiN
+    讚 2660，回覆 381，轉發 118，分享 884
+  更新指標：https://www.threads.com/@canot77/post/DYMDJPbCUnf
+    讚 5，回覆 4，轉發 1，分享 1
+完成 指標更新完成，共處理 201 篇貼文。
+
+[2026-05-15 09:43:25,430] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-15 09:43:25,431] INFO - 啟動 趨勢分析...
+[2026-05-15 09:58:37,301] INFO - 趨勢分析 完成
+[2026-05-15 09:58:37,304] INFO - 輸出: s://www.threads.com/@yuukiopp_67/post/DYR4K81E8yA
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@twen__/post/DVvpDdZjzeH
+  完成 出現反彈聲浪（情緒分數: 2）
+
+  分析 (crisis_score=3)：https://www.threads.com/@schneider__jasper/post/DYUXiLdiSpa
+  完成 出現反彈聲浪（情緒分數: 1）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-15 09:58:37,305] INFO - 本次排程執行完畢。
+[2026-05-15 09:58:37,305] INFO - ============================================================
+[2026-05-15 10:18:55,776] INFO - ============================================================
+[2026-05-15 10:18:56,062] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 10:18:56,064] INFO - 啟動 每小時爬蟲...
+[2026-05-15 10:19:45,674] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-15 10:19:45,676] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-15 10:19:45,676] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 10:40:20,728] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 10:40:20,735] INFO - 輸出:  53，轉發 19，分享 35
+  更新指標：https://www.threads.com/@_yux_07_/post/DYOIuRxkqv8
+    讚 188，回覆 53，轉發 19，分享 35
+  更新指標：https://www.threads.com/@maeve_glow_up_diary/post/DYNspbnEwYZ
+    讚 2，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@tw_ac_uads/post/DYNKFMWERYF
+    讚 9，回覆 1，轉發 3，分享 0
+完成 指標更新完成，共處理 191 篇貼文。
+
+[2026-05-15 10:40:20,774] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 10:40:20,775] INFO - 本次排程執行完畢。
+[2026-05-15 10:40:20,775] INFO - ============================================================
+[2026-05-15 10:41:05,825] INFO - ============================================================
+[2026-05-15 10:41:06,199] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 10:41:06,200] INFO - 啟動 每小時爬蟲...
+[2026-05-15 10:42:41,146] INFO - 每小時爬蟲 完成
+[2026-05-15 10:42:41,148] INFO - 輸出: ult&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 18 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：18 筆
+   - 新增貼文：11 筆
+
+🤖 開始批次分析 11 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 10:42:41,149] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 11:04:02,358] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 11:04:02,362] INFO - 輸出:  53，轉發 19，分享 35
+  更新指標：https://www.threads.com/@_yux_07_/post/DYOIuRxkqv8
+    讚 188，回覆 53，轉發 19，分享 35
+  更新指標：https://www.threads.com/@maeve_glow_up_diary/post/DYNspbnEwYZ
+    讚 2，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@tw_ac_uads/post/DYNKFMWERYF
+    讚 9，回覆 1，轉發 3，分享 0
+完成 指標更新完成，共處理 202 篇貼文。
+
+[2026-05-15 11:04:02,389] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 11:04:02,390] INFO - 本次排程執行完畢。
+[2026-05-15 11:04:02,390] INFO - ============================================================
+[2026-05-15 11:18:58,145] INFO - ============================================================
+[2026-05-15 11:18:58,659] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 11:18:58,661] INFO - 啟動 每小時爬蟲...
+[2026-05-15 11:21:26,660] INFO - 每小時爬蟲 完成
+[2026-05-15 11:21:26,672] INFO - 輸出: www.threads.com/search?after_date=2026-05-14&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：4 筆
+
+🤖 開始批次分析 4 篇新貼文...
+  🔄 批次 1：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 11:21:26,674] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 11:42:33,129] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 11:42:33,133] INFO - 輸出:    讚 5，回覆 2，轉發 0，分享 0
+  更新指標：https://www.threads.com/@__ting2005/post/DYKwu4tH8Zy
+    讚 18，回覆 1，轉發 0，分享 0
+  更新指標：https://www.threads.com/@chwe_en/post/DYMUkNgElMO
+    讚 237，回覆 13，轉發 0，分享 70
+  更新指標：https://www.threads.com/@coffeelife1979/post/DYLzEAbARNJ
+    讚 0，回覆 1，轉發 0，分享 0
+完成 指標更新完成，共處理 196 篇貼文。
+
+[2026-05-15 11:42:33,150] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 11:42:33,151] INFO - 本次排程執行完畢。
+[2026-05-15 11:42:33,151] INFO - ============================================================
+[2026-05-15 12:56:36,512] INFO - ============================================================
+[2026-05-15 12:56:36,696] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 12:56:36,698] INFO - 啟動 每小時爬蟲...
+[2026-05-15 12:56:58,358] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-15 12:56:58,361] ERROR - 錯誤: i_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-15 12:56:58,362] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 12:57:52,442] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 12:57:52,445] INFO - 輸出: ccuib_night_2026/post/DYMd_pXn31l
+  警告 導航失敗：Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://www.threads.com/@nccuib_night_2026/post/DYMd_pXn31l
+Call log:
+  - navigating to "https://www.threads.com/@nccuib_night_2026/post/DYMd_pXn31l", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 190 篇貼文。
+
+[2026-05-15 12:57:52,489] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 12:57:52,490] INFO - 本次排程執行完畢。
+[2026-05-15 12:57:52,491] INFO - ============================================================
+[2026-05-15 13:18:54,906] INFO - ============================================================
+[2026-05-15 13:18:55,035] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 13:18:55,036] INFO - 啟動 每小時爬蟲...
+[2026-05-15 13:20:09,769] INFO - 每小時爬蟲 完成
+[2026-05-15 13:20:09,771] INFO - 輸出: www.threads.com/search?after_date=2026-05-14&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：3 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 13:20:09,771] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 13:40:41,578] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 13:40:41,582] INFO - 輸出:  讚 0，回覆 2，轉發 0，分享 0
+  更新指標：https://www.threads.com/@pandalin004/post/DYMYAEfkym3
+    讚 5，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@ma.and76/post/DYLNFnVkz2D
+    讚 21，回覆 0，轉發 0，分享 1
+  更新指標：https://www.threads.com/@nccuib_night_2026/post/DYMd_pXn31l
+    讚 22，回覆 0，轉發 0，分享 7
+完成 指標更新完成，共處理 193 篇貼文。
+
+[2026-05-15 13:40:41,629] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 13:40:41,630] INFO - 本次排程執行完畢。
+[2026-05-15 13:40:41,631] INFO - ============================================================
+[2026-05-15 13:41:05,667] INFO - ============================================================
+[2026-05-15 13:41:05,971] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 13:41:05,971] INFO - 啟動 每小時爬蟲...
+[2026-05-15 13:42:22,548] INFO - 每小時爬蟲 完成
+[2026-05-15 13:42:22,551] INFO - 輸出: www.threads.com/search?after_date=2026-05-14&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：3 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 13:42:22,552] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 14:02:48,511] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 14:02:48,517] INFO - 輸出:  讚 0，回覆 2，轉發 0，分享 0
+  更新指標：https://www.threads.com/@pandalin004/post/DYMYAEfkym3
+    讚 5，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@ma.and76/post/DYLNFnVkz2D
+    讚 21，回覆 0，轉發 0，分享 1
+  更新指標：https://www.threads.com/@nccuib_night_2026/post/DYMd_pXn31l
+    讚 22，回覆 0，轉發 0，分享 7
+完成 指標更新完成，共處理 196 篇貼文。
+
+[2026-05-15 14:02:48,564] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 14:02:48,565] INFO - 本次排程執行完畢。
+[2026-05-15 14:02:48,565] INFO - ============================================================
+[2026-05-15 14:18:56,587] INFO - ============================================================
+[2026-05-15 14:18:56,834] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 14:18:56,837] INFO - 啟動 每小時爬蟲...
+[2026-05-15 14:20:30,382] INFO - 每小時爬蟲 完成
+[2026-05-15 14:20:30,385] INFO - 輸出: w.threads.com/search?after_date=2026-05-14&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 10 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：10 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 14:20:30,385] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 14:42:04,207] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 14:42:04,214] INFO - 輸出: 5，分享 217
+  更新指標：https://www.threads.com/@corleone_0912/post/DYMqvwLEgzP
+    讚 775，回覆 101，轉發 25，分享 217
+  更新指標：https://www.threads.com/@zchao_xiang/post/DYMvq_iklhi
+    讚 93，回覆 29，轉發 0，分享 11
+  更新指標：https://www.threads.com/@klinaertye_/post/DYNDQmGGFw9
+    讚 215，回覆 2，轉發 1，分享 143
+完成 指標更新完成，共處理 194 篇貼文。
+
+[2026-05-15 14:42:04,296] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 14:42:04,297] INFO - 本次排程執行完畢。
+[2026-05-15 14:42:04,297] INFO - ============================================================
+[2026-05-15 15:18:55,793] INFO - ============================================================
+[2026-05-15 15:18:55,970] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 15:18:55,972] INFO - 啟動 每小時爬蟲...
+[2026-05-15 15:20:59,199] INFO - 每小時爬蟲 完成
+[2026-05-15 15:20:59,207] INFO - 輸出: 2026-05-14&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 16 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：16 筆
+   - 新增貼文：10 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-15 15:20:59,209] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 15:42:11,381] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 15:42:11,388] INFO - 輸出: h
+    讚 17，回覆 0，轉發 0，分享 6
+  更新指標：https://www.threads.com/@jimmy_luo1224/post/DYMVvb0k5s7
+    讚 32，回覆 2，轉發 0，分享 0
+  更新指標：https://www.threads.com/@y.in9__/post/DYNQBEVGTPE
+    讚 82，回覆 2，轉發 0，分享 0
+  更新指標：https://www.threads.com/@imin_1201/post/DYMz1EXD-x7
+    讚 55，回覆 8，轉發 1，分享 1
+完成 指標更新完成，共處理 197 篇貼文。
+
+[2026-05-15 15:42:11,542] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-15 15:42:11,544] INFO - 本次排程執行完畢。
+[2026-05-15 15:42:11,545] INFO - ============================================================
+[2026-05-15 17:09:18,345] INFO - ============================================================
+[2026-05-15 17:09:18,705] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 17:09:18,708] INFO - 啟動 每小時爬蟲...
+[2026-05-15 17:10:21,939] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-15 17:10:21,943] ERROR - 錯誤: wait self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-15 17:10:21,944] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 23:08:16,669] INFO - ============================================================
+[2026-05-15 23:08:27,286] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-15 23:08:27,291] INFO - 啟動 每小時爬蟲...
+[2026-05-15 23:22:37,999] WARNING - 每小時爬蟲 超時
+[2026-05-15 23:22:38,163] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-15 23:44:50,100] INFO - 指標更新（近 3 天） 完成
+[2026-05-15 23:44:50,110] INFO - 輸出: ，轉發 0，分享 0
+  更新指標：https://www.threads.com/@tkb.yzu/post/DYOPm_0mQTM
+    讚 10，回覆 3，轉發 0，分享 2
+  更新指標：https://www.threads.com/@yummy_is_many_things/post/DYPRMFDGeB2
+    讚 88，回覆 22，轉發 3，分享 64
+  更新指標：https://www.threads.com/@mistique._____/post/DYOM68hmRsx
+    讚 26，回覆 0，轉發 0，分享 28
+完成 指標更新完成，共處理 178 篇貼文。
+
+[2026-05-15 23:44:50,176] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-15 23:44:50,177] INFO - 啟動 趨勢分析...
+[2026-05-15 23:55:34,077] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-15 23:55:34,081] ERROR - 錯誤: wright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: Page.evaluate: Target page, context or browser has been closed
+
+[2026-05-15 23:55:34,082] INFO - 本次排程執行完畢。
+[2026-05-15 23:55:34,082] INFO - ============================================================
+[2026-05-16 00:41:06,366] INFO - ============================================================
+[2026-05-16 00:41:06,463] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 00:41:06,466] INFO - 啟動 每小時爬蟲...
+[2026-05-16 00:42:51,080] INFO - 每小時爬蟲 完成
+[2026-05-16 00:42:51,085] INFO - 輸出: www.threads.com/search?after_date=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 5 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：5 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 00:42:51,086] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 01:02:40,964] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 01:02:40,972] INFO - 輸出: ，轉發 0，分享 0
+  更新指標：https://www.threads.com/@tkb.yzu/post/DYOPm_0mQTM
+    讚 10，回覆 3，轉發 0，分享 2
+  更新指標：https://www.threads.com/@yummy_is_many_things/post/DYPRMFDGeB2
+    讚 88，回覆 22，轉發 3，分享 64
+  更新指標：https://www.threads.com/@mistique._____/post/DYOM68hmRsx
+    讚 26，回覆 0，轉發 0，分享 28
+完成 指標更新完成，共處理 183 篇貼文。
+
+[2026-05-16 01:02:41,064] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 01:02:41,065] INFO - 本次排程執行完畢。
+[2026-05-16 01:02:41,065] INFO - ============================================================
+[2026-05-16 01:18:55,161] INFO - ============================================================
+[2026-05-16 01:18:55,361] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 01:18:55,364] INFO - 啟動 每小時爬蟲...
+[2026-05-16 01:20:26,048] INFO - 每小時爬蟲 完成
+[2026-05-16 01:20:26,052] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 01:20:26,053] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 01:27:11,275] ERROR - 指標更新（近 3 天） 失敗 (返回碼: 1)
+[2026-05-16 01:27:11,279] ERROR - 錯誤: wright\_impl\_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: Page.evaluate: Target page, context or browser has been closed
+
+[2026-05-16 01:27:11,361] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 01:27:11,362] INFO - 本次排程執行完畢。
+[2026-05-16 01:27:11,362] INFO - ============================================================
+[2026-05-16 15:41:06,764] INFO - ============================================================
+[2026-05-16 15:41:06,967] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 15:41:06,970] INFO - 啟動 每小時爬蟲...
+[2026-05-16 15:42:53,155] INFO - 每小時爬蟲 完成
+[2026-05-16 15:42:53,161] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 15:42:53,163] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 15:59:55,765] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 15:59:55,776] INFO - 輸出:  10，分享 36
+  更新指標：https://www.threads.com/@lisa_agftw/post/DYRZU97E4px
+    讚 523，回覆 18，轉發 10，分享 36
+  更新指標：https://www.threads.com/@joyce05020502/post/DYOmX38gVU9
+    讚 260，回覆 4，轉發 1，分享 24
+  更新指標：https://www.threads.com/@wowhocurry0809/post/DYOm0ftGSDv
+    讚 260，回覆 4，轉發 1，分享 24
+完成 指標更新完成，共處理 153 篇貼文。
+
+[2026-05-16 15:59:55,923] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-16 15:59:55,923] INFO - 啟動 趨勢分析...
+[2026-05-16 16:15:05,099] INFO - 趨勢分析 完成
+[2026-05-16 16:15:05,108] INFO - 輸出: =3)：https://www.threads.com/@2hjean_/post/DYV3DLFEyFA
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@aaron_iber/post/DYWPeEjkTGq
+  完成 擴大中（情緒分數: 2）
+
+  分析 (crisis_score=3)：https://www.threads.com/@guitarloverdodo/post/DYWj3ZegWzh
+  完成 擴大中（情緒分數: 4）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-16 16:15:05,109] INFO - 本次排程執行完畢。
+[2026-05-16 16:15:05,109] INFO - ============================================================
+[2026-05-16 16:18:55,532] INFO - ============================================================
+[2026-05-16 16:18:55,827] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 16:18:55,827] INFO - 啟動 每小時爬蟲...
+[2026-05-16 16:20:50,549] INFO - 每小時爬蟲 完成
+[2026-05-16 16:20:50,554] INFO - 輸出: e=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 16:20:50,555] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 16:39:15,306] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 16:39:15,313] INFO - 輸出: ，轉發 10，分享 36
+  更新指標：https://www.threads.com/@lisa_agftw/post/DYRZU97E4px
+    讚 523，回覆 18，轉發 10，分享 36
+  更新指標：https://www.threads.com/@joyce05020502/post/DYOmX38gVU9
+    讚 1，回覆 1，轉發 0，分享 0
+  更新指標：https://www.threads.com/@wowhocurry0809/post/DYOm0ftGSDv
+    讚 260，回覆 4，轉發 1，分享 24
+完成 指標更新完成，共處理 162 篇貼文。
+
+[2026-05-16 16:39:15,348] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 16:39:15,350] INFO - 本次排程執行完畢。
+[2026-05-16 16:39:15,351] INFO - ============================================================
+[2026-05-16 16:41:05,590] INFO - ============================================================
+[2026-05-16 16:41:05,866] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 16:41:05,867] INFO - 啟動 每小時爬蟲...
+[2026-05-16 16:42:39,871] INFO - 每小時爬蟲 完成
+[2026-05-16 16:42:39,873] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 16:42:39,874] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 16:59:50,191] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 16:59:50,196] INFO - 輸出: 0，分享 194
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2426，回覆 39，轉發 120，分享 194
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 159 篇貼文。
+
+[2026-05-16 16:59:50,258] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 16:59:50,259] INFO - 本次排程執行完畢。
+[2026-05-16 16:59:50,259] INFO - ============================================================
+[2026-05-16 17:18:54,783] INFO - ============================================================
+[2026-05-16 17:18:55,033] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 17:18:55,033] INFO - 啟動 每小時爬蟲...
+[2026-05-16 17:20:35,864] INFO - 每小時爬蟲 完成
+[2026-05-16 17:20:35,867] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 17:20:35,868] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 17:38:32,967] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 17:38:32,974] INFO - 輸出: 0，分享 194
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2426，回覆 39，轉發 120，分享 194
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 165 篇貼文。
+
+[2026-05-16 17:38:33,046] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 17:38:33,047] INFO - 本次排程執行完畢。
+[2026-05-16 17:38:33,048] INFO - ============================================================
+[2026-05-16 17:41:05,568] INFO - ============================================================
+[2026-05-16 17:41:05,801] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 17:41:05,801] INFO - 啟動 每小時爬蟲...
+[2026-05-16 17:42:30,740] INFO - 每小時爬蟲 完成
+[2026-05-16 17:42:30,742] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 17:42:30,744] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 18:07:28,955] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 18:07:28,958] INFO - 輸出: 新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+Call log:
+  - navigating to "https://www.threads.com/@bamau666/post/DYQvxEYkW8K", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 171 篇貼文。
+
+[2026-05-16 18:07:29,061] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 18:07:29,061] INFO - 本次排程執行完畢。
+[2026-05-16 18:07:29,061] INFO - ============================================================
+[2026-05-16 18:18:56,029] INFO - ============================================================
+[2026-05-16 18:18:56,375] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 18:18:56,375] INFO - 啟動 每小時爬蟲...
+[2026-05-16 18:19:12,113] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-16 18:19:12,114] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-16 18:19:12,115] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 18:19:19,415] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 18:19:19,416] INFO - 輸出: 新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+Call log:
+  - navigating to "https://www.threads.com/@bamau666/post/DYQvxEYkW8K", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 171 篇貼文。
+
+[2026-05-16 18:19:19,438] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 18:19:19,438] INFO - 本次排程執行完畢。
+[2026-05-16 18:19:19,439] INFO - ============================================================
+[2026-05-16 21:51:44,507] INFO - ============================================================
+[2026-05-16 21:51:45,009] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 21:51:45,012] INFO - 啟動 每小時爬蟲...
+[2026-05-16 21:53:55,839] INFO - 每小時爬蟲 完成
+[2026-05-16 21:53:55,841] INFO - 輸出: www.threads.com/search?after_date=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 21:53:55,842] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 22:06:50,067] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 22:06:50,071] INFO - 輸出: 新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+Call log:
+  - navigating to "https://www.threads.com/@bamau666/post/DYQvxEYkW8K", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 176 篇貼文。
+
+[2026-05-16 22:06:50,142] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 22:06:50,142] INFO - 本次排程執行完畢。
+[2026-05-16 22:06:50,144] INFO - ============================================================
+[2026-05-16 22:18:55,331] INFO - ============================================================
+[2026-05-16 22:18:55,794] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 22:18:55,794] INFO - 啟動 每小時爬蟲...
+[2026-05-16 22:20:37,793] INFO - 每小時爬蟲 完成
+[2026-05-16 22:20:37,795] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 22:20:37,796] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 22:41:10,412] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 22:41:10,419] INFO - 輸出: 0，分享 194
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2428，回覆 39，轉發 120，分享 194
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 185 篇貼文。
+
+[2026-05-16 22:41:10,463] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-16 22:41:10,463] INFO - 啟動 趨勢分析...
+[2026-05-16 22:57:56,702] INFO - 趨勢分析 完成
+[2026-05-16 22:57:56,709] INFO - 輸出: =3)：https://www.threads.com/@2hjean_/post/DYV3DLFEyFA
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@aaron_iber/post/DYWPeEjkTGq
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@guitarloverdodo/post/DYWj3ZegWzh
+  完成 擴大中（情緒分數: 4）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-16 22:57:56,711] INFO - 本次排程執行完畢。
+[2026-05-16 22:57:56,712] INFO - ============================================================
+[2026-05-16 23:18:55,532] INFO - ============================================================
+[2026-05-16 23:18:55,946] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-16 23:18:55,946] INFO - 啟動 每小時爬蟲...
+[2026-05-16 23:21:22,181] INFO - 每小時爬蟲 完成
+[2026-05-16 23:21:22,186] INFO - 輸出: ate=2026-05-15&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-16 23:21:22,187] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-16 23:44:44,211] INFO - 指標更新（近 3 天） 完成
+[2026-05-16 23:44:44,249] INFO - 輸出: 0，分享 194
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2428，回覆 39，轉發 120，分享 194
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 194 篇貼文。
+
+[2026-05-16 23:44:44,399] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-16 23:44:44,399] INFO - 本次排程執行完畢。
+[2026-05-16 23:44:44,400] INFO - ============================================================
+[2026-05-17 00:18:55,403] INFO - ============================================================
+[2026-05-17 00:18:55,887] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 00:18:55,889] INFO - 啟動 每小時爬蟲...
+[2026-05-17 00:20:24,664] INFO - 每小時爬蟲 完成
+[2026-05-17 00:20:24,667] INFO - 輸出: www.threads.com/search?after_date=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：3 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 00:20:24,667] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 09:18:55,731] INFO - ============================================================
+[2026-05-17 09:18:56,054] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 09:18:56,054] INFO - 啟動 每小時爬蟲...
+[2026-05-17 09:20:50,295] INFO - 每小時爬蟲 完成
+[2026-05-17 09:20:50,295] INFO - 輸出: ate=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 09:20:50,296] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 09:54:26,176] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 09:54:26,179] INFO - 輸出: 0，分享 195
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2430，回覆 39，轉發 120，分享 195
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 203 篇貼文。
+
+[2026-05-17 09:54:26,198] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-17 09:54:26,199] INFO - 啟動 趨勢分析...
+[2026-05-17 10:11:10,425] INFO - 趨勢分析 完成
+[2026-05-17 10:11:10,428] INFO - 輸出: =3)：https://www.threads.com/@2hjean_/post/DYV3DLFEyFA
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@aaron_iber/post/DYWPeEjkTGq
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@guitarloverdodo/post/DYWj3ZegWzh
+  完成 擴大中（情緒分數: 4）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-17 10:11:10,429] INFO - 本次排程執行完畢。
+[2026-05-17 10:11:10,429] INFO - ============================================================
+[2026-05-17 10:18:55,135] INFO - ============================================================
+[2026-05-17 10:18:55,402] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 10:18:55,402] INFO - 啟動 每小時爬蟲...
+[2026-05-17 10:20:28,301] INFO - 每小時爬蟲 完成
+[2026-05-17 10:20:28,306] INFO - 輸出: ate=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 10:20:28,307] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 10:42:44,733] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 10:42:44,760] INFO - 輸出: 0，分享 195
+  更新指標：https://www.threads.com/@goodtoking_store/post/DYR6yPUj_3I
+    讚 2430，回覆 39，轉發 120，分享 195
+  更新指標：https://www.threads.com/@lawyermolly/post/DYQupnDE8MU
+    讚 137，回覆 10，轉發 0，分享 1
+  更新指標：https://www.threads.com/@bamau666/post/DYQvxEYkW8K
+    讚 137，回覆 10，轉發 0，分享 1
+完成 指標更新完成，共處理 209 篇貼文。
+
+[2026-05-17 10:42:44,846] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 10:42:44,847] INFO - 本次排程執行完畢。
+[2026-05-17 10:42:44,847] INFO - ============================================================
+[2026-05-17 10:43:53,629] INFO - ============================================================
+[2026-05-17 10:43:53,912] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 10:43:53,913] INFO - 啟動 每小時爬蟲...
+[2026-05-17 10:45:25,843] INFO - 每小時爬蟲 完成
+[2026-05-17 10:45:25,846] INFO - 輸出: www.threads.com/search?after_date=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 5 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：5 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 10:45:25,846] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 11:13:05,465] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 11:13:05,473] INFO - 輸出: ，分享 3
+  更新指標：https://www.threads.com/@peidarling/post/DYRycQUgZQx
+    讚 358，回覆 61，轉發 21，分享 92
+  更新指標：https://www.threads.com/@chameleon.5942369/post/DYRzC6tmaeo
+    讚 358，回覆 61，轉發 21，分享 92
+  更新指標：https://www.threads.com/@chingxi_star_/post/DYRou5Nksrg
+    讚 287，回覆 6，轉發 1，分享 2
+完成 指標更新完成，共處理 205 篇貼文。
+
+[2026-05-17 11:13:05,625] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 11:13:05,626] INFO - 本次排程執行完畢。
+[2026-05-17 11:13:05,626] INFO - ============================================================
+[2026-05-17 11:18:55,688] INFO - ============================================================
+[2026-05-17 11:18:56,055] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 11:18:56,056] INFO - 啟動 每小時爬蟲...
+[2026-05-17 11:20:50,208] INFO - 每小時爬蟲 完成
+[2026-05-17 11:20:50,211] INFO - 輸出: ate=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 11:20:50,212] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 11:44:35,190] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 11:44:35,198] INFO - 輸出: ，分享 3
+  更新指標：https://www.threads.com/@peidarling/post/DYRycQUgZQx
+    讚 358，回覆 61，轉發 21，分享 92
+  更新指標：https://www.threads.com/@chameleon.5942369/post/DYRzC6tmaeo
+    讚 358，回覆 61，轉發 21，分享 92
+  更新指標：https://www.threads.com/@chingxi_star_/post/DYRou5Nksrg
+    讚 287，回覆 6，轉發 1，分享 2
+完成 指標更新完成，共處理 211 篇貼文。
+
+[2026-05-17 11:44:35,295] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 11:44:35,296] INFO - 本次排程執行完畢。
+[2026-05-17 11:44:35,296] INFO - ============================================================
+[2026-05-17 13:50:15,679] INFO - ============================================================
+[2026-05-17 13:50:15,899] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 13:50:15,901] INFO - 啟動 每小時爬蟲...
+[2026-05-17 13:52:38,631] INFO - 每小時爬蟲 完成
+[2026-05-17 13:52:38,632] INFO - 輸出: e=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 10 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：10 筆
+   - 新增貼文：9 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 13:52:38,633] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 14:17:29,789] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 14:17:29,797] INFO - 輸出: 1，轉發 0，分享 21
+  更新指標：https://www.threads.com/@abiao0713/post/DYRdqx-GajJ
+    讚 5，回覆 0，轉發 0，分享 1
+  更新指標：https://www.threads.com/@mistakehen/post/DYTrGr5mto5
+    讚 2066，回覆 11，轉發 43，分享 527
+  更新指標：https://www.threads.com/@eric_chen.lr/post/DYTrj2-j7EJ
+    讚 2066，回覆 11，轉發 43，分享 527
+完成 指標更新完成，共處理 212 篇貼文。
+
+[2026-05-17 14:17:29,877] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 14:17:29,879] INFO - 本次排程執行完畢。
+[2026-05-17 14:17:29,881] INFO - ============================================================
+[2026-05-17 14:18:55,883] INFO - ============================================================
+[2026-05-17 14:18:56,156] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 14:18:56,157] INFO - 啟動 每小時爬蟲...
+[2026-05-17 14:20:48,038] INFO - 每小時爬蟲 完成
+[2026-05-17 14:20:48,040] INFO - 輸出: ult&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 15 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：15 筆
+   - 新增貼文：13 筆
+
+🤖 開始批次分析 13 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 14:20:48,041] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 14:49:10,745] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 14:49:10,755] INFO - 輸出: 1，轉發 0，分享 21
+  更新指標：https://www.threads.com/@abiao0713/post/DYRdqx-GajJ
+    讚 5，回覆 0，轉發 0，分享 1
+  更新指標：https://www.threads.com/@mistakehen/post/DYTrGr5mto5
+    讚 2066，回覆 11，轉發 43，分享 527
+  更新指標：https://www.threads.com/@eric_chen.lr/post/DYTrj2-j7EJ
+    讚 2066，回覆 11，轉發 43，分享 527
+完成 指標更新完成，共處理 225 篇貼文。
+
+[2026-05-17 14:49:10,881] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 14:49:10,881] INFO - 本次排程執行完畢。
+[2026-05-17 14:49:10,882] INFO - ============================================================
+[2026-05-17 15:18:56,461] INFO - ============================================================
+[2026-05-17 15:18:56,731] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 15:18:56,732] INFO - 啟動 每小時爬蟲...
+[2026-05-17 15:22:07,881] INFO - 每小時爬蟲 完成
+[2026-05-17 15:22:07,887] INFO - 輸出: ult&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：11 筆
+
+🤖 開始批次分析 11 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 15:22:07,888] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 15:52:15,952] WARNING - 指標更新（近 3 天） 超時
+[2026-05-17 15:52:16,663] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 15:52:16,664] INFO - 本次排程執行完畢。
+[2026-05-17 15:52:16,664] INFO - ============================================================
+[2026-05-17 16:18:57,667] INFO - ============================================================
+[2026-05-17 16:19:01,668] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 16:19:01,705] INFO - 啟動 每小時爬蟲...
+[2026-05-17 16:29:38,224] WARNING - 每小時爬蟲 超時
+[2026-05-17 16:29:38,241] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 16:59:45,520] WARNING - 指標更新（近 3 天） 超時
+[2026-05-17 16:59:45,790] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-17 16:59:45,791] INFO - 啟動 趨勢分析...
+[2026-05-17 20:53:10,126] INFO - ============================================================
+[2026-05-17 20:53:10,449] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 20:53:10,452] INFO - 啟動 每小時爬蟲...
+[2026-05-17 20:56:14,740] INFO - 每小時爬蟲 完成
+[2026-05-17 20:56:14,743] INFO - 輸出: e=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 11 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：11 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 20:56:14,744] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 21:26:31,689] WARNING - 指標更新（近 3 天） 超時
+[2026-05-17 21:26:31,811] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 21:26:31,811] INFO - 本次排程執行完畢。
+[2026-05-17 21:26:31,812] INFO - ============================================================
+[2026-05-17 21:41:07,059] INFO - ============================================================
+[2026-05-17 21:41:07,741] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 21:41:07,744] INFO - 啟動 每小時爬蟲...
+[2026-05-17 21:44:07,825] INFO - 每小時爬蟲 完成
+[2026-05-17 21:44:07,833] INFO - 輸出: e=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 14 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：14 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 21:44:07,834] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 22:05:31,347] INFO - 指標更新（近 3 天） 完成
+[2026-05-17 22:05:31,356] INFO - 輸出: ://www.threads.com/@inmydream_8/post/DYUazG6E_Bg
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@inmydream_8/post/DYUazG6E_Bg
+Call log:
+  - navigating to "https://www.threads.com/@inmydream_8/post/DYUazG6E_Bg", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 200 篇貼文。
+
+[2026-05-17 22:05:31,533] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 22:05:31,534] INFO - 本次排程執行完畢。
+[2026-05-17 22:05:31,534] INFO - ============================================================
+[2026-05-17 22:18:55,377] INFO - ============================================================
+[2026-05-17 22:18:55,557] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 22:18:55,558] INFO - 啟動 每小時爬蟲...
+[2026-05-17 22:20:51,576] INFO - 每小時爬蟲 完成
+[2026-05-17 22:20:51,582] INFO - 輸出: www.threads.com/search?after_date=2026-05-16&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 8 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：8 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-17 22:20:51,583] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-17 22:51:13,124] WARNING - 指標更新（近 3 天） 超時
+[2026-05-17 22:51:13,260] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-17 22:51:13,261] INFO - 本次排程執行完畢。
+[2026-05-17 22:51:13,261] INFO - ============================================================
+[2026-05-17 23:18:55,732] INFO - ============================================================
+[2026-05-17 23:18:55,923] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-17 23:18:55,925] INFO - 啟動 每小時爬蟲...
+[2026-05-17 23:22:31,412] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-17 23:22:31,425] ERROR - 錯誤: ^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/search?after_date=2026-05-16&q=%E6%94%BF%E5%A4%A7&serp_type=default&hl=zh-tw", waiting until "domcontentloaded"
+
+
+[2026-05-17 23:22:31,484] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 13:44:35,200] INFO - ============================================================
+[2026-05-18 13:44:50,407] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 13:44:50,410] INFO - 啟動 每小時爬蟲...
+[2026-05-18 13:48:27,729] INFO - 每小時爬蟲 完成
+[2026-05-18 13:48:27,732] INFO - 輸出: ate=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 13:48:27,733] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 14:18:54,973] INFO - ============================================================
+[2026-05-18 14:18:55,182] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 14:18:55,183] INFO - 啟動 每小時爬蟲...
+[2026-05-18 14:20:09,515] INFO - 每小時爬蟲 完成
+[2026-05-18 14:20:09,517] INFO - 輸出: www.threads.com/search?after_date=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 5 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：5 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 14:20:09,518] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 14:39:02,136] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 14:39:02,144] INFO - 輸出:   讚 1，回覆 1，轉發 0，分享 0
+  更新指標：https://www.threads.com/@cyx__17_/post/DYUKwLNGd8o
+    讚 46，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@doc_hsunchen/post/DYUHU08ibmU
+    讚 277，回覆 58，轉發 18，分享 68
+  更新指標：https://www.threads.com/@aaron_iber/post/DYWPeEjkTGq
+    讚 12，回覆 2，轉發 0，分享 2
+完成 指標更新完成，共處理 174 篇貼文。
+
+[2026-05-18 14:39:02,174] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 14:39:02,175] INFO - 啟動 趨勢分析...
+[2026-05-18 14:54:10,864] INFO - 趨勢分析 完成
+[2026-05-18 14:54:10,868] INFO - 輸出: e=3)：https://www.threads.com/@isjustfinance_/post/DYZP5hVmODV
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@jan_huss_/post/DYZ8geREVab
+  完成 擴大中（情緒分數: 1）
+
+  分析 (crisis_score=3)：https://www.threads.com/@cich_111/post/DYZ-mCIGZMG
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-18 14:54:10,869] INFO - 本次排程執行完畢。
+[2026-05-18 14:54:10,869] INFO - ============================================================
+[2026-05-18 15:18:55,208] INFO - ============================================================
+[2026-05-18 15:18:55,352] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 15:18:55,352] INFO - 啟動 每小時爬蟲...
+[2026-05-18 15:20:31,526] INFO - 每小時爬蟲 完成
+[2026-05-18 15:20:31,530] INFO - 輸出: ate=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 7 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：7 筆
+   - 新增貼文：7 筆
+
+🤖 開始批次分析 7 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 15:20:31,530] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 15:39:19,960] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 15:39:19,979] INFO - 輸出:   讚 41，回覆 5，轉發 6，分享 11
+  更新指標：https://www.threads.com/@hsuanmini/post/DYXOxPnEWVr
+    讚 4，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@shihming_chen/post/DYWxsL0jZly
+    讚 1，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+    讚 0，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 166 篇貼文。
+
+[2026-05-18 15:39:20,137] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-18 15:39:20,140] INFO - 本次排程執行完畢。
+[2026-05-18 15:39:20,141] INFO - ============================================================
+[2026-05-18 15:41:05,808] INFO - ============================================================
+[2026-05-18 15:41:06,128] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 15:41:06,128] INFO - 啟動 每小時爬蟲...
+[2026-05-18 15:42:23,979] INFO - 每小時爬蟲 完成
+[2026-05-18 15:42:23,983] INFO - 輸出: www.threads.com/search?after_date=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：5 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 15:42:23,984] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 16:01:31,955] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 16:01:31,961] INFO - 輸出:   讚 41，回覆 5，轉發 6，分享 11
+  更新指標：https://www.threads.com/@hsuanmini/post/DYXOxPnEWVr
+    讚 4，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@shihming_chen/post/DYWxsL0jZly
+    讚 1，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+    讚 0，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 171 篇貼文。
+
+[2026-05-18 16:01:32,124] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-18 16:01:32,124] INFO - 本次排程執行完畢。
+[2026-05-18 16:01:32,125] INFO - ============================================================
+[2026-05-18 16:18:55,505] INFO - ============================================================
+[2026-05-18 16:18:55,793] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 16:18:55,794] INFO - 啟動 每小時爬蟲...
+[2026-05-18 16:20:32,513] INFO - 每小時爬蟲 完成
+[2026-05-18 16:20:32,515] INFO - 輸出: www.threads.com/search?after_date=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 4 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：4 筆
+   - 新增貼文：2 筆
+
+🤖 開始批次分析 2 篇新貼文...
+  🔄 批次 1：分析 2 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 16:20:32,516] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 16:38:56,446] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 16:38:56,451] INFO - 輸出:   讚 41，回覆 5，轉發 6，分享 11
+  更新指標：https://www.threads.com/@hsuanmini/post/DYXOxPnEWVr
+    讚 4，回覆 1，轉發 0，分享 1
+  更新指標：https://www.threads.com/@shihming_chen/post/DYWxsL0jZly
+    讚 1，回覆 0，轉發 0，分享 0
+  更新指標：https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+    讚 0，回覆 0，轉發 0，分享 0
+完成 指標更新完成，共處理 173 篇貼文。
+
+[2026-05-18 16:38:56,511] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-18 16:38:56,512] INFO - 本次排程執行完畢。
+[2026-05-18 16:38:56,513] INFO - ============================================================
+[2026-05-18 16:41:05,004] INFO - ============================================================
+[2026-05-18 16:41:05,201] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 16:41:05,201] INFO - 啟動 每小時爬蟲...
+[2026-05-18 16:42:26,903] INFO - 每小時爬蟲 完成
+[2026-05-18 16:42:26,906] INFO - 輸出: ate=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 6 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：6 筆
+   - 新增貼文：6 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 16:42:26,906] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 17:46:14,685] INFO - ============================================================
+[2026-05-18 17:46:15,085] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 17:46:15,088] INFO - 啟動 每小時爬蟲...
+[2026-05-18 17:46:35,698] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-18 17:46:35,699] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-18 17:46:35,699] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 17:46:42,876] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 17:46:42,876] INFO - 輸出: .threads.com/@hi.nails_room/post/DYWoE8-EZUb
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+Call log:
+  - navigating to "https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 179 篇貼文。
+
+[2026-05-18 17:46:42,887] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-18 17:46:42,887] INFO - 本次排程執行完畢。
+[2026-05-18 17:46:42,888] INFO - ============================================================
+[2026-05-18 21:17:46,982] INFO - ============================================================
+[2026-05-18 21:17:47,640] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 21:17:47,641] INFO - 啟動 每小時爬蟲...
+[2026-05-18 21:18:09,490] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-18 21:18:09,491] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-18 21:18:09,491] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 21:18:50,064] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 21:18:50,066] INFO - 輸出: .threads.com/@hi.nails_room/post/DYWoE8-EZUb
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+Call log:
+  - navigating to "https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 179 篇貼文。
+
+[2026-05-18 21:18:50,099] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 21:18:50,100] INFO - 啟動 趨勢分析...
+[2026-05-18 21:19:05,921] INFO - 趨勢分析 完成
+[2026-05-18 21:19:05,922] INFO - 輸出: www.threads.com/@cich_111/post/DYZ-mCIGZMG
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@cich_111/post/DYZ-mCIGZMG
+Call log:
+  - navigating to "https://www.threads.com/@cich_111/post/DYZ-mCIGZMG", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-18 21:19:05,923] INFO - 本次排程執行完畢。
+[2026-05-18 21:19:05,923] INFO - ============================================================
+[2026-05-18 21:41:42,314] INFO - ============================================================
+[2026-05-18 21:43:15,814] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 21:43:16,550] INFO - 啟動 每小時爬蟲...
+[2026-05-18 21:45:56,203] INFO - 每小時爬蟲 完成
+[2026-05-18 21:45:56,215] INFO - 輸出: www.threads.com/search?after_date=2026-05-17&q=政大&serp_type=default&hl=zh-tw
+模擬滾動載入貼文中... (共 30 次)
+   已捲動 10/30 次...
+   已捲動 20/30 次...
+   已捲動 30/30 次...
+   抓到 9 筆貼文
+
+[OK] Scraping completed!
+   - 總共擷取：9 筆
+   - 新增貼文：4 筆
+
+🤖 開始批次分析 4 篇新貼文...
+  🔄 批次 1：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 21:45:56,219] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 21:48:57,702] INFO - ============================================================
+[2026-05-18 21:48:57,804] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 21:48:57,804] INFO - 啟動 每小時爬蟲...
+[2026-05-18 21:50:57,735] INFO - 每小時爬蟲 完成
+[2026-05-18 21:50:57,737] INFO - 輸出: ps://www.threads.com/@reiix33/post/DYcFSmSkTo6
+     ➖ 未對外顯示或權限隱藏
+   ➔ 深度訪問 (7/7): https://www.threads.com/@chunlivv/post/DYb-hJ4Erf7
+     ✅ 成功捕獲隱藏瀏覽量: 50
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：1 筆
+   - 更新指標：6 筆
+
+🤖 開始批次分析 1 篇新貼文...
+  🔄 批次 1：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 21:50:57,738] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 21:51:03,830] ERROR - 指標更新（近 3 天） 失敗 (返回碼: 1)
+[2026-05-18 21:51:03,830] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=19408
+  - [pid=19408] <gracefully close start>
+  - [pid=19408] <kill>
+  - [pid=19408] <will force kill>
+  - [pid=19408] taskkill stderr: ���~: �䤣��B�z�{�� "19408"�C
+  - [pid=19408] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=19408] starting temporary directories cleanup
+  - [pid=19408] finished temporary directories cleanup
+  - [pid=19408] <gracefully close end>
+
+
+[2026-05-18 21:51:03,834] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 21:51:03,835] INFO - 啟動 趨勢分析...
+[2026-05-18 21:51:07,835] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-18 21:51:07,835] ERROR - 錯誤: er-data-dir=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=1760
+  - [pid=1760] <gracefully close start>
+  - [pid=1760] <kill>
+  - [pid=1760] <will force kill>
+  - [pid=1760] taskkill stderr: ���~: �䤣��B�z�{�� "1760"�C
+  - [pid=1760] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=1760] starting temporary directories cleanup
+  - [pid=1760] finished temporary directories cleanup
+  - [pid=1760] <gracefully close end>
+
+
+[2026-05-18 21:51:07,836] INFO - 本次排程執行完畢。
+[2026-05-18 21:51:07,836] INFO - ============================================================
+[2026-05-18 22:09:54,000] INFO - ============================================================
+[2026-05-18 22:09:54,313] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 22:09:54,315] INFO - 啟動 每小時爬蟲...
+[2026-05-18 22:19:59,546] WARNING - 每小時爬蟲 超時
+[2026-05-18 22:19:59,557] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 22:20:12,776] ERROR - 指標更新（近 3 天） 失敗 (返回碼: 1)
+[2026-05-18 22:20:12,777] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=22456
+  - [pid=22456] <gracefully close start>
+  - [pid=22456] <kill>
+  - [pid=22456] <will force kill>
+  - [pid=22456] taskkill stderr: ���~: �䤣��B�z�{�� "22456"�C
+  - [pid=22456] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=22456] starting temporary directories cleanup
+  - [pid=22456] finished temporary directories cleanup
+  - [pid=22456] <gracefully close end>
+
+
+[2026-05-18 22:20:12,826] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 22:20:12,827] INFO - 啟動 趨勢分析...
+[2026-05-18 22:20:24,508] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-18 22:20:24,509] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=19916
+  - [pid=19916] <gracefully close start>
+  - [pid=19916] <kill>
+  - [pid=19916] <will force kill>
+  - [pid=19916] taskkill stderr: ���~: �䤣��B�z�{�� "19916"�C
+  - [pid=19916] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=19916] starting temporary directories cleanup
+  - [pid=19916] finished temporary directories cleanup
+  - [pid=19916] <gracefully close end>
+
+
+[2026-05-18 22:20:24,509] INFO - 本次排程執行完畢。
+[2026-05-18 22:20:24,509] INFO - ============================================================
+[2026-05-18 22:29:10,613] INFO - ============================================================
+[2026-05-18 22:29:10,901] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 22:29:10,903] INFO - 啟動 每小時爬蟲...
+[2026-05-18 22:31:35,653] INFO - 每小時爬蟲 完成
+[2026-05-18 22:31:35,657] INFO - 輸出: reads.com/@hailunchi/post/DYbBdKIj1Lp
+     ✅ 成功捕獲隱藏瀏覽量: 93
+   ➔ 深度訪問 (8/8): https://www.threads.com/@kevin112_1216/post/DYebPPXibRX
+     ✅ 成功捕獲隱藏瀏覽量: 397
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：8 筆
+   - 新增貼文：3 筆
+   - 更新指標：5 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 22:31:35,657] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 22:31:40,434] ERROR - 指標更新（近 3 天） 失敗 (返回碼: 1)
+[2026-05-18 22:31:40,434] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=21848
+  - [pid=21848] <gracefully close start>
+  - [pid=21848] <kill>
+  - [pid=21848] <will force kill>
+  - [pid=21848] taskkill stderr: ���~: �䤣��B�z�{�� "21848"�C
+  - [pid=21848] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=21848] starting temporary directories cleanup
+  - [pid=21848] finished temporary directories cleanup
+  - [pid=21848] <gracefully close end>
+
+
+[2026-05-18 22:31:40,436] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 22:31:40,437] INFO - 啟動 趨勢分析...
+[2026-05-18 22:31:44,662] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-18 22:31:44,662] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=28516
+  - [pid=28516] <gracefully close start>
+  - [pid=28516] <kill>
+  - [pid=28516] <will force kill>
+  - [pid=28516] taskkill stderr: ���~: �䤣��B�z�{�� "28516"�C
+  - [pid=28516] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=28516] starting temporary directories cleanup
+  - [pid=28516] finished temporary directories cleanup
+  - [pid=28516] <gracefully close end>
+
+
+[2026-05-18 22:31:44,662] INFO - 本次排程執行完畢。
+[2026-05-18 22:31:44,663] INFO - ============================================================
+[2026-05-18 22:34:14,912] INFO - ============================================================
+[2026-05-18 22:34:15,141] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-18 22:34:15,141] INFO - 啟動 每小時爬蟲...
+[2026-05-18 22:36:29,286] INFO - 每小時爬蟲 完成
+[2026-05-18 22:36:29,288] INFO - 輸出: /www.threads.com/@fiercebat0318/post/DYeZJw2EtfD
+     ➖ 未對外顯示或權限隱藏
+   ➔ 深度訪問 (7/7): https://www.threads.com/@msno18/post/DYe6-b_IH55
+     ✅ 成功捕獲隱藏瀏覽量: 22
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：4 筆
+   - 更新指標：3 筆
+
+🤖 開始批次分析 4 篇新貼文...
+  🔄 批次 1：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-18 22:36:39,292] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-18 22:58:47,078] INFO - 指標更新（近 3 天） 完成
+[2026-05-18 22:58:47,108] INFO - 輸出: 263
+  更新指標：https://www.threads.com/@hsuanmini/post/DYXOxPnEWVr
+    讚 4，回覆 1，轉發 0，分享 1，瀏覽 850
+  更新指標：https://www.threads.com/@shihming_chen/post/DYWxsL0jZly
+    讚 1，回覆 0，轉發 0，分享 0，瀏覽 282
+  更新指標：https://www.threads.com/@hi.nails_room/post/DYWoE8-EZUb
+    讚 0，回覆 0，轉發 0，分享 0，瀏覽 0
+完成 指標更新完成，共處理 191 篇貼文。
+
+[2026-05-18 22:58:47,219] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-18 22:58:47,221] INFO - 啟動 趨勢分析...
+[2026-05-18 22:59:08,803] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-18 22:59:08,812] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=25460
+  - [pid=25460] <gracefully close start>
+  - [pid=25460] <kill>
+  - [pid=25460] <will force kill>
+  - [pid=25460] taskkill stderr: ���~: �䤣��B�z�{�� "25460"�C
+  - [pid=25460] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=25460] starting temporary directories cleanup
+  - [pid=25460] finished temporary directories cleanup
+  - [pid=25460] <gracefully close end>
+
+
+[2026-05-18 22:59:08,812] INFO - 本次排程執行完畢。
+[2026-05-18 22:59:08,831] INFO - ============================================================
+[2026-05-19 08:41:05,863] INFO - ============================================================
+[2026-05-19 08:41:05,995] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 08:41:05,997] INFO - 啟動 每小時爬蟲...
+[2026-05-19 08:41:12,681] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-19 08:41:12,682] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-19 08:41:22,684] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 08:41:29,038] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 08:41:29,039] INFO - 輸出: ://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+Call log:
+  - navigating to "https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 177 篇貼文。
+
+[2026-05-19 08:41:29,080] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 08:41:29,080] INFO - 啟動 趨勢分析...
+[2026-05-19 08:41:34,685] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 08:41:34,685] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=17328
+  - [pid=17328] <gracefully close start>
+  - [pid=17328] <kill>
+  - [pid=17328] <will force kill>
+  - [pid=17328] taskkill stderr: ���~: �䤣��B�z�{�� "17328"�C
+  - [pid=17328] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=17328] starting temporary directories cleanup
+  - [pid=17328] finished temporary directories cleanup
+  - [pid=17328] <gracefully close end>
+
+
+[2026-05-19 08:41:34,686] INFO - 本次排程執行完畢。
+[2026-05-19 08:41:34,686] INFO - ============================================================
+[2026-05-19 09:41:05,999] INFO - ============================================================
+[2026-05-19 09:41:06,305] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 09:41:06,306] INFO - 啟動 每小時爬蟲...
+[2026-05-19 09:43:46,570] INFO - 每小時爬蟲 完成
+[2026-05-19 09:43:46,572] INFO - 輸出: CoPzE8q0
+     ✅ 成功捕獲隱藏瀏覽量: 33
+   ➔ 深度訪問 (7/7): https://www.threads.com/@ncculandclub/post/DYd6GOYj9jN
+     ✅ 成功捕獲隱藏瀏覽量: 559
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：6 筆
+   - 更新指標：1 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 09:43:56,580] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 10:41:06,053] INFO - ============================================================
+[2026-05-19 10:41:06,377] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 10:41:06,377] INFO - 啟動 每小時爬蟲...
+[2026-05-19 10:43:14,196] INFO - 每小時爬蟲 完成
+[2026-05-19 10:43:14,197] INFO - 輸出: threads.com/@__ycht_/post/DYfCbYXibon
+     ✅ 成功捕獲隱藏瀏覽量: 447
+   ➔ 深度訪問 (7/7): https://www.threads.com/@tengpangchiu/post/DYd0hA4mSte
+     ✅ 成功捕獲隱藏瀏覽量: 130
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：3 筆
+   - 更新指標：4 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 10:43:24,198] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 11:06:04,892] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 11:06:04,899] INFO - 輸出: s://www.threads.com/@teresachen920/post/DYVeq6ekhzU
+    讚 6，回覆 0，轉發 0，分享 0，瀏覽 164
+  更新指標：https://www.threads.com/@lao_po_stanley_0824/post/DYVLCVDk1fp
+    讚 79，回覆 1，轉發 6，分享 78，瀏覽 2212
+  更新指標：https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+    讚 32，回覆 3，轉發 0，分享 0，瀏覽 1276
+完成 指標更新完成，共處理 186 篇貼文。
+
+[2026-05-19 11:06:04,966] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 11:06:04,967] INFO - 啟動 趨勢分析...
+[2026-05-19 11:06:15,726] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 11:06:15,726] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=28540
+  - [pid=28540] <gracefully close start>
+  - [pid=28540] <kill>
+  - [pid=28540] <will force kill>
+  - [pid=28540] taskkill stderr: ���~: �䤣��B�z�{�� "28540"�C
+  - [pid=28540] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=28540] starting temporary directories cleanup
+  - [pid=28540] finished temporary directories cleanup
+  - [pid=28540] <gracefully close end>
+
+
+[2026-05-19 11:06:15,727] INFO - 本次排程執行完畢。
+[2026-05-19 11:06:15,727] INFO - ============================================================
+[2026-05-19 11:41:06,473] INFO - ============================================================
+[2026-05-19 11:41:06,688] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 11:41:06,689] INFO - 啟動 每小時爬蟲...
+[2026-05-19 11:43:41,161] INFO - 每小時爬蟲 完成
+[2026-05-19 11:43:41,163] INFO - 輸出: aiwantaiyaki1010/post/DYenmrwFPr_
+     ✅ 成功捕獲隱藏瀏覽量: 5,144
+   ➔ 深度訪問 (6/6): https://www.threads.com/@echo_peach_echo/post/DYdpio9E47Q
+     ✅ 成功捕獲隱藏瀏覽量: 28
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：6 筆
+   - 新增貼文：4 筆
+   - 更新指標：2 筆
+
+🤖 開始批次分析 4 篇新貼文...
+  🔄 批次 1：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 11:43:51,164] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 12:04:42,235] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 12:04:42,253] INFO - 輸出: ://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+Call log:
+  - navigating to "https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 190 篇貼文。
+
+[2026-05-19 12:04:42,274] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 12:04:42,275] INFO - 啟動 趨勢分析...
+[2026-05-19 12:04:49,334] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 12:04:49,336] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=24972
+  - [pid=24972] <gracefully close start>
+  - [pid=24972] <kill>
+  - [pid=24972] <will force kill>
+  - [pid=24972] taskkill stderr: ���~: �䤣��B�z�{�� "24972"�C
+  - [pid=24972] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=24972] starting temporary directories cleanup
+  - [pid=24972] finished temporary directories cleanup
+  - [pid=24972] <gracefully close end>
+
+
+[2026-05-19 12:04:49,337] INFO - 本次排程執行完畢。
+[2026-05-19 12:04:49,338] INFO - ============================================================
+[2026-05-19 12:41:05,292] INFO - ============================================================
+[2026-05-19 12:41:05,505] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 12:41:05,505] INFO - 啟動 每小時爬蟲...
+[2026-05-19 12:41:08,085] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-19 12:41:08,085] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-19 12:41:18,086] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 12:41:26,763] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 12:41:26,763] INFO - 輸出: ://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+Call log:
+  - navigating to "https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 190 篇貼文。
+
+[2026-05-19 12:41:26,771] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 12:41:26,771] INFO - 啟動 趨勢分析...
+[2026-05-19 12:41:34,404] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 12:41:34,405] ERROR - 錯誤: ill stderr: ���~: PID �� 17684 (PID �� 9240 ���l�B�z�{��) ���B�z�{�ǵL�k�פ�C
+
+��]: ���䴩�ҹ��ժ��ާ@�C
+
+
+���~: PID �� 9240 (PID �� 15552 ���l�B�z�{��) ���B�z�{�ǵL�k�פ�C
+
+��]: ���䴩�ҹ��ժ��ާ@�C
+
+
+���~: PID �� 15552 (PID �� 25996 ���l�B�z�{��) ���B�z�{�ǵL�k�פ�C
+
+��]: �S�����b���檺�u�@�Ҷ��C
+  - [pid=15552] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=15552] starting temporary directories cleanup
+  - [pid=15552] finished temporary directories cleanup
+  - [pid=15552] <gracefully close end>
+
+
+[2026-05-19 12:41:34,406] INFO - 本次排程執行完畢。
+[2026-05-19 12:41:34,406] INFO - ============================================================
+[2026-05-19 13:41:05,383] INFO - ============================================================
+[2026-05-19 13:41:05,715] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 13:41:05,716] INFO - 啟動 每小時爬蟲...
+[2026-05-19 13:43:27,497] INFO - 每小時爬蟲 完成
+[2026-05-19 13:43:27,502] INFO - 輸出: NMJkd3T
+     ✅ 成功捕獲隱藏瀏覽量: 283
+   ➔ 深度訪問 (6/6): https://www.threads.com/@shawn.0511/post/DYd8IjMEbwf
+     ✅ 成功捕獲隱藏瀏覽量: 4,337
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：6 筆
+   - 新增貼文：6 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 13:43:37,503] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 14:05:04,249] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 14:05:04,254] INFO - 輸出: s://www.threads.com/@teresachen920/post/DYVeq6ekhzU
+    讚 6，回覆 0，轉發 0，分享 0，瀏覽 165
+  更新指標：https://www.threads.com/@lao_po_stanley_0824/post/DYVLCVDk1fp
+    讚 79，回覆 1，轉發 6，分享 78，瀏覽 2213
+  更新指標：https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+    讚 32，回覆 3，轉發 0，分享 0，瀏覽 1282
+完成 指標更新完成，共處理 196 篇貼文。
+
+[2026-05-19 14:05:04,323] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 14:05:04,323] INFO - 啟動 趨勢分析...
+[2026-05-19 14:05:11,205] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 14:05:11,206] ERROR - 錯誤: er-data-dir=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=7916
+  - [pid=7916] <gracefully close start>
+  - [pid=7916] <kill>
+  - [pid=7916] <will force kill>
+  - [pid=7916] taskkill stderr: ���~: �䤣��B�z�{�� "7916"�C
+  - [pid=7916] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=7916] starting temporary directories cleanup
+  - [pid=7916] finished temporary directories cleanup
+  - [pid=7916] <gracefully close end>
+
+
+[2026-05-19 14:05:11,206] INFO - 本次排程執行完畢。
+[2026-05-19 14:05:11,206] INFO - ============================================================
+[2026-05-19 14:41:05,141] INFO - ============================================================
+[2026-05-19 14:41:05,367] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 14:41:05,367] INFO - 啟動 每小時爬蟲...
+[2026-05-19 14:44:01,052] INFO - 每小時爬蟲 完成
+[2026-05-19 14:44:01,055] INFO - 輸出: st/DYd9yQ5kTAe
+     ➖ 未對外顯示或權限隱藏
+   ➔ 深度訪問 (7/7): https://www.threads.com/@nccu_da/post/DYexSKwD49m
+     ✅ 成功捕獲隱藏瀏覽量: 1,007
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：6 筆
+   - 更新指標：1 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 14:44:11,057] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 15:06:18,543] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 15:06:18,544] INFO - 輸出: s://www.threads.com/@teresachen920/post/DYVeq6ekhzU
+    讚 6，回覆 0，轉發 0，分享 0，瀏覽 166
+  更新指標：https://www.threads.com/@lao_po_stanley_0824/post/DYVLCVDk1fp
+    讚 79，回覆 1，轉發 6，分享 78，瀏覽 2214
+  更新指標：https://www.threads.com/@xxeeoveya__/post/DYWLWJJE7Nf
+    讚 32，回覆 3，轉發 0，分享 0，瀏覽 1283
+完成 指標更新完成，共處理 202 篇貼文。
+
+[2026-05-19 15:06:18,559] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 15:06:18,560] INFO - 啟動 趨勢分析...
+[2026-05-19 15:06:24,708] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 15:06:24,708] ERROR - 錯誤: er-data-dir=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=9180
+  - [pid=9180] <gracefully close start>
+  - [pid=9180] <kill>
+  - [pid=9180] <will force kill>
+  - [pid=9180] taskkill stderr: ���~: �䤣��B�z�{�� "9180"�C
+  - [pid=9180] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=9180] starting temporary directories cleanup
+  - [pid=9180] finished temporary directories cleanup
+  - [pid=9180] <gracefully close end>
+
+
+[2026-05-19 15:06:24,708] INFO - 本次排程執行完畢。
+[2026-05-19 15:06:24,708] INFO - ============================================================
+[2026-05-19 15:41:05,439] INFO - ============================================================
+[2026-05-19 15:41:05,706] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 15:41:05,709] INFO - 啟動 每小時爬蟲...
+[2026-05-19 15:44:50,119] INFO - 每小時爬蟲 完成
+[2026-05-19 15:44:50,122] INFO - 輸出:  4
+   💤 觸發動態防禦暫停 10.4 秒，模擬真人中場休息...
+   ➔ 深度訪問 (9/9): https://www.threads.com/@ychaofu/post/DYd4FVbmhc8
+     ✅ 成功捕獲隱藏瀏覽量: 47
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：9 筆
+   - 新增貼文：8 筆
+   - 更新指標：1 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 15:45:00,123] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 16:07:34,158] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 16:07:34,161] INFO - 輸出: ps://www.threads.com/@cloud._______.yun/post/DYWOHJLmab7
+    讚 0，回覆 0，轉發 0，分享 0，瀏覽 169
+  更新指標：https://www.threads.com/@n.f.c.ymca/post/DYXkYC1GQ0L
+    讚 7，回覆 0，轉發 2，分享 4，瀏覽 115
+  更新指標：https://www.threads.com/@springrain_1998/post/DYXWxP9mcPV
+    讚 182，回覆 34，轉發 4，分享 27，瀏覽 1116
+完成 指標更新完成，共處理 203 篇貼文。
+
+[2026-05-19 16:07:34,234] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 16:07:34,235] INFO - 啟動 趨勢分析...
+[2026-05-19 16:07:42,055] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 16:07:42,057] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=11736
+  - [pid=11736] <gracefully close start>
+  - [pid=11736] <kill>
+  - [pid=11736] <will force kill>
+  - [pid=11736] taskkill stderr: ���~: �䤣��B�z�{�� "11736"�C
+  - [pid=11736] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=11736] starting temporary directories cleanup
+  - [pid=11736] finished temporary directories cleanup
+  - [pid=11736] <gracefully close end>
+
+
+[2026-05-19 16:07:42,058] INFO - 本次排程執行完畢。
+[2026-05-19 16:07:42,058] INFO - ============================================================
+[2026-05-19 16:41:05,048] INFO - ============================================================
+[2026-05-19 16:41:05,291] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 16:41:05,291] INFO - 啟動 每小時爬蟲...
+[2026-05-19 16:42:01,884] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-19 16:42:01,887] ERROR - 錯誤: ^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TimeoutError: Page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "https://www.threads.com/search?after_date=2026-05-18&q=%E6%94%BF%E5%A4%A7&serp_type=default&hl=zh-tw", waiting until "domcontentloaded"
+
+
+[2026-05-19 16:42:11,888] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 17:03:15,668] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 17:03:15,672] INFO - 輸出: //www.threads.com/@moonlight_1203/post/DYY7rs2DwCV
+    讚 450，回覆 10，轉發 0，分享 11，瀏覽 0
+  更新指標：https://www.threads.com/@kitty_jetaime/post/DYWVfFzEQxK
+    讚 9254，回覆 18，轉發 57，分享 192，瀏覽 0
+  更新指標：https://www.threads.com/@mike_tsao__/post/DYWOc-dAf8Y
+    讚 147，回覆 6，轉發 14，分享 18，瀏覽 3027
+完成 指標更新完成，共處理 194 篇貼文。
+
+[2026-05-19 17:03:15,688] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 17:03:15,688] INFO - 啟動 趨勢分析...
+[2026-05-19 17:03:22,583] ERROR - 趨勢分析 失敗 (返回碼: 1)
+[2026-05-19 17:03:22,584] ERROR - 錯誤: r=C:\Users\user\Desktop\秘書處AI實習\threads_moniter\browser_data --remote-debugging-pipe about:blank
+  - <launched> pid=15992
+  - [pid=15992] <gracefully close start>
+  - [pid=15992] <kill>
+  - [pid=15992] <will force kill>
+  - [pid=15992] taskkill stderr: ���~: �䤣��B�z�{�� "15992"�C
+  - [pid=15992] <process did exit: exitCode=2147483651, signal=null>
+  - [pid=15992] starting temporary directories cleanup
+  - [pid=15992] finished temporary directories cleanup
+  - [pid=15992] <gracefully close end>
+
+
+[2026-05-19 17:03:22,584] INFO - 本次排程執行完畢。
+[2026-05-19 17:03:22,584] INFO - ============================================================
+[2026-05-19 21:26:54,363] INFO - ============================================================
+[2026-05-19 21:26:54,575] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 21:26:54,578] INFO - 啟動 每小時爬蟲...
+[2026-05-19 21:32:00,584] INFO - 每小時爬蟲 完成
+[2026-05-19 21:32:00,682] INFO - 輸出: 423
+   ➔ 深度訪問 (11/11): https://www.threads.com/@yuxnlng/post/DYfMF_9EpIF
+     ➖ 未對外顯示或權限隱藏
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：11 筆
+   - 新增貼文：11 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 11 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 3：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 21:32:11,535] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 22:03:35,938] WARNING - 指標更新（近 3 天） 超時
+[2026-05-19 22:03:36,036] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 22:03:36,036] INFO - 啟動 趨勢分析...
+[2026-05-19 22:04:38,331] INFO - 趨勢分析 完成
+[2026-05-19 22:04:38,335] INFO - 輸出: entchen0929/post/DYgxfSKEcoe
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@vincentchen0929/post/DYgxfSKEcoe
+Call log:
+  - navigating to "https://www.threads.com/@vincentchen0929/post/DYgxfSKEcoe", waiting until "domcontentloaded"
+
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-19 22:04:38,337] INFO - 本次排程執行完畢。
+[2026-05-19 22:04:38,338] INFO - ============================================================
+[2026-05-19 22:13:26,391] INFO - ============================================================
+[2026-05-19 22:13:26,798] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-19 22:13:26,800] INFO - 啟動 每小時爬蟲...
+[2026-05-19 22:19:32,020] INFO - 每小時爬蟲 完成
+[2026-05-19 22:19:32,027] INFO - 輸出: 動態防禦暫停 13.6 秒，模擬真人中場休息...
+   ➔ 深度訪問 (13/13): https://www.threads.com/@aviva_88888/post/DYcEfAAjTCT
+     ✅ 成功捕獲隱藏瀏覽量: 793
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：13 筆
+   - 新增貼文：10 筆
+   - 更新指標：3 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-19 22:19:42,028] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-19 22:44:04,840] INFO - 指標更新（近 3 天） 完成
+[2026-05-19 22:44:04,848] INFO - 輸出:  更新指標：https://www.threads.com/@mangogo0505/post/DYWyD4LmOAu
+    讚 6，回覆 0，轉發 0，分享 0，瀏覽 673
+  更新指標：https://www.threads.com/@meowmoohehe26/post/DYVB9aykovX
+    讚 6，回覆 1，轉發 0，分享 3，瀏覽 837
+  更新指標：https://www.threads.com/@executiveyuan/post/DYV35uYCNdz
+    讚 25，回覆 0，轉發 4，分享 0，瀏覽 377
+完成 指標更新完成，共處理 191 篇貼文。
+
+[2026-05-19 22:44:05,004] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-19 22:44:15,006] INFO - 啟動 趨勢分析...
+[2026-05-19 23:04:50,278] INFO - 趨勢分析 完成
+[2026-05-19 23:04:50,281] INFO - 輸出: /www.threads.com/@bibicloset15880/post/DYd9yQ5kTAe
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@21starofdavid/post/DYeVYWEAY2_
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@vincentchen0929/post/DYgxfSKEcoe
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-19 23:04:50,282] INFO - 本次排程執行完畢。
+[2026-05-19 23:04:50,282] INFO - ============================================================
+[2026-05-20 08:41:09,848] INFO - ============================================================
+[2026-05-20 08:41:10,104] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 08:41:10,106] INFO - 啟動 每小時爬蟲...
+[2026-05-20 08:44:19,067] INFO - 每小時爬蟲 完成
+[2026-05-20 08:44:19,069] INFO - 輸出: YhP52wErcU
+     ✅ 成功捕獲隱藏瀏覽量: 929
+   ➔ 深度訪問 (8/8): https://www.threads.com/@quuuuuuyc/post/DYhDvooHSh9
+     ✅ 成功捕獲隱藏瀏覽量: 834
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：8 筆
+   - 新增貼文：8 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 08:44:29,086] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 09:03:58,475] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 09:03:58,479] INFO - 輸出: www.threads.com/@the_pharmacist_is_so_fun/post/DYZlr_BFFBf
+    讚 0，回覆 0，轉發 0，分享 0，瀏覽 100
+  更新指標：https://www.threads.com/@hi.nails_room/post/DYZwN7wkaVo
+    讚 0，回覆 0，轉發 0，分享 0，瀏覽 0
+  更新指標：https://www.threads.com/@wisolene__03/post/DYXQ6TiGjBG
+    讚 0，回覆 627，轉發 250，分享 1878，瀏覽 0
+完成 指標更新完成，共處理 178 篇貼文。
+
+[2026-05-20 09:03:58,525] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-20 09:04:08,526] INFO - 啟動 趨勢分析...
+[2026-05-20 09:21:56,111] INFO - 趨勢分析 完成
+[2026-05-20 09:21:56,113] INFO - 輸出: /www.threads.com/@bibicloset15880/post/DYd9yQ5kTAe
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@21starofdavid/post/DYeVYWEAY2_
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@vincentchen0929/post/DYgxfSKEcoe
+  完成 擴大中（情緒分數: 4）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-20 09:21:56,113] INFO - 本次排程執行完畢。
+[2026-05-20 09:21:56,113] INFO - ============================================================
+[2026-05-20 09:41:07,909] INFO - ============================================================
+[2026-05-20 09:41:08,329] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 09:41:08,331] INFO - 啟動 每小時爬蟲...
+[2026-05-20 09:44:09,614] INFO - 每小時爬蟲 完成
+[2026-05-20 09:44:09,617] INFO - 輸出:   ✅ 成功捕獲隱藏瀏覽量: 218
+   ➔ 深度訪問 (8/8): https://www.threads.com/@onigiri.honokura_nccu/post/DYg5n8-EYsU
+     ✅ 成功捕獲隱藏瀏覽量: 1,806
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：8 筆
+   - 新增貼文：8 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 09:44:19,631] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 10:05:03,674] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 10:05:03,701] INFO - 輸出: ttps://www.threads.com/@nelson.lan.18/post/DYZGNRAief0
+    讚 1，回覆 0，轉發 0，分享 0，瀏覽 85
+  更新指標：https://www.threads.com/@isjustfinance_/post/DYZP5hVmODV
+    讚 310，回覆 13，轉發 19，分享 214，瀏覽 0
+  更新指標：https://www.threads.com/@victorlin141913/post/DYY6TvBkUG4
+    讚 6，回覆 1，轉發 5，分享 4，瀏覽 523
+完成 指標更新完成，共處理 180 篇貼文。
+
+[2026-05-20 10:05:03,832] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 10:05:03,832] INFO - 本次排程執行完畢。
+[2026-05-20 10:05:03,833] INFO - ============================================================
+[2026-05-20 10:41:09,730] INFO - ============================================================
+[2026-05-20 10:41:10,069] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 10:41:10,071] INFO - 啟動 每小時爬蟲...
+[2026-05-20 10:43:48,334] INFO - 每小時爬蟲 完成
+[2026-05-20 10:43:48,336] INFO - 輸出: gx88kARjn
+     ✅ 成功捕獲隱藏瀏覽量: 680
+   💤 觸發動態防禦暫停 12.3 秒，模擬真人中場休息...
+   ➔ 深度訪問 (5/5): https://www.threads.com/@bkkleee/post/DYhy60IE_hw
+     ✅ 成功捕獲隱藏瀏覽量: 203
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：5 筆
+   - 新增貼文：3 筆
+   - 更新指標：2 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 10:43:58,342] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 11:03:55,294] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 11:03:55,301] INFO - 輸出: 229
+  更新指標：https://www.threads.com/@jimmykid132/post/DYZHpMvmrSu
+    讚 839，回覆 127，轉發 5，分享 134，瀏覽 0
+  更新指標：https://www.threads.com/@alan.927tw/post/DYZzNgsCTkq
+    讚 1，回覆 0，轉發 0，分享 0，瀏覽 105
+  更新指標：https://www.threads.com/@eros1224/post/DYY3qrQlCqM
+    讚 2，回覆 0，轉發 0，分享 0，瀏覽 292
+完成 指標更新完成，共處理 177 篇貼文。
+
+[2026-05-20 11:03:55,375] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 11:03:55,375] INFO - 本次排程執行完畢。
+[2026-05-20 11:03:55,376] INFO - ============================================================
+[2026-05-20 11:41:06,523] INFO - ============================================================
+[2026-05-20 11:41:06,850] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 11:41:06,853] INFO - 啟動 每小時爬蟲...
+[2026-05-20 11:43:19,688] INFO - 每小時爬蟲 完成
+[2026-05-20 11:43:19,691] INFO - 輸出: post/DYg2EX0j9fS
+     ➖ 未對外顯示或權限隱藏
+   💤 觸發動態防禦暫停 12.9 秒，模擬真人中場休息...
+   ➔ 深度訪問 (5/5): https://www.threads.com/@wajui___/post/DYgZstZGev0
+     ➖ 未對外顯示或權限隱藏
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：5 筆
+   - 新增貼文：5 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 5 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 11:43:29,692] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 12:02:17,184] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 12:02:17,190] INFO - 輸出: 瀏覽 482
+  更新指標：https://www.threads.com/@nny._415/post/DYYpom5CcNz
+    讚 209，回覆 49，轉發 0，分享 108，瀏覽 0
+  更新指標：https://www.threads.com/@yiyunnnn___/post/DYZ7jWAGLH2
+    讚 13，回覆 1，轉發 0，分享 2，瀏覽 704
+  更新指標：https://www.threads.com/@xh1lkyn/post/DYZfDPggSt5
+    讚 1，回覆 1，轉發 0，分享 0，瀏覽 607
+完成 指標更新完成，共處理 171 篇貼文。
+
+[2026-05-20 12:02:17,215] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 12:02:17,216] INFO - 本次排程執行完畢。
+[2026-05-20 12:02:17,216] INFO - ============================================================
+[2026-05-20 12:41:06,029] INFO - ============================================================
+[2026-05-20 12:41:06,368] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 12:41:06,372] INFO - 啟動 每小時爬蟲...
+[2026-05-20 12:41:13,656] ERROR - 每小時爬蟲 失敗 (返回碼: 1)
+[2026-05-20 12:41:13,658] ERROR - 錯誤: _api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "C:\Users\user\Desktop\秘書處AI實習\threads_moniter\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.Error: Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/
+Call log:
+  - navigating to "https://www.threads.com/", waiting until "domcontentloaded"
+
+
+[2026-05-20 12:41:23,660] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 12:41:35,877] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 12:41:35,880] INFO - 輸出:   更新指標：https://www.threads.com/@xh1lkyn/post/DYZfDPggSt5
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@xh1lkyn/post/DYZfDPggSt5
+Call log:
+  - navigating to "https://www.threads.com/@xh1lkyn/post/DYZfDPggSt5", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 171 篇貼文。
+
+[2026-05-20 12:41:35,952] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 12:41:35,953] INFO - 本次排程執行完畢。
+[2026-05-20 12:41:35,953] INFO - ============================================================
+[2026-05-20 13:41:05,508] INFO - ============================================================
+[2026-05-20 13:41:05,758] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 13:41:05,758] INFO - 啟動 每小時爬蟲...
+[2026-05-20 13:44:02,371] INFO - 每小時爬蟲 完成
+[2026-05-20 13:44:02,373] INFO - 輸出:     ✅ 成功捕獲隱藏瀏覽量: 1,030
+   ➔ 深度訪問 (10/10): https://www.threads.com/@nccu_artfestival/post/DYhflDjGHLh
+     ✅ 成功捕獲隱藏瀏覽量: 569
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：10 筆
+   - 新增貼文：8 筆
+   - 更新指標：2 筆
+
+🤖 開始批次分析 8 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 13:44:12,375] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 14:03:25,813] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 14:03:25,816] INFO - 輸出: 瀏覽 483
+  更新指標：https://www.threads.com/@nny._415/post/DYYpom5CcNz
+    讚 209，回覆 49，轉發 0，分享 108，瀏覽 0
+  更新指標：https://www.threads.com/@yiyunnnn___/post/DYZ7jWAGLH2
+    讚 13，回覆 1，轉發 0，分享 2，瀏覽 705
+  更新指標：https://www.threads.com/@xh1lkyn/post/DYZfDPggSt5
+    讚 1，回覆 1，轉發 0，分享 0，瀏覽 608
+完成 指標更新完成，共處理 179 篇貼文。
+
+[2026-05-20 14:03:25,839] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 14:03:25,840] INFO - 本次排程執行完畢。
+[2026-05-20 14:03:25,840] INFO - ============================================================
+[2026-05-20 14:41:05,459] INFO - ============================================================
+[2026-05-20 14:41:05,702] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 14:41:05,703] INFO - 啟動 每小時爬蟲...
+[2026-05-20 14:43:04,797] INFO - 每小時爬蟲 完成
+[2026-05-20 14:43:04,800] INFO - 輸出: oldfish0723/post/DYiqdqUj8lZ
+     ✅ 成功捕獲隱藏瀏覽量: 3,795
+   ➔ 深度訪問 (7/7): https://www.threads.com/@sinosecretariat0120/post/DYiw4T1j_5v
+     ✅ 成功捕獲隱藏瀏覽量: 253
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：7 筆
+   - 新增貼文：3 筆
+   - 更新指標：4 筆
+
+🤖 開始批次分析 3 篇新貼文...
+  🔄 批次 1：分析 3 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 14:43:14,802] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 15:00:33,313] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 15:00:33,318] INFO - 輸出: ttps://www.threads.com/@zhangyixiang1022/post/DYbYk2EmZ-y
+    讚 0，回覆 0，轉發 0，分享 0，瀏覽 0
+  更新指標：https://www.threads.com/@yuan0208.tw/post/DYZSgqBj8CB
+    讚 345，回覆 22，轉發 36，分享 47，瀏覽 163
+  更新指標：https://www.threads.com/@nccu_esports/post/DYZPuz-ExOx
+    讚 345，回覆 22，轉發 36，分享 47，瀏覽 0
+完成 指標更新完成，共處理 160 篇貼文。
+
+[2026-05-20 15:00:33,367] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 15:00:33,368] INFO - 本次排程執行完畢。
+[2026-05-20 15:00:33,368] INFO - ============================================================
+[2026-05-20 15:41:05,542] INFO - ============================================================
+[2026-05-20 15:41:05,803] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 15:41:05,803] INFO - 啟動 每小時爬蟲...
+[2026-05-20 15:43:48,945] INFO - 每小時爬蟲 完成
+[2026-05-20 15:43:48,949] INFO - 輸出: t/DYhMqM_FDwM
+     ➖ 未對外顯示或權限隱藏
+   ➔ 深度訪問 (6/6): https://www.threads.com/@waltho1123/post/DYhhMo0D4tK
+     ✅ 成功捕獲隱藏瀏覽量: 123
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：6 筆
+   - 新增貼文：6 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 6 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 1 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 15:43:58,961] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 16:00:59,284] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 16:00:59,296] INFO - 輸出: s://www.threads.com/@cattwn123/post/DYXY9WtgY7j
+    讚 135，回覆 38，轉發 2，分享 13，瀏覽 3158
+  更新指標：https://www.threads.com/@sofi.life_official/post/DYXcAwnk1SG
+    讚 8，回覆 0，轉發 2，分享 0，瀏覽 797
+  更新指標：https://www.threads.com/@candy_study_112/post/DYbhei0k6tr
+    讚 15，回覆 0，轉發 0，分享 0，瀏覽 253
+完成 指標更新完成，共處理 155 篇貼文。
+
+[2026-05-20 16:00:59,320] INFO - 距上次趨勢分析已超過 6 小時，執行趨勢分析...
+[2026-05-20 16:01:09,322] INFO - 啟動 趨勢分析...
+[2026-05-20 16:16:55,472] INFO - 趨勢分析 完成
+[2026-05-20 16:16:55,472] INFO - 輸出: /www.threads.com/@bibicloset15880/post/DYd9yQ5kTAe
+  完成 擴大中（情緒分數: 5）
+
+  分析 (crisis_score=3)：https://www.threads.com/@21starofdavid/post/DYeVYWEAY2_
+  完成 擴大中（情緒分數: 4）
+
+  分析 (crisis_score=3)：https://www.threads.com/@vincentchen0929/post/DYgxfSKEcoe
+  完成 擴大中（情緒分數: 5）
+
+完成 趨勢分析結束，結果已存入 trend_analysis 表。
+
+[2026-05-20 16:16:55,473] INFO - 本次排程執行完畢。
+[2026-05-20 16:16:55,473] INFO - ============================================================
+[2026-05-20 16:41:06,351] INFO - ============================================================
+[2026-05-20 16:41:06,825] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 16:41:06,825] INFO - 啟動 每小時爬蟲...
+[2026-05-20 16:44:06,079] INFO - 每小時爬蟲 完成
+[2026-05-20 16:44:06,080] INFO - 輸出: 💤 觸發動態防禦暫停 13.3 秒，模擬真人中場休息...
+   ➔ 深度訪問 (9/9): https://www.threads.com/@studying_a_at/post/DYhbnujmJBt
+     ✅ 成功捕獲隱藏瀏覽量: 66
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：9 筆
+   - 新增貼文：9 筆
+   - 更新指標：0 筆
+
+🤖 開始批次分析 9 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 4 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 16:44:16,081] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 17:01:59,539] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 17:01:59,542] INFO - 輸出: s://www.threads.com/@cattwn123/post/DYXY9WtgY7j
+    讚 135，回覆 38，轉發 2，分享 13，瀏覽 3160
+  更新指標：https://www.threads.com/@sofi.life_official/post/DYXcAwnk1SG
+    讚 8，回覆 0，轉發 2，分享 0，瀏覽 798
+  更新指標：https://www.threads.com/@candy_study_112/post/DYbhei0k6tr
+    讚 15，回覆 0，轉發 0，分享 0，瀏覽 254
+完成 指標更新完成，共處理 164 篇貼文。
+
+[2026-05-20 17:01:59,591] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 17:01:59,591] INFO - 本次排程執行完畢。
+[2026-05-20 17:01:59,592] INFO - ============================================================
+[2026-05-20 21:34:24,908] INFO - ============================================================
+[2026-05-20 21:34:27,275] INFO - 排程器啟動 | Windows 11 | Python 3.13.3
+[2026-05-20 21:34:27,280] INFO - 啟動 每小時爬蟲...
+[2026-05-20 21:38:51,015] INFO - 每小時爬蟲 完成
+[2026-05-20 21:38:51,021] INFO - 輸出: qGASe
+     ✅ 成功捕獲隱藏瀏覽量: 649
+   ➔ 深度訪問 (11/11): https://www.threads.com/@allen_ku.0926/post/DYg2EX0j9fS
+     ➖ 未對外顯示或權限隱藏
+
+[OK] 雙階段爬蟲與資料庫同步大功告成！
+   - 總掃描數：11 筆
+   - 新增貼文：10 筆
+   - 更新指標：1 筆
+
+🤖 開始批次分析 10 篇新貼文...
+  🔄 批次 1：分析 5 篇貼文...
+  ✅ 批次完成
+  🔄 批次 2：分析 5 篇貼文...
+  ✅ 批次完成
+✅ 危機分析完成，結果已存入 post_analysis 表
+
+[2026-05-20 21:39:01,048] INFO - 啟動 指標更新（近 3 天）...
+[2026-05-20 21:53:47,175] INFO - 指標更新（近 3 天） 完成
+[2026-05-20 21:53:47,183] INFO - 輸出: 新指標：https://www.threads.com/@hezerohe/post/DYZo9CngcdG
+  警告 導航失敗：Page.goto: net::ERR_INTERNET_DISCONNECTED at https://www.threads.com/@hezerohe/post/DYZo9CngcdG
+Call log:
+  - navigating to "https://www.threads.com/@hezerohe/post/DYZo9CngcdG", waiting until "domcontentloaded"
+
+完成 指標更新完成，共處理 168 篇貼文。
+
+[2026-05-20 21:53:47,419] INFO - 趨勢分析距上次不足 6 小時，跳過。
+[2026-05-20 21:53:47,419] INFO - 本次排程執行完畢。
+[2026-05-20 21:53:47,420] INFO - ============================================================

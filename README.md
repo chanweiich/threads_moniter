@@ -4,46 +4,78 @@
 本系統為專門為 **政大秘書處 (NCCU Secretariat)** 開發的實習專案，旨在透過 AI 自動化監控 Threads 平台上的校園動態與學生心聲。系統能即時攔截並評估潛在的公關危機，協助校方在重大爭議（如校園安全、住宿環境、學權問題）發酵前掌握先機並進行妥善處置。
 
 ## 🚀 核心功能
-* **定時關鍵字爬蟲**：每小時自動搜尋關鍵字（含政大專屬黑話如 `種茶大學`、`自強七舍`、`會研所`），抓取 24 小時內新貼文並存入 SQLite。
-* **指標即時更新**：每小時重新訪問近 3 天所有貼文，更新 likes / 回覆 / 轉貼 / 分享數。
+* **雙階段爬蟲**：每小時執行。第一階段搜尋頁滾動收集貼文基礎指標；第二階段逐篇訪問單一貼文頁面，捕捉瀏覽量（views），並內建擬人化隨機延遲的反偵測機制。
+* **指標即時更新**：每小時重新訪問近 3 天所有貼文，更新 likes / 回覆 / 轉貼 / 分享 / **瀏覽量**。
 * **AI 危機評分**：整合 Google Gemini API，自動分析貼文情緒與危機等級（0–5 分），僅對負面貼文評 1–5 分，正面/中立固定為 0。
 * **趨勢追蹤**：每 6 小時對 crisis_score ≥ 3 的高風險貼文執行深度趨勢分析，結果存入 `trend_analysis` 表。
-* **動態 Dashboard**：即時視覺化排行榜、數據統計圖表與輿情溫度警報標籤。
+* **動態 Dashboard**：視覺化互動熱度趨勢、情緒 P/N 比、文字雲（jieba 中文斷詞）、監控貼文列表（含瀏覽量）。
 
 ## 🛠️ 技術棧 (Tech Stack)
-* **後端架構**：`Python`, `Flask`
+* **後端**：`Python`、`Flask`
 * **資料庫**：`SQLite` (`threads_posts.db`)
-* **自動化爬蟲**：`Playwright` (Chromium，持久化 browser session)
-* **AI 分析決策**：`Google Gemini 2.5 Flash` (透過 `google-genai` 與 Pydantic 結構解析)
-* **前端與數據視覺化**：原生 HTML/JS 搭配 `Chart.js` 及 Bootstrap
+* **爬蟲**：`Playwright` + Google Chrome（持久化 browser session，headless 模式），選配 `playwright-stealth`；發文時間透過解析 `<time datetime="...">` 屬性取得 ISO 8601 UTC 精確時間戳
+* **中文斷詞**：`jieba`（文字雲後端分詞）
+* **AI 分析**：`Google Gemini 2.5 Flash`（透過 `google-genai` 與 Pydantic 結構解析）
+* **前端**：原生 HTML/JS、`Chart.js`、`wordcloud2.js`、Bootstrap 5
 
 ## 🗂️ 專案結構
 ```
 threads_moniter/
 ├── hourly_crawler/
-│   ├── hourly_scheduler.py   # 排程器：每小時呼叫 scraper + update，每 6 小時呼叫 trend
-│   ├── hourly_scraper.py     # 爬取搜尋結果新貼文，寫入 DB 並進行危機分析
+│   ├── hourly_scheduler.py   # 排程入口：呼叫 scraper → (等10秒) → update → (等10秒) → trend
+│   ├── hourly_scraper.py     # 雙階段爬蟲：搜尋頁收集 + 單篇深訪抓瀏覽量 + 危機分析
+│   ├── login.py              # 首次登入引導：開啟 Chrome 視窗讓使用者手動登入並儲存 session
 │   └── db_utils.py
 ├── dashboard/
-|   ├── templates/
-|   |   └──index.html         # 操作介面模板
-│   └── app.py                # Flask Dashboard 主程式
-├── hourly_update.py          # 更新近 3 天貼文的 likes/回覆/轉貼/分享
+│   ├── templates/
+│   │   └── index.html        # 儀表板前端
+│   └── app.py                # Flask 主程式（含 /api/wordcloud jieba 斷詞端點）
+├── hourly_update.py          # 更新近 3 天貼文的 likes / 回覆 / 轉貼 / 分享 / 瀏覽量
 ├── trend_update.py           # 高風險貼文趨勢分析（每 6 小時）
-├── nccu_risk_keywords.json   # 搜尋關鍵字設定
 ├── threads_posts.db          # SQLite 資料庫
 ├── browser_data/             # Playwright 持久化登入 session
 ├── logs/                     # hourly_scheduler.log
-├── requirements.txt
-└──note.md                    # 紀錄hourly_scheduler.py, hourly_scraper.py, hourly_update.py, trend_update.py 之間的關係、各自的職責、負責產出的table
+└── requirements.txt
 ```
 
+## 🗄️ 資料庫結構
+
+### `posts`
+| 欄位 | 類型 | 說明 |
+|------|------|------|
+| `id` | INTEGER | 主鍵 |
+| `url` | TEXT | 貼文連結（唯一值）|
+| `author` | TEXT | 帳號名稱 |
+| `content` | TEXT | 貼文內容 |
+| `post_date` | TEXT | 發文時間（ISO 8601 UTC 或相對時間）|
+| `likes` | INTEGER | 愛心數 |
+| `comments` | INTEGER | 留言數 |
+| `reposts` | INTEGER | 轉發數 |
+| `shares` | INTEGER | 分享數 |
+| `views` | INTEGER | 瀏覽量 |
+| `created_at` | TEXT | 首次爬取時間 |
+| `updated_at` | TEXT | 最後更新時間 |
+
+### `post_analysis`
+| 欄位 | 說明 |
+|------|------|
+| `post_id` | 關聯 posts.id |
+| `post_url` | 關聯 posts.url |
+| `summary` | AI 摘要 |
+| `sentiment` | 情緒（正面／中立／負面）|
+| `crisis_score` | 危機分數 0–5 |
+
+### `post_snapshots`
+每次更新時記錄快照，用於趨勢計算。含 `post_id`、`url`、`likes`、`comments`、`views`、`captured_at`。
+
+### `trend_analysis`
+crisis_score ≥ 3 的高風險貼文之深度趨勢分析結果。
 
 ## 📦 安裝指南
 
-若未曾登入過 Threads，請先手動啟動瀏覽器登入一次，登入狀態會保存在 `browser_data/` 資料夾。
+> **前置需求**：必須安裝 **Google Chrome**（爬蟲使用 `channel="chrome"` 啟動真實 Chrome，非 Playwright 內建 Chromium）。
 
-### **`Mac`**
+### 共同步驟
 
 1. 下載本專案
 ```bash
@@ -51,99 +83,77 @@ git clone https://github.com/chanweiich/threads_moniter.git
 cd threads_moniter
 ```
 
-2. 建立並啟動虛擬環境
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-3. 安裝依賴套件與瀏覽器
+2. 安裝依賴套件
 ```bash
 pip install -r requirements.txt
-playwright install chromium
+# 選配：安裝反偵測模組（建議安裝）
+pip install playwright-stealth
 ```
 
-4. 設定環境變數 (.env)
+3. 設定環境變數
 
-在專案根目錄建立 `.env` 檔案：
-```bash
+在專案根目錄建立 `.env`：
+```
 GEMINI_API_KEY=您的_Gemini_API_金鑰
 ```
 > **🔑 取得 API Key**：前往 [Google AI Studio](https://aistudio.google.com/apikey) 免費申請。
 
-> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
+> **🚨 請勿將 `.env` 推送至 GitHub。**
 
-5. 設定 Mac 排程器（cron）
+4. 首次登入 Threads
+
+爬蟲預設以 headless 模式執行，首次需透過 `login.py` 完成登入，session 會保存到 `browser_data/` 供後續爬蟲自動使用：
+```bash
+python hourly_crawler/login.py
+```
+執行後會開啟 Chrome 視窗，手動輸入帳號密碼（含 2FA），看到 Threads 首頁後回到終端機按 **Enter** 儲存 session。**此步驟只需執行一次。**
+
+---
+
+### Mac — 設定 cron 排程
+
 ```bash
 # 建立設定腳本
-nano setup_cron.sh
-
-# 貼上以下內容
-PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$(pwd)"
 PYTHON_PATH="$PROJECT_ROOT/.venv/bin/python"
 SCHEDULER_PATH="$PROJECT_ROOT/hourly_crawler/hourly_scheduler.py"
 (crontab -l 2>/dev/null; echo "0 * * * * $PYTHON_PATH $SCHEDULER_PATH") | crontab -
 echo "✅ Cron 任務已設定，每小時執行一次"
-
-# 儲存後賦予執行權限並執行
-chmod +x setup_cron.sh
-./setup_cron.sh
 ```
-
-6. 啟動 Dashboard
-```bash
-cd dashboard
-python app.py
-```
-接著在瀏覽器中開啟 `http://127.0.0.1:5000`
 
 ---
 
-### **`Windows`**
+### Windows — 設定工作排程器
 
-1. 下載本專案
-```bash
-git clone https://github.com/chanweiich/threads_moniter.git
-cd threads_moniter
-```
+1. 開啟「工作排程器」(`taskschd.msc`)
+2. 點選「建立基本工作」
+3. 觸發程序：每天 → 每隔 **1 小時** 重複
+4. 動作設定：
+   - 程式：`<專案根目錄>\.venv\Scripts\python.exe`
+   - 引數：`hourly_scheduler.py`
+   - 起始位置：`<專案根目錄>\hourly_crawler`
 
-2. 建立並啟動虛擬環境
-```bash
-py -m venv .venv
-.venv\Scripts\activate
-```
+---
 
-3. 安裝依賴套件與瀏覽器
-```bash
-pip install -r requirements.txt
-playwright install chromium
-```
+### 啟動 Dashboard
 
-4. 設定環境變數 (.env)
-
-在專案根目錄建立 `.env` 檔案：
-```
-GEMINI_API_KEY=您的_Gemini_API_金鑰
-```
-> **🔑 取得 API Key**：前往 [Google AI Studio](https://aistudio.google.com/apikey) 免費申請。
-
-> **🚨 【安全性警語】：請務必確保 `.env` 檔案保留在本地，絕對不可推送到 GitHub。**
-
-5. 設定 Windows 工作排程器
-- 開啟「工作排程器」(`taskschd.msc`)
-- 點選「建立基本工作」
-- 設定觸發程序：每天 → 每隔 1 小時 重複
-- 設定動作（路徑請依實際安裝位置調整）：
-  - 程式：`<專案根目錄>\.venv\Scripts\python.exe`
-  - 引數：`hourly_scheduler.py`
-  - 起始位置：`<專案根目錄>\hourly_crawler`
-
-6. 啟動 Dashboard
 ```bash
 cd dashboard
 python app.py
 ```
-接著在瀏覽器中開啟 `http://127.0.0.1:5000`
+在瀏覽器開啟 `http://127.0.0.1:5000`
+
+## 🔄 排程執行流程
+
+```
+每小時觸發
+  └─ hourly_scraper.py    （雙階段爬蟲 + 危機分析，timeout 30 分鐘）
+       ↓ 等待 10 秒（釋放 browser_data 鎖定）
+  └─ hourly_update.py     （更新近 3 天指標含瀏覽量，timeout 30 分鐘）
+       ↓ 距上次 ≥ 6 小時才執行
+       ↓ 等待 10 秒
+  └─ trend_update.py      （高風險貼文趨勢分析，timeout 30 分鐘）
+```
 
 ## ⚠️ 免責聲明
 本系統僅供國立政治大學校園研究、實習專案與公關趨勢監測使用。所擷取之數據僅作為內部決策輔助，請嚴格遵守相關社群平台（Meta / Threads）之使用規範與隱私條款，嚴禁將爬蟲數據用於非法窺探或商業營利。

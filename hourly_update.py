@@ -66,10 +66,11 @@ async def update_metrics():
     async with async_playwright() as p:
         context = await p.chromium.launch_persistent_context(
             user_data_dir=user_data_dir,
-            headless=False,
-            args=["--disable-blink-features=AutomationControlled"],
+            headless=True,
+            channel="chrome",
+            args=["--disable-blink-features=AutomationControlled", "--no-sandbox"],
             viewport={'width': 1280, 'height': 800},
-            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         )
         page = await context.new_page()
 
@@ -111,11 +112,21 @@ async def update_metrics():
                     return "0";
                 }
                 
+                let viewsStr = "0";
+                for (let el of document.querySelectorAll('span, div')) {
+                    let txt = el.textContent.trim();
+                    let m1 = txt.match(/^([\d,\.]+[萬KkMm]?)\s*次[瀏覽觀看查看]/);
+                    if (m1) { viewsStr = m1[1]; break; }
+                    let m2 = txt.match(/[瀏覽觀看查看]次數[：:\s]*([\d,\.]+[萬KkMm]?)/);
+                    if (m2) { viewsStr = m2[1]; break; }
+                }
+
                 return {
                     likes:   getCount("Like", "讚", "按讚"),
                     replies: getCount("Reply", "回覆", "留言"),
                     reposts: getCount("Repost", "轉貼", "轉發"),
-                    shares:  getCount("Share", "分享", "傳送")
+                    shares:  getCount("Share", "分享", "傳送"),
+                    views:   viewsStr
                 };
             }''')
 
@@ -123,25 +134,26 @@ async def update_metrics():
                 match = re.search(r'([\d\.,萬]+)', text)
                 return match.group(1) if match else "0"
 
-            likes_num = parse_number_text(extract_digits(page_data['likes']))
+            likes_num   = parse_number_text(extract_digits(page_data['likes']))
             replies_num = parse_number_text(extract_digits(page_data['replies']))
             reposts_num = parse_number_text(extract_digits(page_data['reposts']))
-            shares_num = parse_number_text(extract_digits(page_data['shares']))
+            shares_num  = parse_number_text(extract_digits(page_data['shares']))
+            views_num   = parse_number_text(extract_digits(page_data['views']))
 
             try:
                 now_iso = datetime.now().isoformat()
                 conn = sqlite3.connect(DB_PATH)
                 cursor = conn.cursor()
                 cursor.execute("""
-                    UPDATE posts SET likes = ?, comments = ?, reposts = ?, shares = ?, updated_at = ? WHERE url = ?
-                """, (likes_num, replies_num, reposts_num, shares_num, now_iso, url))
+                    UPDATE posts SET likes = ?, comments = ?, reposts = ?, shares = ?, views = ?, updated_at = ? WHERE url = ?
+                """, (likes_num, replies_num, reposts_num, shares_num, views_num, now_iso, url))
                 cursor.execute("""
-                    INSERT INTO post_snapshots (url, likes, comments, captured_at)
-                    VALUES (?, ?, ?, ?)
-                """, (url, likes_num, replies_num, now_iso))
+                    INSERT INTO post_snapshots (url, likes, comments, views, captured_at)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (url, likes_num, replies_num, views_num, now_iso))
                 conn.commit()
                 conn.close()
-                print(f"    讚 {likes_num}，回覆 {replies_num}，轉發 {reposts_num}，分享 {shares_num}")
+                print(f"    讚 {likes_num}，回覆 {replies_num}，轉發 {reposts_num}，分享 {shares_num}，瀏覽 {views_num}")
             except Exception as e:
                 print(f"  警告 更新 posts 失敗：{e}")
 
