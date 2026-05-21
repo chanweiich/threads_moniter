@@ -100,8 +100,6 @@ py -3.10 -m venv .venv
 3. 安裝依賴套件
 ```bash
 pip install -r requirements.txt
-# 選配：安裝反偵測模組（建議安裝）
-pip install playwright-stealth
 ```
 
 4. 設定環境變數
