@@ -83,14 +83,28 @@ git clone https://github.com/chanweiich/threads_moniter.git
 cd threads_moniter
 ```
 
-2. 安裝依賴套件
+2. 建立虛擬環境
+
+`macOS / Linux`
+```bash
+python3.10 -m venv .venv
+source .venv/bin/activate
+```
+
+`Windows`
+```bash
+py -3.10 -m venv .venv
+.venv\Scripts\activate
+```
+
+3. 安裝依賴套件
 ```bash
 pip install -r requirements.txt
 # 選配：安裝反偵測模組（建議安裝）
 pip install playwright-stealth
 ```
 
-3. 設定環境變數
+4. 設定環境變數
 
 在專案根目錄建立 `.env`：
 ```
@@ -100,7 +114,7 @@ GEMINI_API_KEY=您的_Gemini_API_金鑰
 
 > **🚨 請勿將 `.env` 推送至 GitHub。**
 
-4. 首次登入 Threads
+5. 首次登入 Threads
 
 爬蟲預設以 headless 模式執行，首次需透過 `login.py` 完成登入，session 會保存到 `browser_data/` 供後續爬蟲自動使用：
 ```bash
@@ -127,7 +141,7 @@ echo "✅ Cron 任務已設定，每小時執行一次"
 
 1. 開啟「工作排程器」(`taskschd.msc`)
 2. 點選「建立基本工作」
-3. 觸發程序：每天 → 每隔 **1 小時** 重複
+3. 觸發程序：每天 → 重複工作每隔： **1 小時** ，持續時間為：不限制
 4. 動作設定：
    - 程式：`<專案根目錄>\.venv\Scripts\python.exe`
    - 引數：`hourly_scheduler.py`
